@@ -6,6 +6,7 @@ const App = () => (
   <div className="App">
     <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
+      <p>Server is at {process.env.REACT_APP_SKYVUE_API_URL}</p>
       <p>
         Edit <code>src/App.js</code> and save to reload.
       </p>
