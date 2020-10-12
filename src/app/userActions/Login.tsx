@@ -1,10 +1,11 @@
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import { DangerText, Helper, Text } from 'components/ui/Typography';
 import { Link } from 'react-router-dom';
 import { UserContainer } from './styles';
 import { IReducerAction } from 'types';
+import skyvueFetch from 'services/skyvueFetch';
 
 
 const loginFormReducer = (state: {
@@ -55,6 +56,16 @@ const Login: React.FC = () => {
       },
     }
   )
+
+  useEffect(() => {
+    const fetch = async () => {
+      const res = skyvueFetch();
+      const test = await res.get('/health_check');
+      console.log(test);
+    }
+
+    fetch();
+  })
 
   const onSubmit = () => {
     toggleBadLogin(false);
