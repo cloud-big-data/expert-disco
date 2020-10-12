@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
 interface button {
-  id: string;
+  id?: string;
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;

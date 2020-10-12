@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components/macro";
 import Styles from "styles/Styles";
 
-const Input = styled.input`
+const Input = styled.input<{ error?: boolean }>`
   border-radius: 0.625rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: ${props => props.error ? `1px solid ${Styles.red}` : '1px solid rgba(0, 0, 0, 0.2)'};
   height: 3rem;
   color: ${Styles.fontColor};
   padding: 0.5rem;
@@ -29,6 +29,8 @@ const InputField: React.FC<{
   placeholder?: string;
   value?: string | number;
   defaultValue?: string | number;
+  type?: string;
+  error?: boolean;
 }> = (props) => {
   return (
     <Input
@@ -36,9 +38,11 @@ const InputField: React.FC<{
       className={props.className}
       id={props.id}
       style={props.style}
+      type={props.type ?? 'text'}
       onChange={props.onChange}
       defaultValue={props.defaultValue}
       value={props.value || ""}
+      error={props.error}
     />
   );
 };

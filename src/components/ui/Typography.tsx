@@ -1,8 +1,9 @@
 import React from "react";
 import styled from 'styled-components/macro';
+import Styles from "styles/Styles";
 
 interface text {
-  id: string;
+  id?: string;
   size: string;
   len: string;
   style?: {
@@ -13,7 +14,11 @@ interface text {
 const TextContainer = styled.p<{
   size: string;
   len: string;
+  danger?: boolean;
 }>`
+  ${props =>
+    props.danger ? `color: ${Styles.red};` : ''
+  }
   ${props => 
     props.size === "sm" && props.len === "short" ? `
       font-size: 0.875rem;
@@ -53,6 +58,14 @@ const Text: React.FC<text> = (props) => {
   );
 };
 
+const DangerText: React.FC<text> = props => {
+  return (
+    <TextContainer danger id={props.id} size={props.size} len={props.len}>
+      {props.children}
+    </TextContainer>
+  )
+}
+
 const HelperContainer = styled.p`
   font-size: 0.75rem;
   line-height: 1rem;
@@ -64,4 +77,4 @@ const Helper: React.FC<{ children: React.ReactNode }> = (props) => {
   return <HelperContainer>{props.children}</HelperContainer>;
 };
 
-export { Text, Helper };
+export { Text, Helper, DangerText };
