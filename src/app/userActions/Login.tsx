@@ -1,11 +1,13 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import { DangerText, Helper, Text } from 'components/ui/Typography';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { UserContainer } from './styles';
 import { IReducerAction } from 'types';
 import skyvueFetch from 'services/skyvueFetch';
+import userContext from 'globals/userContext';
+import parseJWT from 'lib/parseJWT';
 
 
 const loginFormReducer = (state: {
@@ -42,6 +44,8 @@ const loginFormReducer = (state: {
 }
 
 const Login: React.FC = () => {
+  const history = useHistory();
+  const UserContext = useContext(userContext);
   const [badLogin, toggleBadLogin] = useState(false);
   const [formState, dispatchFormEvent] = useReducer(
     loginFormReducer,
@@ -57,18 +61,36 @@ const Login: React.FC = () => {
     }
   )
 
-  useEffect(() => {
-    const fetch = async () => {
-      const res = skyvueFetch();
-      const test = await res.get('/health_check');
-      console.log(test);
+  const tryLogin = async () => {
+    const { error, ...res } = await skyvueFetch().post('/auth/user/login', {
+      email: formState.email.value,
+      password: formState.password.value,
+    });
+
+    if (error) {
+      toggleBadLogin(true);
+      return;
+    }
+    
+    const decodedToken = parseJWT(res.accessToken);
+    if (res.accessToken && decodedToken.userId) {
+      UserContext.setUserContextValue({
+        accessToken: res.accessToken,
+        userId: decodedToken.userId,
+      })
     }
 
-    fetch();
-  })
+    localStorage.setItem('refreshToken', res.refreshToken);
+    history.push('/home');
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSubmit();
+    }
+  }
 
   const onSubmit = () => {
-    toggleBadLogin(false);
     if (formState.email.value === '') {
       dispatchFormEvent({
         type: "EMAIL",
@@ -77,6 +99,8 @@ const Login: React.FC = () => {
           error: true,
         }
       })
+      toggleBadLogin(true);
+      return;
     }
 
     if (formState.password.value === '') {
@@ -87,6 +111,13 @@ const Login: React.FC = () => {
           error: true,
         }
       })
+      toggleBadLogin(true);
+      return;
+    }
+
+    toggleBadLogin(false);
+    if (!badLogin) {
+      tryLogin();
     }
   }
   
@@ -108,6 +139,7 @@ const Login: React.FC = () => {
           })}
           error={formState.email.error}
           value={formState.email.value}
+          onKeyDown={onKeyDown}
         />
       </div>
       <div className="input-group">
@@ -122,6 +154,7 @@ const Login: React.FC = () => {
           error={formState.password.error}
           value={formState.password.value}
           type="password"
+          onKeyDown={onKeyDown}
         />
       </div>
 

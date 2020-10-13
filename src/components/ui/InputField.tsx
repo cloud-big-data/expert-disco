@@ -31,6 +31,7 @@ const InputField: React.FC<{
   defaultValue?: string | number;
   type?: string;
   error?: boolean;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }> = (props) => {
   return (
     <Input
@@ -43,6 +44,7 @@ const InputField: React.FC<{
       defaultValue={props.defaultValue}
       value={props.value || ""}
       error={props.error}
+      onKeyDown={props.onKeyDown}
     />
   );
 };

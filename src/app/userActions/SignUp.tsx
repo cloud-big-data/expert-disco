@@ -1,12 +1,15 @@
-import React, { useReducer, useState } from 'react';
+import React, { useContext, useReducer, useState } from 'react';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import { Helper, Text, DangerText } from 'components/ui/Typography';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { UserContainer } from './styles';
 import { IReducerAction } from 'types';
 import * as EmailValidator from 'email-validator';
 import { formErrors } from './user_actions_utils';
+import skyvueFetch from 'services/skyvueFetch';
+import userContext from 'globals/userContext';
+import parseJWT from 'lib/parseJWT';
 
 interface ISignupFormState {
   firstName: {
@@ -80,33 +83,61 @@ const signUpFormReducer = (state: ISignupFormState, action: IReducerAction) => {
   }
 }
 
+const initialState = {
+  firstName: {
+    error: false,
+    value: "",
+  },
+  lastName: {
+    error: false,
+    value: "",
+  },
+  email: {
+    error: false,
+    value: "",
+  },
+  password: {
+    error: false,
+    value: "",
+  },
+  phone: {
+    error: false,
+    value: undefined,
+  },
+};
+
 const SignUp: React.FC = () => {
+  const UserContext = useContext(userContext);
+  const history = useHistory();
   const [accountExists, toggleAccountExists] = useState(false);
   const [formState, dispatchFormEvent] = useReducer(
     signUpFormReducer,
-    {
-      firstName: {
-        error: false,
-        value: "",
-      },
-      lastName: {
-        error: false,
-        value: "",
-      },
-      email: {
-        error: false,
-        value: "",
-      },
-      password: {
-        error: false,
-        value: "",
-      },
-      phone: {
-        error: false,
-        value: undefined,
-      },
-    }
+    initialState
   )
+
+  const tryCreateAccount = async () => {
+    const { error, ...res } = await skyvueFetch().post('/auth/user/create', {
+      email: formState.email.value,
+      password: formState.password.value,
+      firstName: formState.firstName.value,
+      lastName: formState.lastName.value,
+      phone: formState.phone?.value,
+    });
+
+    if (error) {
+      toggleAccountExists(true);
+      return;
+    }
+
+    const decodedToken = parseJWT(res.accessToken);
+    UserContext.setUserContextValue({
+      accessToken: res.accessToken,
+      userId: decodedToken.userId,
+    })
+
+    localStorage.setItem('refreshToken', res.refreshToken);
+    history.push('/home');
+  }
 
   const onSubmit = () => {
     toggleAccountExists(false);
@@ -160,6 +191,19 @@ const SignUp: React.FC = () => {
         }
       })
     }
+
+    const errors = formErrors(formState);
+    const fieldsWithErrors = Object.keys(errors).filter((x: any) => errors[x] === true);
+
+    if (fieldsWithErrors.length === 0) {
+      tryCreateAccount();
+    }
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSubmit();
+    }
   }
 
   const errors = formErrors(formState)
@@ -199,6 +243,7 @@ const SignUp: React.FC = () => {
           })}
           value={formState.firstName.value}
           error={formState.firstName.error}
+          onKeyDown={onKeyDown}
         />
       </div>
       <div className="input-group">
@@ -213,6 +258,7 @@ const SignUp: React.FC = () => {
           })}
           value={formState.lastName.value}
           error={formState.lastName.error}
+          onKeyDown={onKeyDown}
         />
       </div>
       <div className="input-group">
@@ -227,6 +273,7 @@ const SignUp: React.FC = () => {
           })}
           value={formState.email.value}
           error={formState.email.error}
+          onKeyDown={onKeyDown}
         />
       </div>
       <div className="input-group">
@@ -242,6 +289,7 @@ const SignUp: React.FC = () => {
           value={formState.password.value}
           error={formState.password.error}
           type="password"
+          onKeyDown={onKeyDown}
         />
       </div>
       <div className="input-group">
@@ -256,6 +304,7 @@ const SignUp: React.FC = () => {
           })}
           value={formState.phone?.value ?? ''}
           error={formState.phone?.error}
+          onKeyDown={onKeyDown}
         />
       </div>
 

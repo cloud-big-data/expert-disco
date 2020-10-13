@@ -1,23 +1,35 @@
-const skyvueFetch = (accessToken?: string) => {
+const skyvueFetch = (accessToken?: string): {
+  get: (url: string) => Promise<any>;
+  post: (url: string, body: { [key: string]: any }) => Promise<any>;
+  patch: (url: string, body: { [key: string]: any }) => Promise<any>;
+  delete: (url: string, body: { [key: string]: any }) => Promise<any>;
+} => {
   const baseUrl = process.env.REACT_APP_SKYVUE_API_URL;
 
-  const refreshToken = localStorage.getItem('refreshToken')
-  const headers = new Headers({
+  const headers = {
     Authorization: `Bearer ${accessToken}`,
-    'x-refresh-token': refreshToken ?? '',
+    'x-refresh-token': localStorage.getItem('refreshToken') ?? '',
     'Content-Type': 'application/json',
-  })
+  };
 
   const makeCall = async (url: string, options: any) => {
-    const finalUrl = `${baseUrl}${url}`
-    const res = await fetch(finalUrl, {
-      headers,
-      method: options.method,
-      body: options.body,
-    });
-    const json = await res.json();
+    const finalUrl = `${baseUrl}${url}`;
+    try {
+      const res = await fetch(finalUrl, {
+        headers,
+        method: options.method,
+        body: JSON.stringify(options.body),
+      });
 
-    return json;
+      try {
+        const json = await res.json();
+        return json;
+      } catch (e) {
+        return e.message;
+      }
+    } catch (e) {
+      return e.message;
+    }
   }
 
   return {
