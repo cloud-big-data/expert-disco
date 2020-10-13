@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useContext, useReducer, useState } from 'react';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import { DangerText, Helper, Text } from 'components/ui/Typography';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { UserContainer } from './styles';
 import { IReducerAction } from 'types';
 import skyvueFetch from 'services/skyvueFetch';

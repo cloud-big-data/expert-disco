@@ -1,9 +1,8 @@
 import userContext from 'globals/userContext';
 import useTokenRefresh from 'hooks/useTokenRefresh';
 import parseJWT from 'lib/parseJWT';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import skyvueFetch from 'services/skyvueFetch';
 
 const AuthenticatedRoute: React.FC<{
   children: React.ReactNode;
