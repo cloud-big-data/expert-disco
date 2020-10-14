@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
 } from "react-router-dom";
 import './App.css';
 import { Login, SignUp } from 'app/userActions';
@@ -11,9 +10,10 @@ import Home from 'app/home';
 import { AuthenticatedRoute } from 'app/routing';
 import Logout from 'app/userActions/Logout';
 import PublicRoute from 'app/routing/PublicRoute';
-import DataBaseView from 'app/database';
+import App from 'app';
 
-const App = () => {
+const Skyvue = () => {
+  console.log('hi')
   return (
     <Router>
       <Switch>
@@ -32,7 +32,7 @@ const App = () => {
         </Route>
         <Route path="/home">
           <AuthenticatedRoute>
-            <DataBaseView />
+            <App />
           </AuthenticatedRoute>
         </Route>
         <Route path="/">
@@ -45,4 +45,4 @@ const App = () => {
   )
 };
 
-export default App;
+export default Skyvue;

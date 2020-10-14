@@ -4,15 +4,13 @@ import Styles from "styles/Styles";
 
 const Input = styled.input<{ error?: boolean }>`
   border-radius: 0.625rem;
-  border: ${props => props.error ? `1px solid ${Styles.red}` : '1px solid rgba(0, 0, 0, 0.2)'};
+  border: ${props => props.error ? `1px solid ${Styles.red}` : '1px solid rgba(0, 0, 0, 0.1)'};
   height: 3rem;
   color: ${Styles.fontColor};
-  padding: 0.5rem;
+  padding: 0.5rem .75rem;
   outline: none;
   transition-duration: 0.2s;
-  &:hover {
-    box-shadow: ${Styles.smBoxShadow};
-  }
+  &:hover,
   &:active,
   &:focus {
     border: 1px solid ${Styles.purple};

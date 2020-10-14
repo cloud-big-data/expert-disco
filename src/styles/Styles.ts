@@ -13,4 +13,5 @@ export default {
   chartWidth: 400,
   boxShadow: "10px 10px 30px #d9d9d9, -10px -10px 30px #ffffff",
   smBoxShadow: "0px 2px 6px rgba(0, 0, 0, 0.25);",
+  defaultPadding: "1rem",
 };

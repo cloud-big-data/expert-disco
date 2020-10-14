@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import skyvueFetch from 'services/skyvueFetch';
 
-const useTokenRefresh = (refreshToken: string | null, accessToken: string | null) => {
+const useTokenRefresh = () => {
   const [tokens, setTokens] = useState<{
     accessToken: string | null;
     refreshToken: string | null;
     error: boolean;
   }>({
-    accessToken,
-    refreshToken,
+    accessToken: null,
+    refreshToken: localStorage.getItem('refreshToken'),
     error: false,
   });
 
@@ -26,15 +26,19 @@ const useTokenRefresh = (refreshToken: string | null, accessToken: string | null
         return;
       }
 
-      if (res.refreshToken) {
+      if (res.refreshToken && res.accessToken) {
         localStorage.setItem('refreshToken', res.refreshToken);
+        setTokens({
+          ...res
+        })
       }
     }
 
-    if (refreshToken && !accessToken) {
+    if (tokens.refreshToken && !tokens.accessToken) {
       getTokens();
     }
-  }, [refreshToken, accessToken, tokens])
+  }, [tokens])
+
 
   return tokens;
 }

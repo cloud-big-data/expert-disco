@@ -1,7 +1,7 @@
 import userContext from 'globals/userContext';
 import useTokenRefresh from 'hooks/useTokenRefresh';
 import parseJWT from 'lib/parseJWT';
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
 const AuthenticatedRoute: React.FC<{
@@ -15,14 +15,17 @@ const AuthenticatedRoute: React.FC<{
     accessToken: null,
   });
   const [isLoaded, toggleIsLoaded] = useState(false);
-  const UserContext = useContext(userContext);
+  const { accessToken, error } = useTokenRefresh();
 
-  const { accessToken, error } = useTokenRefresh(
-    localStorage.getItem('refreshToken'),
-    UserContext.accessToken,
-  );
-
-  console.log(error);
+  useEffect(() => {
+    if (accessToken && !userContextValue.accessToken) {
+      const decodedToken = accessToken ? parseJWT(accessToken) : {};
+      setUserContextValue({
+        userId: decodedToken.userId,
+        accessToken: accessToken,
+      })
+    }
+  }, [accessToken, userContextValue.accessToken])
 
   if (!localStorage.getItem('refreshToken')) {
     return <Redirect to="/login" />
@@ -35,15 +38,6 @@ const AuthenticatedRoute: React.FC<{
 
   if (accessToken && !isLoaded) {
     toggleIsLoaded(true);
-  }
-
-  const decodedToken = parseJWT(accessToken!);
-
-  if (isLoaded) {
-    setUserContextValue({
-      userId: decodedToken.userId,
-      accessToken,
-    })
   }
 
   if (isLoaded && !accessToken) return <Redirect to="/login" />

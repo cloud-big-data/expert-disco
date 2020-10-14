@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-import App from './App';
+import Skyvue from './Skyvue';
 import * as serviceWorker from './serviceWorker';
 
 const myEnv = dotenv.config();
@@ -11,7 +11,7 @@ dotenvExpand(myEnv);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Skyvue />
   </React.StrictMode>,
   document.getElementById('root'),
 );
