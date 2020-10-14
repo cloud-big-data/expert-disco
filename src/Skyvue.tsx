@@ -11,6 +11,7 @@ import { AuthenticatedRoute } from 'app/routing';
 import Logout from 'app/userActions/Logout';
 import PublicRoute from 'app/routing/PublicRoute';
 import App from 'app';
+import ForgotPassword from 'app/userActions/ForgotPassword';
 
 const Skyvue = () => {
   console.log('hi')
@@ -25,6 +26,11 @@ const Skyvue = () => {
         <Route path="/login">
           <PublicRoute>
             <Login />
+          </PublicRoute>
+        </Route>
+        <Route path="/forgot_password">
+          <PublicRoute>
+            <ForgotPassword />
           </PublicRoute>
         </Route>
         <Route path="/logout">
