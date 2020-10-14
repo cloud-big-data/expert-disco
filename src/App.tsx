@@ -3,33 +3,42 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
 import './App.css';
 import { Login, SignUp } from 'app/userActions';
 import Home from 'app/home';
 import { AuthenticatedRoute } from 'app/routing';
 import Logout from 'app/userActions/Logout';
+import PublicRoute from 'app/routing/PublicRoute';
+import DataBaseView from 'app/database';
 
 const App = () => {
   return (
     <Router>
       <Switch>
         <Route path="/signup">
-          <SignUp />
+          <PublicRoute>
+            <SignUp />
+          </PublicRoute>
         </Route>
         <Route path="/login">
-          <Login />
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
         </Route>
         <Route path="/logout">
           <Logout />
         </Route>
         <Route path="/home">
           <AuthenticatedRoute>
-            <p>Home</p>
+            <DataBaseView />
           </AuthenticatedRoute>
         </Route>
         <Route path="/">
-          <Home />
+          <PublicRoute>
+            <Home />
+          </PublicRoute>
         </Route>
       </Switch>
     </Router>

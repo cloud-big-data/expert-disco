@@ -18,7 +18,7 @@ const useTokenRefresh = (refreshToken: string | null, accessToken: string | null
         refreshToken: localStorage.getItem('refreshToken'),
       })
 
-      if (res.error) {
+      if (res.error || res === 'JsonWebTokenError') {
         setTokens({
           ...tokens,
           error: true,

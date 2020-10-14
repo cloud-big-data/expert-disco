@@ -22,6 +22,8 @@ const AuthenticatedRoute: React.FC<{
     UserContext.accessToken,
   );
 
+  console.log(error);
+
   if (!localStorage.getItem('refreshToken')) {
     return <Redirect to="/login" />
   }
@@ -38,7 +40,6 @@ const AuthenticatedRoute: React.FC<{
   const decodedToken = parseJWT(accessToken!);
 
   if (isLoaded) {
-    console.log(userContextValue)
     setUserContextValue({
       userId: decodedToken.userId,
       accessToken,

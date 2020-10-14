@@ -25,10 +25,14 @@ const skyvueFetch = (accessToken?: string): {
         const json = await res.json();
         return json;
       } catch (e) {
-        return e.message;
+        return {
+          error: e.message,
+        }
       }
     } catch (e) {
-      return e.message;
+      return {
+        error: e.message,
+      }
     }
   }
 
