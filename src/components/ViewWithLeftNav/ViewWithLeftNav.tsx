@@ -2,8 +2,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import React from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import Select, { ValueType } from 'react-select';
-import { Text } from 'components/ui/Typography';
+import Select from 'react-select';
 
 interface IViewWithLeftNav {
   options: Array<{

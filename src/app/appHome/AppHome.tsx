@@ -1,5 +1,5 @@
 import ViewWithLeftNav from 'components/ViewWithLeftNav';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 const AppHome: React.FC = () => {
