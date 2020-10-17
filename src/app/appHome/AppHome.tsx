@@ -25,6 +25,11 @@ const AppHome: React.FC = () => {
           value: "datasets",
           icon: <i className="fal fa-database" />
         },
+        {
+          label: "Queries",
+          value: "queries",
+          icon: <i className="fas fa-question-circle" />
+        },
         { 
           label: "Shared with me",
           value: "shared",

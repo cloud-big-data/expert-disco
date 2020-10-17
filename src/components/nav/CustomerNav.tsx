@@ -39,7 +39,7 @@ const UserDropdownContainer = styled.div<{ dropdownOpen: boolean }>`
   i {
     color: white;
   }
-  background: ${Styles.blue};
+  background: linear-gradient(115.8deg, #6e30f2 0%, #86e2ff 100%);
 
   ${props => props.dropdownOpen ? `box-shadow: ${Styles.boxShadow};` : ''}
   &:hover {
@@ -82,6 +82,7 @@ const UserDropdownExpanded = styled.div`
 
     i {
       margin-right: 1rem;
+      color: initial;
     }
 
     &:hover {
