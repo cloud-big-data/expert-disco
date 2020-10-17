@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContainer } from './styles';
 import * as EmailValidator from 'email-validator';
+import skyvueFetch from 'services/skyvueFetch';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +20,11 @@ const ForgotPassword: React.FC = () => {
       setError(false);
     }
 
+    await skyvueFetch().post('/auth/user/forgot_password', { email });
     toggleShowConfirmation(true);
+    setTimeout(() => {
+      toggleShowConfirmation(false);
+    }, 10000);
   }
 
   return (
@@ -30,7 +35,7 @@ const ForgotPassword: React.FC = () => {
       </Text>
 
       <div className="input-group">
-        {showConfirmation && <Helper>Success! Check your email for your reset link.</Helper>}
+        {showConfirmation && <Helper>Check your email for your reset link. It will be valid for 15 minutes.</Helper>}
         <InputField
           onChange={e => setEmail(e.target.value)}
           error={error}

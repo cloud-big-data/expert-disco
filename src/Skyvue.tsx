@@ -12,9 +12,9 @@ import Logout from 'app/userActions/Logout';
 import PublicRoute from 'app/routing/PublicRoute';
 import App from 'app';
 import ForgotPassword from 'app/userActions/ForgotPassword';
+import PasswordReset from 'app/userActions/PasswordReset';
 
 const Skyvue = () => {
-  console.log('hi')
   return (
     <Router>
       <Switch>
@@ -28,9 +28,14 @@ const Skyvue = () => {
             <Login />
           </PublicRoute>
         </Route>
-        <Route path="/forgot_password">
+        <Route exact path="/forgot_password">
           <PublicRoute>
             <ForgotPassword />
+          </PublicRoute>
+        </Route>
+        <Route path="/forgot_password/:token">
+          <PublicRoute>
+            <PasswordReset />
           </PublicRoute>
         </Route>
         <Route path="/logout">
