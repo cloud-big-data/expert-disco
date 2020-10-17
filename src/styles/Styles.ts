@@ -16,4 +16,5 @@ export default {
   xsBoxShadow: "rgba(0, 0, 0, 0.03) 0px 2px 0px 0px",
   defaultPadding: "1rem",
   defaultMaxWidth: "70rem",
+  faintBorderColor: "#EAF5F7",
 };

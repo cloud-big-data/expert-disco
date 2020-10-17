@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Label } from 'components/ui/Typography';
+import useHandleClickOutside from 'hooks/useHandleClickOutside';
+import React, { useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
@@ -46,32 +48,58 @@ const UserDropdownExpanded = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  margin-top: 6rem;
-  margin-left: -8rem;
+  margin-bottom: -13rem;
+  margin-left: -14rem;
   background: white;
-  padding: 1rem 0;
-  width: 10rem;
-  text-align: center;
+  padding: 1rem;
+  width: 16rem;
+  text-align: left;
   box-shadow: ${Styles.smBoxShadow};
   border-radius: .5rem;
+  border: 1px solid ${Styles.faintBorderColor};
+
+  #email__label {
+    width: 100%;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0, 0, 0, .1);
+  }
+
   a {
+    &:first-of-type {
+      margin-top: 1rem;
+    }
     text-decoration: none;
     height: 2rem;
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+
+    i {
+      margin-right: 1rem;
+    }
 
     &:hover {
       font-weight: bold;
     }
   }
+
+  a.active {
+    color: ${Styles.purple};
+    font-weight: bold;
+    * {
+      color: ${Styles.purple};
+    }
+  }
 `;
 
-const CustomerNav: React.FC = () => {
+const CustomerNav: React.FC<{ email: string }> = ({ email }) => {
   const [dropdownOpen, toggleDropdownOpen] = useState(false);
+  const expandedRef = useRef<HTMLDivElement>(null);
+  useHandleClickOutside(expandedRef, () => toggleDropdownOpen(false));
+  const location = useLocation();
   
   return (
     <CustomerNavContainer>
@@ -79,11 +107,23 @@ const CustomerNav: React.FC = () => {
         <Link style={{textDecoration: 'none'}} to="/home">
           <span className="customer-nav__icon">Skyvue.io</span>
         </Link>
-        <UserDropdownContainer onClick={() => toggleDropdownOpen(!dropdownOpen)} dropdownOpen={dropdownOpen}>
+        <UserDropdownContainer
+          ref={expandedRef}
+          onClick={() => toggleDropdownOpen(!dropdownOpen)}
+          dropdownOpen={dropdownOpen}
+        >
           <i className="fad fa-user" />
           {dropdownOpen && (
             <UserDropdownExpanded>
-              <Link to="/logout">Logout</Link>
+              <Label id="email__label">{email}</Label>
+              <Link className={`${location.pathname === '/home/account' ? 'active' : ''}`} to="/home/account">
+                <i className="fad fa-user" />
+                Account
+              </Link>
+              <Link to="/logout">
+                <i className="fad fa-sign-out-alt" />
+                Logout
+              </Link>
             </UserDropdownExpanded>
           )}
         </UserDropdownContainer>

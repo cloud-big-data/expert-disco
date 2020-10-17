@@ -1,31 +1,39 @@
-import userContext from 'globals/userContext';
+import React, { useEffect, useState } from 'react';
+import UserContext from 'globals/userContext';
 import useTokenRefresh from 'hooks/useTokenRefresh';
 import parseJWT from 'lib/parseJWT';
-import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
+import ErrorScreen from 'components/ErrorScreen';
 
 const AuthenticatedRoute: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [userContextValue, setUserContextValue] = useState<{
+  const [userContext, setUserContextValue] = useState<{
     userId: string | null;
     accessToken: string | null;
+    email: string | null;
   }>({
     userId: null,
     accessToken: null,
+    email: null,
   });
   const [isLoaded, toggleIsLoaded] = useState(false);
-  const { accessToken, error } = useTokenRefresh();
+  const { accessToken, error, disconnected } = useTokenRefresh();
 
   useEffect(() => {
-    if (accessToken && !userContextValue.accessToken) {
-      const decodedToken = accessToken ? parseJWT(accessToken) : {};
+    if (accessToken && !userContext.accessToken) {
+      const decodedToken = accessToken ? parseJWT(accessToken) : {};  
       setUserContextValue({
         userId: decodedToken.userId,
         accessToken: accessToken,
+        email: decodedToken.email,
       })
     }
-  }, [accessToken, userContextValue.accessToken])
+  }, [accessToken, userContext.accessToken])
+
+  if (disconnected) {
+    return <ErrorScreen />
+  }
 
   if (!localStorage.getItem('refreshToken')) {
     return <Redirect to="/login" />
@@ -42,13 +50,14 @@ const AuthenticatedRoute: React.FC<{
 
   if (isLoaded && !accessToken) return <Redirect to="/login" />
   return (
-    <userContext.Provider value={{
-      accessToken: userContextValue.accessToken,
-      userId: userContextValue.userId,
+    <UserContext.Provider value={{
+      accessToken: userContext.accessToken,
+      userId: userContext.userId,
+      email: userContext.email,
       setUserContextValue,
     }}>
       {children}
-    </userContext.Provider>
+    </UserContext.Provider>
   )
 }
 

@@ -2,13 +2,11 @@ import React from "react";
 import styled from 'styled-components/macro';
 import Styles from "styles/Styles";
 
-interface text {
+interface IText {
   id?: string;
   size: string;
   len: string;
-  style?: {
-    [key: string]: number | string;
-  };
+  style?: React.CSSProperties;
 }
 
 const TextContainer = styled.p<{
@@ -50,7 +48,7 @@ const TextContainer = styled.p<{
 
 `;
 
-const Text: React.FC<text> = (props) => {
+const Text: React.FC<IText> = (props) => {
   return (
     <TextContainer id={props.id} size={props.size} len={props.len}>
       {props.children}
@@ -58,11 +56,26 @@ const Text: React.FC<text> = (props) => {
   );
 };
 
-const DangerText: React.FC<text> = props => {
+const DangerText: React.FC<IText> = props => {
   return (
     <TextContainer danger id={props.id} size={props.size} len={props.len}>
       {props.children}
     </TextContainer>
+  )
+}
+
+const LabelContainer = styled.span`
+  display: flex;
+  font-weight: 600;
+`;
+
+const Label: React.FC<{
+  id?: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}> = props => {
+  return (
+    <LabelContainer id={props.id}>{props.children}</LabelContainer>
   )
 }
 
@@ -77,4 +90,4 @@ const Helper: React.FC<{ children: React.ReactNode }> = (props) => {
   return <HelperContainer>{props.children}</HelperContainer>;
 };
 
-export { Text, Helper, DangerText };
+export { Text, Helper, DangerText, Label };

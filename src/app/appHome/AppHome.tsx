@@ -8,7 +8,7 @@ const AppHome: React.FC = () => {
 
   useEffect(() => {
     if (!view) {
-      history.replace("/home/my_tables");
+      history.replace("/home/datasets");
     }
   }, [history, view])
 
@@ -20,8 +20,8 @@ const AppHome: React.FC = () => {
       activeView={view}
       options={[
         { 
-          label: "My tables",
-          value: "my_tables",
+          label: "My datasets",
+          value: "datasets",
           icon: <i className="fal fa-database" />
         },
         { 
@@ -36,8 +36,8 @@ const AppHome: React.FC = () => {
         },
       ]}>
         <h3 style={{ marginTop: 0 }}>
-          {view === "my_tables" ? (
-            `My tables`
+          {view === "datasets" ? (
+            `My datasets`
           ) : view === "shared" ? (
             `Shared with me`
           ) : view === "workspaces" ? (

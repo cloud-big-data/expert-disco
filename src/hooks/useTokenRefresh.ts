@@ -6,10 +6,12 @@ const useTokenRefresh = () => {
     accessToken: string | null;
     refreshToken: string | null;
     error: boolean;
+    disconnected: boolean;
   }>({
     accessToken: null,
     refreshToken: localStorage.getItem('refreshToken'),
     error: false,
+    disconnected: false,
   });
 
   useEffect(() => {
@@ -18,7 +20,14 @@ const useTokenRefresh = () => {
         refreshToken: localStorage.getItem('refreshToken'),
       })
 
-      if (res.error || res === 'JsonWebTokenError') {
+      if (res.error === 'Failed to fetch') {
+        setTokens({
+          ...tokens,
+          disconnected: true,
+        })
+        return;
+      }
+      if (res.error || res === 'JsonWebTokenError' || res === 'Authorization error') {
         setTokens({
           ...tokens,
           error: true,
@@ -38,7 +47,6 @@ const useTokenRefresh = () => {
       getTokens();
     }
   }, [tokens])
-
 
   return tokens;
 }

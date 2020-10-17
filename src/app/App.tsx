@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Switch,
   Route,
@@ -7,6 +7,9 @@ import CustomerNav from 'components/nav';
 import styled from 'styled-components/macro';
 import AppHome from './appHome';
 import Styles from 'styles/Styles';
+import UserContext from 'globals/userContext';
+import Loading from 'components/ui/Loading';
+import AccountManagement from './accountManagement';
 
 const AppContainer = styled.div`
   display: flex;
@@ -24,13 +27,24 @@ const AppContainer = styled.div`
 `;
 
 const App: React.FC = () => {
+  const user = useContext(UserContext);
+
+  if (!user.email) return (
+    <div className="absolute__center">
+      <Loading />
+    </div>
+  )
+
   return (
     <AppContainer>
-      <CustomerNav />
+      <CustomerNav email={user.email} />
       <div className="app-body__container">
         <Switch>
           <Route path="/home/database">
             <p>App test</p>
+          </Route>
+          <Route path="/home/account">
+            <AccountManagement />
           </Route>
           <Route path="/home/:view?">
             <AppHome />
