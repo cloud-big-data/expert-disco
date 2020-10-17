@@ -21,7 +21,9 @@ const Container = styled.div<{ stackNav: boolean }>`
   grid-column-gap: 1rem;
   grid-row-gap: 1rem;
   width: 100%;
-  padding: ${Styles.defaultPadding};
+  @media (max-width: ${Styles.defaultMaxWidth}) {
+    padding: ${Styles.defaultPadding};
+  }
 
   @media (max-width: 750px) {
     grid-template-columns: 4fr;
@@ -39,17 +41,41 @@ const LeftNav = styled.div`
 
 const NavItem = styled.div<{ active?: boolean }>`
   font-weight: ${props => props.active ? 'bold' : 'normal'};
-  color: ${props => props.active ? Styles.purple : 'inherit'};
   i {
     color: ${props => props.active ? Styles.purple : 'inherit'};
   }
+  .label__container {
+    transition-duration: .2s;
+    ${props => 
+      props.active ? `
+        transform: scale(1.1);
+        padding-left: .3rem;
+      ` : ''
+    }
+  }
   margin-top: 1rem;
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   cursor: pointer;
   transition-duration: .3s;
   &:hover {
     font-weight: bold;
+  }
+
+  &:nth-of-type(2) {
+    i {
+      color: ${Styles.green};
+    }
+  }
+  &:nth-of-type(3) {
+    i {
+      color: ${Styles.blue};
+    }
+  }
+  &:nth-of-type(4) {
+    i {
+      color: ${Styles.peach};
+    }
   }
 `;
 

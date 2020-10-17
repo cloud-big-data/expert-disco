@@ -17,4 +17,5 @@ export default {
   defaultPadding: "1rem",
   defaultMaxWidth: "70rem",
   faintBorderColor: "#EAF5F7",
+  defaultBorderRadius: ".5rem",
 };

@@ -50,7 +50,7 @@ const TextContainer = styled.p<{
 
 const Text: React.FC<IText> = (props) => {
   return (
-    <TextContainer id={props.id} size={props.size} len={props.len}>
+    <TextContainer style={props.style} id={props.id} size={props.size} len={props.len}>
       {props.children}
     </TextContainer>
   );
@@ -58,7 +58,7 @@ const Text: React.FC<IText> = (props) => {
 
 const DangerText: React.FC<IText> = props => {
   return (
-    <TextContainer danger id={props.id} size={props.size} len={props.len}>
+    <TextContainer danger style={props.style} id={props.id} size={props.size} len={props.len}>
       {props.children}
     </TextContainer>
   )
@@ -86,8 +86,11 @@ const HelperContainer = styled.p`
   letter-spacing: 0.32px;
 `;
 
-const Helper: React.FC<{ children: React.ReactNode }> = (props) => {
-  return <HelperContainer>{props.children}</HelperContainer>;
+const Helper: React.FC<{
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}> = ({ style, children }) => {
+  return <HelperContainer style={style}>{children}</HelperContainer>;
 };
 
 export { Text, Helper, DangerText, Label };

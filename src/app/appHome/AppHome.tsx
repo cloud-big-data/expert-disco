@@ -1,6 +1,7 @@
 import ViewWithLeftNav from 'components/ViewWithLeftNav';
 import React, { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import MyDatasets from './MyDatasets';
 
 const AppHome: React.FC = () => {
   const { view } = useParams<{view: string}>();
@@ -35,15 +36,15 @@ const AppHome: React.FC = () => {
           icon: <i className="fad fa-layer-group" />
         },
       ]}>
-        <h3 style={{ marginTop: 0 }}>
-          {view === "datasets" ? (
-            `My datasets`
-          ) : view === "shared" ? (
-            `Shared with me`
-          ) : view === "workspaces" ? (
-            `Workspaces`
-          ) : <></>}
-        </h3>
+        {view === "datasets" && (
+          <MyDatasets />
+        )}
+        {view === "shared" && (
+          `Shared with me`
+        )}
+        {view === "workspaces" && (
+          `Workspaces`
+        )}
     </ViewWithLeftNav>
   )
 }

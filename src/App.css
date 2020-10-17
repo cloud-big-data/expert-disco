@@ -105,8 +105,8 @@ h6 {
   letter-spacing: 0;
 }
 
-a:hover *,
-a:hover {
+a:not(.no-hover):hover *,
+a:not(.no-hover):hover {
   color: var(--purple);
 }
 

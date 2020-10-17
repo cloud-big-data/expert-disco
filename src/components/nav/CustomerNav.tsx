@@ -22,6 +22,7 @@ const CustomerNavContainer = styled.div`
     display: flex;
     width: 100%;
     margin: 0 auto;
+    align-items: center;
   }
 `;
 
@@ -32,11 +33,13 @@ const UserDropdownContainer = styled.div<{ dropdownOpen: boolean }>`
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border: 2px solid #34ebaa;
   padding: .25rem;
   border-radius: 50%;
   cursor: pointer;
-  background: ${Styles.green};
+  i {
+    color: white;
+  }
+  background: ${Styles.blue};
 
   ${props => props.dropdownOpen ? `box-shadow: ${Styles.boxShadow};` : ''}
   &:hover {
@@ -57,7 +60,7 @@ const UserDropdownExpanded = styled.div`
   width: 16rem;
   text-align: left;
   box-shadow: ${Styles.smBoxShadow};
-  border-radius: .5rem;
+  border-radius: ${Styles.defaultBorderRadius};
   border: 1px solid ${Styles.faintBorderColor};
 
   #email__label {
