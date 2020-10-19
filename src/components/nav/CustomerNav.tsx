@@ -6,6 +6,7 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
 const CustomerNavContainer = styled.div`
+  z-index: 1000;
   display: flex;
   position: sticky;
   padding: ${Styles.defaultPadding};

@@ -43,16 +43,16 @@ const MyDatasets: React.FC = () => {
         </ButtonPrimary>
       </div>
       <ListContainer>
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} description={"Test description"} title="User events" />
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} description={"A compilation of all US Census submissions for the past 3 million years"} title="US Census Data" />
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="Arizona Voter Registration" />  
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="A really long title that is intended to test the line break functionality" />  
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="Testing line break" />
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="User events" />
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="US Census Data" />
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="Arizona Voter Registration" />  
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="A really long title that is intended to test the line break functionality" />  
-        <DatasetCard timestamp={'2020-10-17T19:39:47+00:00'} title="Testing line break" />
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} description={"Test description"} title="User events" />
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} description={"A compilation of all US Census submissions for the past 3 million years"} title="US Census Data" />
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Arizona Voter Registration" />  
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="A really long title that is intended to test the line break functionality" />  
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Testing line break" />
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="User events" />
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="US Census Data" />
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Arizona Voter Registration" />  
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="A really long title that is intended to test the line break functionality" />  
+        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Testing line break" />
       </ListContainer>
     </MyDatasetsContainer>
   )

@@ -13,6 +13,8 @@ import PublicRoute from 'app/routing/PublicRoute';
 import App from 'app';
 import ForgotPassword from 'app/userActions/ForgotPassword';
 import PasswordReset from 'app/userActions/PasswordReset';
+import Dataset from 'app/dataset';
+import DatasetContainerEditor from 'app/dataset/DatasetContainerEditor';
 
 const Skyvue = () => {
   return (
@@ -44,6 +46,13 @@ const Skyvue = () => {
         <Route path="/home">
           <AuthenticatedRoute>
             <App />
+          </AuthenticatedRoute>
+        </Route>
+        <Route path="/dataset/:datasetId">
+          <AuthenticatedRoute>
+            <DatasetContainerEditor>
+              <Dataset />
+            </DatasetContainerEditor>
           </AuthenticatedRoute>
         </Route>
         <Route path="/">

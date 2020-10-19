@@ -40,13 +40,10 @@ const App: React.FC = () => {
       <CustomerNav email={user.email} />
       <div className="app-body__container">
         <Switch>
-          <Route path="/home/database">
-            <p>App test</p>
-          </Route>
-          <Route path="/home/account">
+          <Route path={`/home/account`}>
             <AccountManagement />
           </Route>
-          <Route path="/home/:view?">
+          <Route path={`/home/:view?`}>
             <AppHome />
           </Route>
         </Switch>
