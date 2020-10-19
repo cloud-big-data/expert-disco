@@ -1,5 +1,5 @@
 import Loading from 'components/ui/Loading';
-import userContext from 'globals/userContext';
+import userContext from 'contexts/userContext';
 import parseJWT from 'lib/parseJWT';
 import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';

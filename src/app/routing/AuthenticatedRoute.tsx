@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import UserContext from 'globals/userContext';
+import UserContext from 'contexts/userContext';
 import useTokenRefresh from 'hooks/useTokenRefresh';
 import parseJWT from 'lib/parseJWT';
 import { Redirect } from 'react-router-dom';

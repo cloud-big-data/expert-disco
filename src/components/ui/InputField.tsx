@@ -21,9 +21,7 @@ const InputField: React.FC<{
   onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   id?: string;
-  style?: {
-    [key: string]: string | number;
-  };
+  style?: React.CSSProperties;
   placeholder?: string;
   value?: string | number;
   defaultValue?: string | number;

@@ -7,7 +7,7 @@ import CustomerNav from 'components/nav';
 import styled from 'styled-components/macro';
 import AppHome from './appHome';
 import Styles from 'styles/Styles';
-import UserContext from 'globals/userContext';
+import UserContext from 'contexts/userContext';
 import Loading from 'components/ui/Loading';
 import AccountManagement from './accountManagement';
 

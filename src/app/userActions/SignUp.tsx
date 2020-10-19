@@ -8,7 +8,7 @@ import { IReducerAction } from 'types';
 import * as EmailValidator from 'email-validator';
 import { formErrors } from './user_actions_utils';
 import skyvueFetch from 'services/skyvueFetch';
-import userContext from 'globals/userContext';
+import userContext from 'contexts/userContext';
 import parseJWT from 'lib/parseJWT';
 
 interface ISignupFormState {

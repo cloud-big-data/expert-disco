@@ -6,7 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { UserContainer } from './styles';
 import { IReducerAction } from 'types';
 import skyvueFetch from 'services/skyvueFetch';
-import userContext from 'globals/userContext';
+import userContext from 'contexts/userContext';
 import parseJWT from 'lib/parseJWT';
 
 
