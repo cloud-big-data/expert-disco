@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 import Grid from './grid';
 
 const DatasetContainer = styled.div`
@@ -19,7 +19,7 @@ const ParentGridContainer = styled.div`
 const ToolbarContainer = styled.div``;
 
 const Dataset: React.FC = () => {
-  const params = useParams();
+  // const params = useParams();
 
   return (
     <DatasetContainer>
