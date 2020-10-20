@@ -1,11 +1,16 @@
-import React from 'react';
+import DatasetContext from 'contexts/DatasetContext';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { ICell } from '../types';
+import { IBoardState, ICell } from '../types';
 import { defaults } from './constants';
 
 
 interface ICellProps extends ICell {
+  rowId: string;
+  highlighted: boolean;
+  active: boolean;
+  selected: boolean;
   position: {
     lastRow: boolean;
     lastColumn: boolean;
@@ -60,6 +65,13 @@ const CellContainer = styled.div<{
   ` : ''}
 `;
 
+const ActiveInput = styled.input`
+  width: 100%;
+  border: none;
+  &:focus {
+    outline: none;
+  }
+`;
 
 const Cell: React.FC<ICellProps> = ({
   _id,
@@ -69,14 +81,45 @@ const Cell: React.FC<ICellProps> = ({
   selected,
   position,
 }) => {
+  const { boardState, setBoardState } = useContext(DatasetContext)!;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { cellsState } = boardState;
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [active])
+
   return (
     <CellContainer
       active={active}
       highlighted={highlighted}
       position={position}
       selected={selected}
+      onClick={() => setBoardState({
+        ...boardState,
+        cellsState: {
+          ...cellsState,
+          selectedCell: _id
+        }
+      })}
+      onDoubleClick={() => setBoardState({
+        ...boardState,
+        cellsState: {
+          ...cellsState,
+          activeCell: _id
+        }
+      })}
+      data-cellId={_id}
     >
-      {value}
+      {active ? (
+        <ActiveInput
+          ref={inputRef}
+          value={value as string}
+          type="text"
+        />
+      ) : (
+        value
+      )}
     </CellContainer>
   );
 }

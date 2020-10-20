@@ -2,8 +2,8 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useEffect, useState } from 'react';
-import { DataTypes, IDataset } from '../types';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { DataTypes, IBoardState, IDataset } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
 const sample: IDataset = {
@@ -149,9 +149,24 @@ const getUserType = (
   }
 }
 
+export const initialBoardState = {
+  cellsState: {
+    activeCell: '',
+    selectedCell: '',
+    highlightedCells: [],
+  },
+  rowsState: {
+    selectedRow: '',
+  },
+  columnsState: {
+    selectedColumn: -1,
+  }
+}
+
 const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [gridData, setGridData] = useState<IDataset | undefined>(undefined);
+  const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   
   useEffect(() => {
     setGridData(sample);
@@ -180,7 +195,6 @@ const DatasetWrapper: React.FC = () => {
     user.userId,
     gridData?.visibilitySettings
   );
-
   
   return (
     <DatasetContext.Provider value={{
@@ -188,7 +202,9 @@ const DatasetWrapper: React.FC = () => {
       setGridData:
         [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType)
           ? setGridData
-          : null
+          : null,
+      boardState,
+      setBoardState,
     }}>
       <CustomerNav email={user.email} />
       {userType === DatasetUserTypes.owner && (

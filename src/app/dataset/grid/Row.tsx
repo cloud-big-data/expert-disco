@@ -1,4 +1,6 @@
-import React from 'react';
+import { Helper } from 'components/ui/Typography';
+import DatasetContext from 'contexts/DatasetContext';
+import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import { IRow } from '../types';
 import Cell from './Cell';
@@ -10,28 +12,62 @@ const RowContainer = styled.div`
   height: ${defaults.ROW_HEIGHT}rem;
 `;
 
+const RowIndexContainer = styled.div`
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    * {
+      font-weight: bold;
+    }
+  }
+`;
+
 interface IRowProps extends IRow {
   position: {
     firstRow: boolean;
     lastRow: boolean;
   }
+  rowIndex: number;
 }
 
 const Row: React.FC<IRowProps> = ({
   _id,
   cells,
   rowHeight,
-  highlighted,
   dragging,
   position,
+  rowIndex,
 }) => {
+  const { boardState, setBoardState } = useContext(DatasetContext)!;
   return (
     <RowContainer>
+      <RowIndexContainer onClick={() => {
+        setBoardState({
+          ...boardState,
+          rowsState: {
+            selectedRow: _id,
+          },
+          columnsState: {
+            selectedColumn: -1,
+          }
+        })
+      }}>
+        <Helper>{rowIndex}</Helper>
+      </RowIndexContainer>
       {cells.map((cell, index) =>
         <Cell
           key={cell._id}
-          highlighted={index === 1}
-          selected={cell._id === 'yo14'}
+          rowId={_id}
+          highlighted={
+            boardState.cellsState.highlightedCells.includes(cell._id) ||
+            boardState.rowsState.selectedRow === _id ||
+            boardState.columnsState.selectedColumn === index
+          }
+          selected={boardState.cellsState.selectedCell === cell._id}
+          active={boardState.cellsState.activeCell === cell._id}
           position={{
             lastRow: position.lastRow,
             lastColumn: index === cells.length - 1,

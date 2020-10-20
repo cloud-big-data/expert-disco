@@ -1,12 +1,15 @@
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext } from 'react';
+import useHandleClickOutside from 'hooks/useHandleClickOutside';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
+import { initialBoardState } from '../wrappers/DatasetWrapper';
 import ColumnHeader from './ColumnHeader';
 import Row from './Row';
 
 const GridContainer = styled.div`
   display: flex;
+  flex: 0 1 auto;
   width: 100%;
   flex-direction: column;
   margin-top: 1rem;
@@ -17,6 +20,7 @@ const ColumnsContainer = styled.div`
   flex: 0 1 100%;
   display: flex;
   align-items: center;
+  margin-left: 2rem;
 `;
 const RowsContainer = styled.div`
   width: 100%;
@@ -50,6 +54,13 @@ lifted state:
 
 const Grid: React.FC = () => {
   const dataset = useContext(DatasetContext);
+  const gridRef = useRef(null);
+  const {gridData, setBoardState, boardState} = dataset!;
+
+  useHandleClickOutside(gridRef, () => {
+    setBoardState(initialBoardState);
+  })
+  
   if (!dataset) {
     return (
       <div className="absolute__center">
@@ -58,16 +69,16 @@ const Grid: React.FC = () => {
     )
   }
 
-  const {gridData} = dataset;
   const {rows, columns} = gridData;
 
   return (
-    <GridContainer>
+    <GridContainer ref={gridRef}>
       <ColumnsContainer>
         {columns.map((col, index) =>
           <ColumnHeader
             key={col._id}
             {...col}
+            columnIndex={index}
             position={{
               firstColumn: index === 0,
               lastColumn: index === columns.length - 1,
@@ -83,6 +94,7 @@ const Grid: React.FC = () => {
           <Row
             key={row._id}
             {...row}
+            rowIndex={index}
             position={{
               firstRow: index === 0,
               lastRow: index === rows.length - 1,

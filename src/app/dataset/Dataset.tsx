@@ -13,10 +13,9 @@ const DatasetContainer = styled.div`
   padding: 1rem;
 `;
 const ParentGridContainer = styled.div`
-  flex: 1 0 auto;
+  flex: 0 1 auto;
   display: flex;
   width: 100%;
-  height: 100%;
 `;
 // const ToolbarContainer = styled.div`
 // `;

@@ -9,6 +9,20 @@ export enum DataTypes {
   date
 }
 
+export interface IBoardState {
+  cellsState: {
+    activeCell: string;
+    selectedCell: string;
+    highlightedCells: string[];
+  }
+  rowsState: {
+    selectedRow: string;
+  }
+  columnsState: {
+    selectedColumn: number;
+  }
+}
+
 export interface IColumn {
   _id: string;
   title: ValueSet;
@@ -25,9 +39,6 @@ export interface IColumn {
 export interface ICell {
   _id: string;
   value: string | number | null;
-  highlighted?: boolean;
-  active?: boolean;
-  selected?: boolean;
 }
 
 export interface IRow {
@@ -37,7 +48,6 @@ export interface IRow {
    * rowHeight: The height of the row, in px.
    */
   rowHeight?: number;
-  highlighted?: boolean;
   dragging?: boolean;
 };
 
