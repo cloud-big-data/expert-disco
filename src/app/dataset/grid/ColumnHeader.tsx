@@ -1,10 +1,11 @@
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import { IColumn } from '../types';
 import { defaults } from './constants';
+import { ActiveInput } from './styles';
 
 interface IColumnHeaderProps extends IColumn {
   columnIndex: number;
@@ -17,6 +18,7 @@ interface IColumnHeaderProps extends IColumn {
 const ColumnHeaderContainer = styled.div<{
   colWidth: number;
   position: IColumnHeaderProps['position'];
+  active: boolean;
 }>`
   cursor: pointer;
   background: #F1EFF3;
@@ -57,10 +59,25 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   columnIndex,
 }) => {
   const { boardState, setBoardState } = useContext(DatasetContext)!;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const active = boardState.columnsState.activeColumn === columnIndex;
+  
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [active])
+
   return (
     <ColumnHeaderContainer
       position={position}
+      active={active}
       colWidth={colWidth ?? defaults.COL_WIDTH}
+      onDoubleClick={() => setBoardState({
+        ...boardState,
+        columnsState: {
+          ...boardState.columnsState,
+          activeColumn: columnIndex,
+        }
+      })}
       onClick={() => setBoardState({
         ...boardState,
         columnsState: {
@@ -73,9 +90,17 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         }
       })}
     >
-      <Label>
-        {title.label}
-      </Label>
+      {active ? (
+        <ActiveInput
+          ref={inputRef}
+          value={title.label}
+          type="text"
+        />
+      ) : (
+        <Label>
+          {title.label}
+        </Label>
+      )}
     </ColumnHeaderContainer>
   )
 }

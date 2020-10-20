@@ -160,6 +160,7 @@ export const initialBoardState = {
   },
   columnsState: {
     selectedColumn: -1,
+    activeColumn: -1,
   }
 }
 

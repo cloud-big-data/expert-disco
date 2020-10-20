@@ -51,6 +51,7 @@ const Row: React.FC<IRowProps> = ({
             selectedRow: _id,
           },
           columnsState: {
+            ...boardState.columnsState,
             selectedColumn: -1,
           }
         })

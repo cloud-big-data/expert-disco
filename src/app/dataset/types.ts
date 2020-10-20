@@ -20,6 +20,7 @@ export interface IBoardState {
   }
   columnsState: {
     selectedColumn: number;
+    activeColumn: number;
   }
 }
 

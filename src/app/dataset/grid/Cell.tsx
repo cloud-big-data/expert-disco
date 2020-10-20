@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import { ICell } from '../types';
 import { defaults } from './constants';
-
+import { ActiveInput } from './styles';
 
 interface ICellProps extends ICell {
   rowId: string;
@@ -63,14 +63,6 @@ const CellContainer = styled.div<{
   ${props => props.highlighted ? `
     background: ${Styles.purpleAccent};
   ` : ''}
-`;
-
-const ActiveInput = styled.input`
-  width: 100%;
-  border: none;
-  &:focus {
-    outline: none;
-  }
 `;
 
 const Cell: React.FC<ICellProps> = ({
