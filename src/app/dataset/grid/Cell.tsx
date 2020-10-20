@@ -2,7 +2,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { IBoardState, ICell } from '../types';
+import { ICell } from '../types';
 import { defaults } from './constants';
 
 

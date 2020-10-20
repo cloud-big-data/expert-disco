@@ -2,7 +2,7 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DataTypes, IBoardState, IDataset } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 

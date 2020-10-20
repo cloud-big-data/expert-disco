@@ -55,7 +55,7 @@ lifted state:
 const Grid: React.FC = () => {
   const dataset = useContext(DatasetContext);
   const gridRef = useRef(null);
-  const {gridData, setBoardState, boardState} = dataset!;
+  const {gridData, setBoardState} = dataset!;
 
   useHandleClickOutside(gridRef, () => {
     setBoardState(initialBoardState);
