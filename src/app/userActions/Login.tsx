@@ -140,6 +140,7 @@ const Login: React.FC = () => {
           error={formState.email.error}
           value={formState.email.value}
           onKeyDown={onKeyDown}
+          icon={<i className="fad fa-envelope" />}
         />
       </div>
       <div className="input-group">
@@ -155,6 +156,7 @@ const Login: React.FC = () => {
           value={formState.password.value}
           type="password"
           onKeyDown={onKeyDown}
+          icon={<i className="fad fa-lock-alt" />}
         />
       </div>
 

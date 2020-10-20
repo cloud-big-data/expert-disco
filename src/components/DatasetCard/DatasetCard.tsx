@@ -47,7 +47,7 @@ const DatasetCard: React.FC<{
   timestamp,
 }) => {
   return (
-    <Link className="no-hover" style={{textDecoration: 'none'}} to={`/home/dataset/${datasetId}`}>
+    <Link className="no-hover" style={{textDecoration: 'none'}} to={`/dataset/${datasetId}`}>
       <DatasetCardContainer>
         <div className="meta__bar">
           <div className="time-ago__container">

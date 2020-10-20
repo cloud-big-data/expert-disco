@@ -1,7 +1,6 @@
 import InputField from 'components/ui/InputField';
 import React from 'react';
 import styled from 'styled-components/macro';
-import Styles from 'styles/Styles';
 // import { useParams } from 'react-router-dom';
 import Grid from './grid';
 
@@ -28,20 +27,6 @@ const FormulaBarContainer = styled.div`
     width: 100%;
     margin-left: .25rem;
   }
-  .icon__container {
-    display: flex;
-    border-radius: .625rem;
-    height: 100%;
-    align-items: center;
-    width: 4rem;
-    height: 3rem;
-    background: ${Styles.purpleGradient};
-    justify-content: center;
-
-    i {
-      color: white;
-    }
-  }
 `;
 
 const Dataset: React.FC<{
@@ -55,10 +40,7 @@ const Dataset: React.FC<{
         <p>Tools</p>
       </ToolbarContainer> */}
       <FormulaBarContainer>
-        <div className="icon__container">
-          <i className="fad fa-function" />
-        </div>
-        <InputField />
+        <InputField icon={<i className="fad fa-function" />} />
       </FormulaBarContainer>
       <ParentGridContainer>
         <Grid />
