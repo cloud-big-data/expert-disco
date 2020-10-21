@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@types/jwt-decode": "^2.2.1",
-    "@types/ramda": "^0.27.23",
+    "@types/ramda": "^0.27.29",
     "@types/react-select": "^3.0.22",
     "@types/styled-components": "^5.1.4",
     "babel-eslint": "^10.1.0",
