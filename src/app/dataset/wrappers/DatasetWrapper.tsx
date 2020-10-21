@@ -168,11 +168,11 @@ export const initialBoardState = {
 
 const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
-  const [gridData, setGridData] = useState<IBoardData | undefined>(undefined);
+  const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   
   useEffect(() => {
-    setGridData(sample);
+    setBoardData(sample);
   }, [])
 
   if (!user.userId || !user.email) {
@@ -183,7 +183,7 @@ const DatasetWrapper: React.FC = () => {
     )
   }
 
-  if (!gridData) {
+  if (!boardData) {
     return (
       <React.Fragment>
         <CustomerNav email={user.email} />
@@ -196,15 +196,15 @@ const DatasetWrapper: React.FC = () => {
 
   const userType = getUserType(
     user.userId,
-    gridData?.visibilitySettings
+    boardData?.visibilitySettings
   );
   
   return (
     <DatasetContext.Provider value={{
-      gridData,
-      setGridData:
+      boardData,
+      setBoardData:
         [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType)
-          ? setGridData
+          ? setBoardData
           : null,
       boardState,
       setBoardState,

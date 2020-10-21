@@ -2,9 +2,11 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { ICell } from '../types';
+import returnUpdatedCells from '../lib/returnUpdatedCells';
+import { ICell, IRow } from '../types';
 import { defaults } from './constants';
 import { ActiveInput } from './styles';
+import * as R from 'ramda';
 
 interface ICellProps extends ICell {
   rowId: string;
@@ -73,7 +75,7 @@ const Cell: React.FC<ICellProps> = ({
   selected,
   position,
 }) => {
-  const { boardState, setBoardState } = useContext(DatasetContext)!;
+  const { boardState, setBoardState, boardData, setBoardData } = useContext(DatasetContext)!;
   const inputRef = useRef<HTMLInputElement>(null);
   const { cellsState } = boardState;
 
@@ -106,8 +108,31 @@ const Cell: React.FC<ICellProps> = ({
       {active ? (
         <ActiveInput
           ref={inputRef}
-          value={value as string}
+          value={value as string ?? ''}
           type="text"
+          onKeyDown={e => {
+            if (e.key === 'Enter') setBoardState({
+              ...boardState,
+              cellsState: {
+                ...boardState.cellsState,
+                activeCell: '',
+              }
+            })
+          }}
+          onChange={e => setBoardData!({
+              ...boardData,
+              rows: R.map(
+                (row: IRow) => ({
+                    ...row,
+                    cells: returnUpdatedCells({
+                      iterable: row.cells,
+                      cellId: _id,
+                      updatedValue: e.target.value,
+                    })!
+                  })
+                )(boardData.rows)
+            })
+          }
         />
       ) : (
         value

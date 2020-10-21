@@ -2,8 +2,8 @@ import { IBoardState, IBoardData } from 'app/dataset/types';
 import { createContext } from 'react';
 
 interface IDatasetContext {
-  gridData: IBoardData;
-  setGridData:
+  boardData: IBoardData;
+  setBoardData:
     null | ((data: IBoardData) => void);
   boardState: IBoardState;
   setBoardState: (boardState: IBoardState) => void;
