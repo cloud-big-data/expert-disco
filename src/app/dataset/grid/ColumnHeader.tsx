@@ -53,8 +53,6 @@ const ColumnHeaderContainer = styled.div<{
 const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   title,
   colWidth,
-  highlighted,
-  dragging,
   position,
   columnIndex,
 }) => {

@@ -1,10 +1,10 @@
-import { IBoardState, IDataset } from 'app/dataset/types';
+import { IBoardState, IBoardData } from 'app/dataset/types';
 import { createContext } from 'react';
 
 interface IDatasetContext {
-  gridData: IDataset;
+  gridData: IBoardData;
   setGridData:
-    null | ((data: IDataset) => void);
+    null | ((data: IBoardData) => void);
   boardState: IBoardState;
   setBoardState: (boardState: IBoardState) => void;
 }

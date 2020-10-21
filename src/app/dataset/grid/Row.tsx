@@ -36,8 +36,6 @@ interface IRowProps extends IRow {
 const Row: React.FC<IRowProps> = ({
   _id,
   cells,
-  rowHeight,
-  dragging,
   position,
   rowIndex,
 }) => {
@@ -48,6 +46,7 @@ const Row: React.FC<IRowProps> = ({
         setBoardState({
           ...boardState,
           rowsState: {
+            ...boardState.rowsState,
             selectedRow: _id,
           },
           columnsState: {

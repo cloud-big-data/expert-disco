@@ -3,10 +3,10 @@ import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { DataTypes, IBoardState, IDataset } from '../types';
+import { DataTypes, IBoardState, IBoardData } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
-const sample: IDataset = {
+const sample: IBoardData = {
   updatedAt: '2020-10-16T03:21:24+00:00',
   createdAt: '2020-10-16T03:21:24+00:00',
   title: 'my first dataset',
@@ -136,7 +136,7 @@ enum DatasetUserTypes {
 
 const getUserType = (
   userId: string,
-  visibility: IDataset['visibilitySettings']
+  visibility: IBoardData['visibilitySettings']
 ): DatasetUserTypes => {
   if (userId === visibility.owner) {
     return DatasetUserTypes.owner
@@ -157,16 +157,18 @@ export const initialBoardState = {
   },
   rowsState: {
     selectedRow: '',
+    draggedRows: [],
   },
   columnsState: {
     selectedColumn: -1,
     activeColumn: -1,
+    draggedColumns: [],
   }
 }
 
 const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
-  const [gridData, setGridData] = useState<IDataset | undefined>(undefined);
+  const [gridData, setGridData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   
   useEffect(() => {
