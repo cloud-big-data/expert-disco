@@ -11,7 +11,7 @@ export enum DataTypes {
 
 export interface IColumn {
   _id: string;
-  title: ValueSet;
+  value: string | number;
   dataType: DataTypes;
   /**
    * colWidth: The width of the column, in px.

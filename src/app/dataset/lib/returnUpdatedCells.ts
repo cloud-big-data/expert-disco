@@ -1,4 +1,4 @@
-import { ICell } from "../types";
+import { ICell, IColumn } from "../types";
 import * as R from "ramda";
 
 /**
@@ -9,7 +9,7 @@ const returnUpdatedCells = ({
   cellId,
   updatedValue
 }: {
-  iterable: ICell[];
+  iterable: ICell[] | IColumn[];
   cellId: string;
   updatedValue: string;
 }) =>

@@ -51,10 +51,11 @@ const ColumnHeaderContainer = styled.div<{
 
 
 const ColumnHeader: React.FC<IColumnHeaderProps> = ({
-  title,
+  value,
   colWidth,
   position,
   columnIndex,
+  _id,
 }) => {
   const { boardState, setBoardState } = useContext(DatasetContext)!;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -91,12 +92,12 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       {active ? (
         <ActiveInput
           ref={inputRef}
-          value={title.label}
+          value={value}
           type="text"
         />
       ) : (
         <Label>
-          {title.label}
+          {value}
         </Label>
       )}
     </ColumnHeaderContainer>

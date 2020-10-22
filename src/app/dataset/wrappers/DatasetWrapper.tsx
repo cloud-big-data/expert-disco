@@ -19,50 +19,32 @@ const sample: IBoardData = {
     {
       _id: 'colyo',
       dataType: DataTypes.string,
-      title: {
-        label: 'col 1',
-        value: 'col_1',
-      }
+      value: 'col 1',
     },
     {
       _id: 'colyoo',
       dataType: DataTypes.string,
-      title: {
-        label: 'col 2',
-        value: 'col_2',
-      }
+      value: 'col 2',
     },
     {
       _id: 'colyooo',
       dataType: DataTypes.string,
-      title: {
-        label: 'col 3',
-        value: 'col_3',
-      }
+      value: 'col 3',
     },
     {
       _id: 'colyoooo',
       dataType: DataTypes.string,
-      title: {
-        label: 'col 4',
-        value: 'col_4',
-      }
+      value: 'col 4',
     },
     {
       _id: 'colyooooo',
       dataType: DataTypes.string,
-      title: {
-        label: 'col 5',
-        value: 'col_5',
-      }
+      value: 'col 5',
     },
     {
       _id: 'colyoooooo',
       dataType: DataTypes.string,
-      title: {
-        label: 'col 6',
-        value: 'col_6',
-      }
+      value: 'col 6',
     }
   ],
   rows: [
