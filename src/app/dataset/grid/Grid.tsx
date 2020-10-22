@@ -1,9 +1,8 @@
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
-import { ICell, IColumn } from '../types';
 import { initialBoardState } from '../wrappers/DatasetWrapper';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';

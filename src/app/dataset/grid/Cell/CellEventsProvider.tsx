@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import hotkeys from 'hotkeys-js';
 import { IBoardData, IBoardState, IRow } from 'app/dataset/types';
 import * as R from 'ramda';

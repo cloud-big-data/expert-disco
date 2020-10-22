@@ -1,5 +1,5 @@
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
