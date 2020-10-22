@@ -9,9 +9,13 @@ export enum DataTypes {
   date
 }
 
-export interface IColumn {
+
+export interface ICell {
   _id: string;
-  value: string | number;
+  value: string | number | null;
+}
+
+export interface IColumn extends ICell {
   dataType: DataTypes;
   /**
    * colWidth: The width of the column, in px.
@@ -19,10 +23,6 @@ export interface IColumn {
   colWidth?: number;
 };
 
-export interface ICell {
-  _id: string;
-  value: string | number | null;
-}
 
 export interface IRow {
   _id: string;
