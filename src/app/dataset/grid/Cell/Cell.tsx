@@ -1,12 +1,13 @@
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import returnUpdatedCells from '../lib/returnUpdatedCells';
-import { ICell, IRow } from '../types';
-import { defaults } from './constants';
-import { ActiveInput } from './styles';
+import returnUpdatedCells from '../../lib/returnUpdatedCells';
+import { ICell, IRow } from '../../types';
+import { defaults } from '../constants';
+import { ActiveInput } from '../styles';
 import * as R from 'ramda';
+import CellEventsProvider from './CellEventsProvider';
 
 interface ICellProps extends ICell {
   rowId: string;
@@ -18,6 +19,7 @@ interface ICellProps extends ICell {
     lastColumn: boolean;
     firstColumn: boolean;
   };
+  isCopying: boolean;
 }
 
 const CellContainer = styled.div<{
@@ -25,12 +27,14 @@ const CellContainer = styled.div<{
   active?: boolean;
   selected?: boolean;
   position: ICellProps['position'];
+  isCopying: boolean;
 }>`
   display: flex;
   align-items: center;
   height: 100%;
   width: ${defaults.COL_WIDTH}rem;
   padding: .5rem;
+  cursor: pointer;
 
   border-top: 2px solid ${Styles.faintBorderColor};
   border-left: 2px solid ${Styles.faintBorderColor};
@@ -65,6 +69,11 @@ const CellContainer = styled.div<{
   ${props => props.highlighted ? `
     background: ${Styles.purpleAccent};
   ` : ''}
+
+  ${props => props.isCopying ? `
+    border: 2px dashed ${Styles.purple};
+    border-radius: ${Styles.defaultBorderRadius};
+  ` : ''}
 `;
 
 const Cell: React.FC<ICellProps> = ({
@@ -74,9 +83,11 @@ const Cell: React.FC<ICellProps> = ({
   active,
   selected,
   position,
+  isCopying,
 }) => {
   const { boardState, setBoardState, boardData, setBoardData } = useContext(DatasetContext)!;
   const inputRef = useRef<HTMLInputElement>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
   const { cellsState } = boardState;
 
   useEffect(() => {
@@ -85,12 +96,17 @@ const Cell: React.FC<ICellProps> = ({
 
   return (
     <CellContainer
+      isCopying={isCopying}
       active={active}
       highlighted={highlighted}
       position={position}
       selected={selected}
       onClick={() => setBoardState({
         ...boardState,
+        columnsState: {
+          ...boardState.columnsState,
+          selectedColumn: -1,
+        },
         cellsState: {
           ...cellsState,
           selectedCell: _id
@@ -103,40 +119,54 @@ const Cell: React.FC<ICellProps> = ({
           activeCell: _id
         }
       })}
-      data-cellId={_id}
     >
-      {active ? (
-        <ActiveInput
-          ref={inputRef}
-          value={value as string ?? ''}
-          type="text"
-          onKeyDown={e => {
-            if (e.key === 'Enter') setBoardState({
-              ...boardState,
-              cellsState: {
-                ...boardState.cellsState,
-                activeCell: '',
-              }
-            })
-          }}
-          onChange={e => setBoardData!({
-              ...boardData,
-              rows: R.map(
-                (row: IRow) => ({
-                    ...row,
-                    cells: returnUpdatedCells({
-                      iterable: row.cells,
-                      cellId: _id,
-                      updatedValue: e.target.value,
-                    })!
-                  })
-                )(boardData.rows)
-            })
-          }
-        />
-      ) : (
-        value
-      )}
+      <CellEventsProvider
+        hiddenInputRef={hiddenInputRef}
+        isCopying={isCopying}
+        value={value}
+        boardState={boardState}
+        setBoardState={setBoardState}
+        boardData={boardData}
+        setBoardData={setBoardData!}
+        _id={_id}
+      >
+        <div style={{position: 'absolute', left: '-99999px'}}>
+          <input ref={hiddenInputRef} id={_id} readOnly type="text" value={value ?? ''}/>
+        </div>
+        {active ? (
+          <ActiveInput
+            ref={inputRef}
+            value={value as string ?? ''}
+            type="text"
+            onKeyDown={e => {
+              if (e.key === 'Enter') setBoardState({
+                ...boardState,
+                cellsState: {
+                  ...boardState.cellsState,
+                  activeCell: '',
+                  selectedCell: _id,
+                }
+              })
+            }}
+            onChange={e => setBoardData!({
+                ...boardData,
+                rows: R.map(
+                  (row: IRow) => ({
+                      ...row,
+                      cells: returnUpdatedCells({
+                        iterable: row.cells,
+                        cellId: _id,
+                        updatedValue: e.target.value,
+                      })!
+                    })
+                  )(boardData.rows)
+              })
+            }
+          />
+        ) : (
+          value
+        )}
+      </CellEventsProvider>
     </CellContainer>
   );
 }

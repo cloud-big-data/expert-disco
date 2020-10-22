@@ -39,7 +39,7 @@ const Dataset: React.FC<{
         <p>Tools</p>
       </ToolbarContainer> */}
       <FormulaBarContainer>
-        <InputField icon={<i className="fad fa-function" />} />
+        <InputField onChange={e => null} icon={<i className="fad fa-function" />} />
       </FormulaBarContainer>
       <ParentGridContainer>
         <Grid />

@@ -73,6 +73,7 @@ const Row: React.FC<IRowProps> = ({
             lastColumn: index === cells.length - 1,
             firstColumn: index === 0,
           }}
+          isCopying={boardState.cellsState.copyingCell === cell._id}
           {...cell}
         />
       )}

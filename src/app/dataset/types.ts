@@ -66,6 +66,7 @@ export interface IBoardState {
     activeCell: string;
     selectedCell: string;
     highlightedCells: string[];
+    copyingCell: string;
   }
   rowsState: {
     selectedRow: string;

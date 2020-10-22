@@ -3,6 +3,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import returnUpdatedCells from '../lib/returnUpdatedCells';
 import { IColumn } from '../types';
 import { defaults } from './constants';
 import { ActiveInput } from './styles';
@@ -57,7 +58,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   columnIndex,
   _id,
 }) => {
-  const { boardState, setBoardState } = useContext(DatasetContext)!;
+  const { boardState, setBoardState, boardData, setBoardData } = useContext(DatasetContext)!;
   const inputRef = useRef<HTMLInputElement>(null);
   const active = boardState.columnsState.activeColumn === columnIndex;
   
@@ -92,8 +93,26 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       {active ? (
         <ActiveInput
           ref={inputRef}
-          value={value}
+          value={value ?? ''}
           type="text"
+          onKeyDown={e => {
+            if (e.key === 'Enter') setBoardState({
+              ...boardState,
+              columnsState: {
+                ...boardState.columnsState,
+                selectedColumn: -1,
+                activeColumn: -1
+              }
+            })
+          }}
+          onChange={e => setBoardData!({
+            ...boardData,
+            columns: returnUpdatedCells({
+              iterable: boardData.columns,
+              cellId: _id,
+              updatedValue: e.target.value,
+            })
+          })}
         />
       ) : (
         <Label>

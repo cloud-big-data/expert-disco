@@ -15,19 +15,22 @@
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
     "email-validator": "^2.0.4",
+    "hotkeys-js": "^3.8.1",
     "jwt-decode": "^3.0.0",
     "moment": "^2.29.1",
     "query-string": "^6.13.6",
     "ramda": "^0.27.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hotkeys-hook": "^2.3.1",
     "react-loading-components": "^1.1.12",
     "react-query": "^2.23.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-select": "^3.1.0",
     "styled-components": "^5.2.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "use-clippy": "^1.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

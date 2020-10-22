@@ -1,10 +1,12 @@
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
+import { ICell, IColumn } from '../types';
 import { initialBoardState } from '../wrappers/DatasetWrapper';
 import ColumnHeader from './ColumnHeader';
+import EventsProvider from './EventsProvider';
 import Row from './Row';
 
 const GridContainer = styled.div`
@@ -54,8 +56,8 @@ lifted state:
 
 const Grid: React.FC = () => {
   const dataset = useContext(DatasetContext);
-  const gridRef = useRef(null);
-  const {boardData, setBoardState} = dataset!;
+  const gridRef = useRef<HTMLDivElement>(null);
+  const {boardData, boardState, setBoardState} = dataset!;
 
   useHandleClickOutside(gridRef, () => {
     setBoardState(initialBoardState);
@@ -73,38 +75,44 @@ const Grid: React.FC = () => {
 
   return (
     <GridContainer ref={gridRef}>
-      <ColumnsContainer>
-        {columns.map((col, index) =>
-          <ColumnHeader
-            key={col._id}
-            {...col}
-            columnIndex={index}
-            position={{
-              firstColumn: index === 0,
-              lastColumn: index === columns.length - 1,
-            }}
-          />
-        )}
-        <AddColumn>
-          <i className="fad fa-plus-circle" />
-        </AddColumn>
-      </ColumnsContainer>
-      <RowsContainer>
-        {rows.map((row, index) => 
-          <Row
-            key={row._id}
-            {...row}
-            rowIndex={index}
-            position={{
-              firstRow: index === 0,
-              lastRow: index === rows.length - 1,
-            }}
-          />
-        )}
-        <AddRow>
-          <i className="fad fa-plus-circle" />
-        </AddRow>
-      </RowsContainer>
+      <EventsProvider
+        boardData={boardData}
+        boardState={boardState}
+        setBoardState={setBoardState}
+      >
+        <ColumnsContainer>
+          {columns.map((col, index) =>
+            <ColumnHeader
+              key={col._id}
+              {...col}
+              columnIndex={index}
+              position={{
+                firstColumn: index === 0,
+                lastColumn: index === columns.length - 1,
+              }}
+            />
+          )}
+          <AddColumn>
+            <i className="fad fa-plus-circle" />
+          </AddColumn>
+        </ColumnsContainer>
+        <RowsContainer>
+          {rows.map((row, index) => 
+            <Row
+              key={row._id}
+              {...row}
+              rowIndex={index}
+              position={{
+                firstRow: index === 0,
+                lastRow: index === rows.length - 1,
+              }}
+            />
+          )}
+          <AddRow>
+            <i className="fad fa-plus-circle" />
+          </AddRow>
+        </RowsContainer>
+      </EventsProvider>
     </GridContainer>
   )
 }

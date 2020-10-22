@@ -136,6 +136,7 @@ export const initialBoardState = {
     activeCell: '',
     selectedCell: '',
     highlightedCells: [],
+    copyingCell: '',
   },
   rowsState: {
     selectedRow: '',
