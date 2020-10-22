@@ -127,7 +127,8 @@ const Cell: React.FC<ICellProps> = ({
             ...cellsState,
             selectedCell: _id,
           },
-        })}
+        })
+      }
       onDoubleClick={() =>
         setBoardState({
           ...boardState,
@@ -135,7 +136,8 @@ const Cell: React.FC<ICellProps> = ({
             ...cellsState,
             activeCell: _id,
           },
-        })}
+        })
+      }
     >
       <CellEventsProvider
         hiddenInputRef={hiddenInputRef}
