@@ -17,6 +17,7 @@ const HotkeysProvider: React.FC<{
   });
   const keysPressed = useRef<string[]>([]);
   const setKeysPressed = (keys: string[]) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     keysPressed.current = [...new Set(keys)];
   };
