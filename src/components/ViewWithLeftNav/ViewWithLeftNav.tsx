@@ -9,7 +9,7 @@ interface IViewWithLeftNav {
     label: string;
     value: string;
     icon: React.ReactNode;
-  }>
+  }>;
   activeView: string;
   children: React.ReactNode;
   setView: (view: string) => void;
@@ -40,24 +40,25 @@ const LeftNav = styled.div`
 `;
 
 const NavItem = styled.div<{ active?: boolean }>`
-  font-weight: ${props => props.active ? 'bold' : 'normal'};
+  font-weight: ${props => (props.active ? 'bold' : 'normal')};
   i {
-    color: ${props => props.active ? Styles.purple : 'inherit'};
+    color: ${props => (props.active ? Styles.purple : 'inherit')};
   }
   .label__container {
-    transition-duration: .2s;
-    ${props => 
-      props.active ? `
+    transition-duration: 0.2s;
+    ${props =>
+      props.active
+        ? `
         transform: scale(1.1);
         padding-left: .3rem;
-      ` : ''
-    }
+      `
+        : ''}
   }
   margin-top: 1rem;
   display: flex;
   flex: 0 1 auto;
   cursor: pointer;
-  transition-duration: .3s;
+  transition-duration: 0.3s;
   &:hover {
     font-weight: bold;
   }
@@ -95,31 +96,24 @@ const ViewWithLeftNav: React.FC<IViewWithLeftNav> = ({
   return (
     <Container stackNav={stackNav}>
       {stackNav ? (
-        <Select
-          options={options}
-          onChange={(e: any) =>
-            setView(e.value)
-          }
-        />
+        <Select options={options} onChange={(e: any) => setView(e.value)} />
       ) : (
         <LeftNav>
-          {options.map(option =>
-            <NavItem onClick={() => setView(option.value)} active={activeView === option.value} key={option.value}>
-              <div className="icon__container">
-                {option.icon}
-              </div>
-              <div className="label__container">
-                {option.label}
-              </div>
-            </NavItem>  
-          )}
+          {options.map(option => (
+            <NavItem
+              onClick={() => setView(option.value)}
+              active={activeView === option.value}
+              key={option.value}
+            >
+              <div className="icon__container">{option.icon}</div>
+              <div className="label__container">{option.label}</div>
+            </NavItem>
+          ))}
         </LeftNav>
       )}
-      <MainContainer>
-        { children }
-      </MainContainer>
+      <MainContainer>{children}</MainContainer>
     </Container>
-  )
-}
+  );
+};
 
 export default ViewWithLeftNav;

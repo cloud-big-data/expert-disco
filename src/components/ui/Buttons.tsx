@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
@@ -35,7 +35,9 @@ const Button = styled.button<{
     }
   }
 
-  ${props => props.primary ? `
+  ${props =>
+    props.primary
+      ? `
     background: linear-gradient(115.8deg, #6e30f2 0%, #86e2ff 100%);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     background-repeat: no-repeat;
@@ -45,9 +47,12 @@ const Button = styled.button<{
     &:hover {
       opacity: 0.7;
     }
-  ` : ''}
+  `
+      : ''}
 
-  ${props => props.secondary ? `
+  ${props =>
+    props.secondary
+      ? `
     background: transparent;
     border-color: ${Styles.fontColor};
     color: ${Styles.fontColor};
@@ -63,9 +68,12 @@ const Button = styled.button<{
       color: #919191;
       background: transparent;
     }
-  ` : ''}
+  `
+      : ''}
 
-  ${props => props.tertiary ? `
+  ${props =>
+    props.tertiary
+      ? `
       border-color: transparent;
       color: ${Styles.fontColor};
       background: transparent;
@@ -77,66 +85,62 @@ const Button = styled.button<{
       &:disabled {
         color: #919191;
       }
-  ` : ''}
+  `
+      : ''}
 
-  ${props => props.danger ? `
+  ${props =>
+    props.danger
+      ? `
     background-color: ${Styles.red};
     &:hover {
       background-color: #fa9596;
     }
-  ` : ''}
+  `
+      : ''}
 `;
 
-const ButtonPrimary: React.FC<button> = (props) => {
-  return (
-    <Button
-      disabled={props.disabled ? props.disabled : false}
-      onClick={props.onClick && props.onClick}
-      id={props.id}
-      primary
-    >
-      {props.children}
-    </Button>
-  );
-};
+const ButtonPrimary: React.FC<button> = props => (
+  <Button
+    disabled={props.disabled ? props.disabled : false}
+    onClick={props.onClick && props.onClick}
+    id={props.id}
+    primary
+  >
+    {props.children}
+  </Button>
+);
 
-const ButtonSecondary: React.FC<button> = (props) => {
-  return (
-    <Button
-      disabled={props.disabled}
-      onClick={props.onClick && props.onClick}
-      id={props.id}
-      secondary
-    >
-      {props.children}
-    </Button>
-  );
-};
+const ButtonSecondary: React.FC<button> = props => (
+  <Button
+    disabled={props.disabled}
+    onClick={props.onClick && props.onClick}
+    id={props.id}
+    secondary
+  >
+    {props.children}
+  </Button>
+);
 
-const ButtonTertiary: React.FC<button> = (props) => {
-  return (
-    <Button
-      disabled={props.disabled}
-      onClick={props.onClick && props.onClick}
-      id={props.id}
-      tertiary
-    >
-      {props.children}
-    </Button>
-  );
-};
+const ButtonTertiary: React.FC<button> = props => (
+  <Button
+    disabled={props.disabled}
+    onClick={props.onClick && props.onClick}
+    id={props.id}
+    tertiary
+  >
+    {props.children}
+  </Button>
+);
 
-const ButtonDanger: React.FC<button> = props => {
-  return (
-    <Button
-      disabled={props.disabled}
-      onClick={props.onClick && props.onClick}
-      id={props.id}
-      danger
-    >
-      {props.children}
-    </Button>
-  )
-}
+const ButtonDanger: React.FC<button> = props => (
+  <Button
+    disabled={props.disabled}
+    onClick={props.onClick && props.onClick}
+    id={props.id}
+    danger
+  >
+    {props.children}
+  </Button>
+);
 
 export { ButtonPrimary, ButtonTertiary, ButtonSecondary, ButtonDanger };

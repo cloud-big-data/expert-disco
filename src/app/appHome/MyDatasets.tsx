@@ -16,7 +16,7 @@ const MyDatasetsContainer = styled.div`
       margin-left: auto;
       i {
         color: white;
-        margin-left: .5rem;
+        margin-left: 0.5rem;
       }
     }
   }
@@ -33,29 +33,69 @@ const ListContainer = styled.div`
   }
 `;
 
-const MyDatasets: React.FC = () => {
-  return (
-    <MyDatasetsContainer>
-      <div className="top__bar">
-        <h3 style={{margin: 0}}>My datasets</h3>
-        <ButtonPrimary id="new_dataset">
-          New dataset <i className="fad fa-plus-circle" />
-        </ButtonPrimary>
-      </div>
-      <ListContainer>
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} description={"Test description"} title="User events" />
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} description={"A compilation of all US Census submissions for the past 3 million years"} title="US Census Data" />
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Arizona Voter Registration" />  
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="A really long title that is intended to test the line break functionality" />  
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Testing line break" />
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="User events" />
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="US Census Data" />
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Arizona Voter Registration" />  
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="A really long title that is intended to test the line break functionality" />  
-        <DatasetCard datasetId={'test'} timestamp={'2020-10-17T19:39:47+00:00'} title="Testing line break" />
-      </ListContainer>
-    </MyDatasetsContainer>
-  )
-}
+const MyDatasets: React.FC = () => (
+  <MyDatasetsContainer>
+    <div className="top__bar">
+      <h3 style={{ margin: 0 }}>My datasets</h3>
+      <ButtonPrimary id="new_dataset">
+        New dataset <i className="fad fa-plus-circle" />
+      </ButtonPrimary>
+    </div>
+    <ListContainer>
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        description="Test description"
+        title="User events"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        description="A compilation of all US Census submissions for the past 3 million years"
+        title="US Census Data"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="Arizona Voter Registration"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="A really long title that is intended to test the line break functionality"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="Testing line break"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="User events"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="US Census Data"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="Arizona Voter Registration"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="A really long title that is intended to test the line break functionality"
+      />
+      <DatasetCard
+        datasetId="test"
+        timestamp="2020-10-17T19:39:47+00:00"
+        title="Testing line break"
+      />
+    </ListContainer>
+  </MyDatasetsContainer>
+);
 
 export default MyDatasets;

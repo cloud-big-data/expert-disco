@@ -3,8 +3,8 @@ import { ButtonPrimary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import { DangerText, Helper, Text } from 'components/ui/Typography';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { UserContainer } from './styles';
 import skyvueFetch from 'services/skyvueFetch';
+import { UserContainer } from './styles';
 
 const PasswordReset: React.FC = () => {
   const history = useHistory();
@@ -18,13 +18,13 @@ const PasswordReset: React.FC = () => {
     const checkTokenValidity = async () => {
       const res = await skyvueFetch().post('/auth/user/forgot_password_validity', {
         token,
-      })
+      });
       if (res?.error === 'token_expired') {
         toggleTokenExpired(true);
       }
-    }
+    };
     checkTokenValidity();
-  }, [token])
+  }, [token]);
 
   const onSubmit = async () => {
     if (password === '' || confirmPassword === '') {
@@ -33,7 +33,7 @@ const PasswordReset: React.FC = () => {
     }
 
     if (password !== confirmPassword) {
-      setError("Password do not match");
+      setError('Password do not match');
       return;
     }
 
@@ -46,11 +46,11 @@ const PasswordReset: React.FC = () => {
     if (res.error) {
       switch (res.error) {
         case 'Passwords do not match':
-          setError('Passwords do not match')
-          return
+          setError('Passwords do not match');
+          return;
         case 'TokenExpiredError':
           toggleTokenExpired(true);
-          return
+          return;
       }
     }
 
@@ -58,22 +58,25 @@ const PasswordReset: React.FC = () => {
     setError('');
 
     history.push('/login');
-  }
+  };
 
   return (
     <UserContainer>
-      { error !== '' && (
+      {error !== '' && (
         <DangerText len="short" size="sm">
-          { error }
+          {error}
         </DangerText>
       )}
       {tokenExpired && (
         <DangerText len="short" size="sm">
-          This link has expired. Please <Link to="/forgot_password">request a new link.</Link>
+          This link has expired. Please{' '}
+          <Link to="/forgot_password">request a new link.</Link>
         </DangerText>
       )}
       <div className="input-group">
-        <Text len="short" size="sm">New password:</Text>
+        <Text len="short" size="sm">
+          New password:
+        </Text>
         <InputField
           onChange={e => setPassword(e.target.value)}
           error={error !== ''}
@@ -85,7 +88,9 @@ const PasswordReset: React.FC = () => {
         />
       </div>
       <div className="input-group">
-        <Text len="short" size="sm">Confirm your new password:</Text>
+        <Text len="short" size="sm">
+          Confirm your new password:
+        </Text>
         <InputField
           onChange={e => setConfirmPassword(e.target.value)}
           error={error !== ''}
@@ -98,13 +103,13 @@ const PasswordReset: React.FC = () => {
       </div>
 
       <div className="actions__container">
-        <ButtonPrimary onClick={onSubmit}>
-          Reset my password
-        </ButtonPrimary>
-        <Helper><Link to="/forgot_password">Customer Login</Link></Helper>
+        <ButtonPrimary onClick={onSubmit}>Reset my password</ButtonPrimary>
+        <Helper>
+          <Link to="/forgot_password">Customer Login</Link>
+        </Helper>
       </div>
     </UserContainer>
-  )
-}
+  );
+};
 
 export default PasswordReset;

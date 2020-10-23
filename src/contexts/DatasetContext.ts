@@ -3,8 +3,7 @@ import { createContext } from 'react';
 
 interface IDatasetContext {
   boardData: IBoardData;
-  setBoardData:
-    null | ((data: IBoardData) => void);
+  setBoardData: null | ((data: IBoardData) => void);
   boardState: IBoardState;
   setBoardState: (boardState: IBoardState) => void;
 }

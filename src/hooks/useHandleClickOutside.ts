@@ -9,10 +9,10 @@ const useHandleClickOutside = (
       if (!ref?.current?.contains(e.target as Node)) {
         onClickOutside();
       }
-    }
-    document.addEventListener('click', handler)
+    };
+    document.addEventListener('click', handler);
     return () => document.removeEventListener('click', handler);
-  })
-}
+  });
+};
 
 export default useHandleClickOutside;

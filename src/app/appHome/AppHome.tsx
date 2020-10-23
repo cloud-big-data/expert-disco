@@ -4,14 +4,14 @@ import { useHistory, useParams } from 'react-router-dom';
 import MyDatasets from './MyDatasets';
 
 const AppHome: React.FC = () => {
-  const { view } = useParams<{view: string}>();
+  const { view } = useParams<{ view: string }>();
   const history = useHistory();
 
   useEffect(() => {
     if (!view) {
-      history.replace("/home/datasets");
+      history.replace('/home/datasets');
     }
-  }, [history, view])
+  }, [history, view]);
 
   return (
     <ViewWithLeftNav
@@ -20,38 +20,33 @@ const AppHome: React.FC = () => {
       }}
       activeView={view}
       options={[
-        { 
-          label: "My datasets",
-          value: "datasets",
-          icon: <i className="fal fa-database" />
+        {
+          label: 'My datasets',
+          value: 'datasets',
+          icon: <i className="fal fa-database" />,
         },
         {
-          label: "Queries",
-          value: "queries",
-          icon: <i className="fas fa-question-circle" />
+          label: 'Queries',
+          value: 'queries',
+          icon: <i className="fas fa-question-circle" />,
         },
-        { 
-          label: "Shared with me",
-          value: "shared",
-          icon: <i className="fad fa-share-alt" />
+        {
+          label: 'Shared with me',
+          value: 'shared',
+          icon: <i className="fad fa-share-alt" />,
         },
-        { 
-          label: "Workspaces",
-          value: "workspaces",
-          icon: <i className="fad fa-layer-group" />
+        {
+          label: 'Workspaces',
+          value: 'workspaces',
+          icon: <i className="fad fa-layer-group" />,
         },
-      ]}>
-        {view === "datasets" && (
-          <MyDatasets />
-        )}
-        {view === "shared" && (
-          `Shared with me`
-        )}
-        {view === "workspaces" && (
-          `Workspaces`
-        )}
+      ]}
+    >
+      {view === 'datasets' && <MyDatasets />}
+      {view === 'shared' && `Shared with me`}
+      {view === 'workspaces' && `Workspaces`}
     </ViewWithLeftNav>
-  )
-}
+  );
+};
 
 export default AppHome;

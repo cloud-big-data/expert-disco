@@ -1,4 +1,4 @@
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 
 const parseJWT = (jwt: string): { [key: string]: any } => {
   try {
@@ -9,6 +9,6 @@ const parseJWT = (jwt: string): { [key: string]: any } => {
       message: e.message,
     };
   }
-}
+};
 
 export default parseJWT;

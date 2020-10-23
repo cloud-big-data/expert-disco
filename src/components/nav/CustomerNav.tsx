@@ -34,7 +34,7 @@ const UserDropdownContainer = styled.div<{ dropdownOpen: boolean }>`
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  padding: .25rem;
+  padding: 0.25rem;
   border-radius: 50%;
   cursor: pointer;
   i {
@@ -42,7 +42,7 @@ const UserDropdownContainer = styled.div<{ dropdownOpen: boolean }>`
   }
   background: linear-gradient(115.8deg, #6e30f2 0%, #86e2ff 100%);
 
-  ${props => props.dropdownOpen ? `box-shadow: ${Styles.boxShadow};` : ''}
+  ${props => (props.dropdownOpen ? `box-shadow: ${Styles.boxShadow};` : '')}
   &:hover {
     box-shadow: ${Styles.boxShadow};
   }
@@ -67,7 +67,7 @@ const UserDropdownExpanded = styled.div`
   #email__label {
     width: 100%;
     padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(0, 0, 0, .1);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
 
   a {
@@ -105,11 +105,11 @@ const CustomerNav: React.FC<{ email: string }> = ({ email }) => {
   const expandedRef = useRef<HTMLDivElement>(null);
   useHandleClickOutside(expandedRef, () => toggleDropdownOpen(false));
   const location = useLocation();
-  
+
   return (
     <CustomerNavContainer>
       <div className="inner">
-        <Link style={{textDecoration: 'none'}} to="/home">
+        <Link style={{ textDecoration: 'none' }} to="/home">
           <span className="customer-nav__icon">Skyvue.io</span>
         </Link>
         <UserDropdownContainer
@@ -121,7 +121,12 @@ const CustomerNav: React.FC<{ email: string }> = ({ email }) => {
           {dropdownOpen && (
             <UserDropdownExpanded>
               <Label id="email__label">{email}</Label>
-              <Link className={`${location.pathname === '/home/account' ? 'active' : ''}`} to="/home/account">
+              <Link
+                className={`${
+                  location.pathname === '/home/account' ? 'active' : ''
+                }`}
+                to="/home/account"
+              >
                 <i className="fad fa-user" />
                 Account
               </Link>
@@ -134,7 +139,7 @@ const CustomerNav: React.FC<{ email: string }> = ({ email }) => {
         </UserDropdownContainer>
       </div>
     </CustomerNavContainer>
-  )
-}
+  );
+};
 
 export default CustomerNav;

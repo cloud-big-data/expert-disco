@@ -21,23 +21,21 @@ const Logout: React.FC = () => {
     const { userId } = parseJWT(refreshToken);
     skyvueFetch().post('/auth/user/revokeToken', {
       userId,
-    })
+    });
     localStorage.removeItem('refreshToken');
   }
 
   UserContext.setUserContextValue({
     accessToken: null,
-  })
-  
-  return (
-    UserContext.accessToken ? (
-      <LoadingContainer>
-        <Loading />
-      </LoadingContainer>
-    ) : (
-      <Redirect to="/" />
-    )
-  )
-}
+  });
+
+  return UserContext.accessToken ? (
+    <LoadingContainer>
+      <Loading />
+    </LoadingContainer>
+  ) : (
+    <Redirect to="/" />
+  );
+};
 
 export default Logout;

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components/macro";
-import Styles from "styles/Styles";
+import React, { useState } from 'react';
+import styled from 'styled-components/macro';
+import Styles from 'styles/Styles';
 
 const InputContainer = styled.div<{
   error: boolean;
@@ -8,10 +8,14 @@ const InputContainer = styled.div<{
 }>`
   display: flex;
   width: 100%;
-  border: ${props => props.error ? `1px solid ${Styles.red}` : '1px solid rgba(0, 0, 0, 0.1)'};
-  ${props => props.active ? `
+  border: ${props =>
+    props.error ? `1px solid ${Styles.red}` : '1px solid rgba(0, 0, 0, 0.1)'};
+  ${props =>
+    props.active
+      ? `
     border: 1px solid ${Styles.purple};
-  ` : ''}
+  `
+      : ''}
   border-radius: .625rem;
 
   &:hover {
@@ -27,9 +31,12 @@ const InputContainer = styled.div<{
     width: 3rem;
     i {
       font-size: 1.5rem;
-      ${props => props.active ? `
+      ${props =>
+        props.active
+          ? `
         color: ${Styles.purple};
-      ` : ''}
+      `
+          : ''}
     }
   }
 `;
@@ -42,7 +49,7 @@ const Input = styled.input<{
   height: 3rem;
   border: none;
   color: ${Styles.fontColor};
-  padding: ${props => props.icon ? '0.5rem .75rem .5rem 0' : '.5rem .75rem'};
+  padding: ${props => (props.icon ? '0.5rem .75rem .5rem 0' : '.5rem .75rem')};
   outline: none;
   transition-duration: 0.2s;
 `;
@@ -59,16 +66,12 @@ const InputField: React.FC<{
   error?: boolean;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   icon?: React.ReactNode;
-}> = (props) => {
+}> = props => {
   const [active, setActive] = useState(false);
 
   return (
     <InputContainer active={active} error={!!props.error}>
-      {props.icon && (
-        <div className="icon__container">
-          {props.icon}
-        </div>
-      )}
+      {props.icon && <div className="icon__container">{props.icon}</div>}
       <Input
         placeholder={props.placeholder}
         className={props.className}
@@ -77,7 +80,7 @@ const InputField: React.FC<{
         type={props.type ?? 'text'}
         onChange={props.onChange}
         defaultValue={props.defaultValue}
-        value={props.value || ""}
+        value={props.value || ''}
         error={props.error}
         onKeyDown={props.onKeyDown}
         icon={!!props.icon}

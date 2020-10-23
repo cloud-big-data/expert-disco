@@ -29,35 +29,32 @@ interface IRowProps extends IRow {
   position: {
     firstRow: boolean;
     lastRow: boolean;
-  }
+  };
   rowIndex: number;
 }
 
-const Row: React.FC<IRowProps> = ({
-  _id,
-  cells,
-  position,
-  rowIndex,
-}) => {
+const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
   const { boardState, setBoardState } = useContext(DatasetContext)!;
   return (
     <RowContainer>
-      <RowIndexContainer onClick={() => {
-        setBoardState({
-          ...boardState,
-          rowsState: {
-            ...boardState.rowsState,
-            selectedRow: _id,
-          },
-          columnsState: {
-            ...boardState.columnsState,
-            selectedColumn: -1,
-          }
-        })
-      }}>
+      <RowIndexContainer
+        onClick={() => {
+          setBoardState({
+            ...boardState,
+            rowsState: {
+              ...boardState.rowsState,
+              selectedRow: _id,
+            },
+            columnsState: {
+              ...boardState.columnsState,
+              selectedColumn: -1,
+            },
+          });
+        }}
+      >
         <Helper>{rowIndex}</Helper>
       </RowIndexContainer>
-      {cells.map((cell, index) =>
+      {cells.map((cell, index) => (
         <Cell
           key={cell._id}
           rowId={_id}
@@ -76,9 +73,9 @@ const Row: React.FC<IRowProps> = ({
           isCopying={boardState.cellsState.copyingCell === cell._id}
           {...cell}
         />
-      )}
+      ))}
     </RowContainer>
-  )
-}
+  );
+};
 
 export default Row;

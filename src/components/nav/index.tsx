@@ -1,3 +1,3 @@
-import CustomerNav from "./CustomerNav";
+import CustomerNav from './CustomerNav';
 
 export default CustomerNav;

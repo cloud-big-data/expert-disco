@@ -6,4 +6,4 @@ export const ActiveInput = styled.input`
   &:focus {
     outline: none;
   }
-`
+`;

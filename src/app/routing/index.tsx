@@ -1,3 +1,3 @@
-import AuthenticatedRoute from "./AuthenticatedRoute";
+import AuthenticatedRoute from './AuthenticatedRoute';
 
 export { AuthenticatedRoute };

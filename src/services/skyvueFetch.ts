@@ -1,4 +1,6 @@
-const skyvueFetch = (accessToken?: string): {
+const skyvueFetch = (
+  accessToken?: string,
+): {
   get: (url: string) => Promise<any>;
   post: (url: string, body: { [key: string]: any }) => Promise<any>;
   patch: (url: string, body: { [key: string]: any }) => Promise<any>;
@@ -27,14 +29,14 @@ const skyvueFetch = (accessToken?: string): {
       } catch (e) {
         return {
           error: e.message,
-        }
+        };
       }
     } catch (e) {
       return {
         error: e.message,
-      }
+      };
     }
-  }
+  };
 
   return {
     get: async (url: string) =>
@@ -42,12 +44,12 @@ const skyvueFetch = (accessToken?: string): {
         method: 'GET',
       }),
     post: async (url: string, body: { [key: string]: any }) =>
-      makeCall(url, { method: "POST", body }),
+      makeCall(url, { method: 'POST', body }),
     patch: async (url: string, body: { [key: string]: any }) =>
-      makeCall(url, { method: "PATCH", body }),
+      makeCall(url, { method: 'PATCH', body }),
     delete: async (url: string, body: { [key: string]: any }) =>
-      makeCall(url, { method: "DELETE", body }),
-  }
-}
+      makeCall(url, { method: 'DELETE', body }),
+  };
+};
 
 export default skyvueFetch;

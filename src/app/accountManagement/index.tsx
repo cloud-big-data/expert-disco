@@ -1,3 +1,3 @@
-import AccountManagement from "./AccountManagement";
+import AccountManagement from './AccountManagement';
 
 export default AccountManagement;

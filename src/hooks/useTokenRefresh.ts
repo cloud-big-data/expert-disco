@@ -18,37 +18,41 @@ const useTokenRefresh = () => {
     const getTokens = async () => {
       const res = await skyvueFetch().post('/auth/user/refresh', {
         refreshToken: localStorage.getItem('refreshToken'),
-      })
+      });
 
       if (res.error === 'Failed to fetch') {
         setTokens({
           ...tokens,
           disconnected: true,
-        })
+        });
         return;
       }
-      if (res.error || res === 'JsonWebTokenError' || res === 'Authorization error') {
+      if (
+        res.error ||
+        res === 'JsonWebTokenError' ||
+        res === 'Authorization error'
+      ) {
         setTokens({
           ...tokens,
           error: true,
-        })
+        });
         return;
       }
 
       if (res.refreshToken && res.accessToken) {
         localStorage.setItem('refreshToken', res.refreshToken);
         setTokens({
-          ...res
-        })
+          ...res,
+        });
       }
-    }
+    };
 
     if (tokens.refreshToken && !tokens.accessToken) {
       getTokens();
     }
-  }, [tokens])
+  }, [tokens]);
 
   return tokens;
-}
+};
 
 export default useTokenRefresh;

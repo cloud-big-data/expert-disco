@@ -6,7 +6,7 @@ const humanizeTimeAgo = (timestamp: string) => {
   if (Math.floor(duration.asSeconds()) < 60) {
     return `${Math.floor(duration.asSeconds())} seconds ago`;
   }
-  return duration.humanize() + ' ago';
+  return `${duration.humanize()} ago`;
 };
 
 export default humanizeTimeAgo;

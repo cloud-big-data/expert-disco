@@ -17,16 +17,14 @@ const HomeContainer = styled.div`
   }
 `;
 
-const Home: React.FC = () => {
-  return (
-    <HomeContainer>
-      <h2>SkyVue Data</h2>
-      <div className="actions__container">
-        <Link to="/login">Login</Link>
-        <Link to="/signup">Create account</Link>
-      </div>
-    </HomeContainer>
-  )
-}
+const Home: React.FC = () => (
+  <HomeContainer>
+    <h2>SkyVue Data</h2>
+    <div className="actions__container">
+      <Link to="/login">Login</Link>
+      <Link to="/signup">Create account</Link>
+    </div>
+  </HomeContainer>
+);
 
 export default Home;

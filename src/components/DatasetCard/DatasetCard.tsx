@@ -13,8 +13,8 @@ const DatasetCardContainer = styled.div`
   border: 2px solid ${Styles.faintBorderColor};
   box-shadow: ${Styles.xsBoxShadow};
   border-radius: ${Styles.defaultBorderRadius};
-  padding: .5rem;
-  transition-duration: .2s;
+  padding: 0.5rem;
+  transition-duration: 0.2s;
   min-height: 7rem;
 
   &:hover {
@@ -40,36 +40,33 @@ const DatasetCard: React.FC<{
   title: string;
   timestamp: string;
   description?: string;
-}> = ({
-  datasetId,
-  title,
-  description,
-  timestamp,
-}) => {
-  return (
-    <Link className="no-hover" style={{textDecoration: 'none'}} to={`/dataset/${datasetId}`}>
-      <DatasetCardContainer>
-        <div className="meta__bar">
-          <div className="time-ago__container">
-            <Helper style={{lineHeight: 0}}>{humanizeTimeAgo(timestamp)}</Helper>
-          </div>
-          <div className="actions">
-            <i className="far fa-cog" />
-          </div>
+}> = ({ datasetId, title, description, timestamp }) => (
+  <Link
+    className="no-hover"
+    style={{ textDecoration: 'none' }}
+    to={`/dataset/${datasetId}`}
+  >
+    <DatasetCardContainer>
+      <div className="meta__bar">
+        <div className="time-ago__container">
+          <Helper style={{ lineHeight: 0 }}>{humanizeTimeAgo(timestamp)}</Helper>
         </div>
-        <div className="label__container">
-          <Label>{ title }</Label>
+        <div className="actions">
+          <i className="far fa-cog" />
         </div>
-        {description && (
-          <div className="description__container">
-            <Text style={{marginBottom: 0}} size="sm" len="long">
-              {description}
-            </Text>
-          </div>
-        )}
-      </DatasetCardContainer>
-    </Link>
-  )
-}
+      </div>
+      <div className="label__container">
+        <Label>{title}</Label>
+      </div>
+      {description && (
+        <div className="description__container">
+          <Text style={{ marginBottom: 0 }} size="sm" len="long">
+            {description}
+          </Text>
+        </div>
+      )}
+    </DatasetCardContainer>
+  </Link>
+);
 
 export default DatasetCard;

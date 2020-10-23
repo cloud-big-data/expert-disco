@@ -22,21 +22,21 @@ const AuthenticatedRoute: React.FC<{
 
   useEffect(() => {
     if (accessToken && !userContext.accessToken) {
-      const decodedToken = accessToken ? parseJWT(accessToken) : {};  
+      const decodedToken = accessToken ? parseJWT(accessToken) : {};
       setUserContextValue({
         userId: decodedToken.userId,
-        accessToken: accessToken,
+        accessToken,
         email: decodedToken.email,
-      })
+      });
     }
-  }, [accessToken, userContext.accessToken])
+  }, [accessToken, userContext.accessToken]);
 
   if (disconnected) {
-    return <ErrorScreen />
+    return <ErrorScreen />;
   }
 
   if (!localStorage.getItem('refreshToken')) {
-    return <Redirect to="/login" />
+    return <Redirect to="/login" />;
   }
 
   if (error) {
@@ -48,17 +48,19 @@ const AuthenticatedRoute: React.FC<{
     toggleIsLoaded(true);
   }
 
-  if (isLoaded && !accessToken) return <Redirect to="/login" />
+  if (isLoaded && !accessToken) return <Redirect to="/login" />;
   return (
-    <UserContext.Provider value={{
-      accessToken: userContext.accessToken,
-      userId: userContext.userId,
-      email: userContext.email,
-      setUserContextValue,
-    }}>
+    <UserContext.Provider
+      value={{
+        accessToken: userContext.accessToken,
+        userId: userContext.userId,
+        email: userContext.email,
+        setUserContextValue,
+      }}
+    >
       {children}
     </UserContext.Provider>
-  )
-}
+  );
+};
 
 export default AuthenticatedRoute;

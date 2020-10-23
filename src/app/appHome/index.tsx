@@ -1,3 +1,3 @@
-import AppHome from "./AppHome";
+import AppHome from './AppHome';
 
 export default AppHome;

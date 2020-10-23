@@ -13,17 +13,14 @@ const ErrorScreenContainer = styled.div`
   }
 `;
 
-const ErrorScreen: React.FC = () => {
-  return (
-    <ErrorScreenContainer>
-      <h2>Server error</h2>
-      <Text size="lg" len="long">
-        We had a problem communicating with the Skyvue server. 
-        This is our fault, not yours. Please refresh the page or try again later.
-      </Text>
-
-    </ErrorScreenContainer>
-  )
-}
+const ErrorScreen: React.FC = () => (
+  <ErrorScreenContainer>
+    <h2>Server error</h2>
+    <Text size="lg" len="long">
+      We had a problem communicating with the Skyvue server. This is our fault, not
+      yours. Please refresh the page or try again later.
+    </Text>
+  </ErrorScreenContainer>
+);
 
 export default ErrorScreen;

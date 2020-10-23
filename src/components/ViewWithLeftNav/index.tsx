@@ -1,3 +1,3 @@
-import ViewWithLeftNav from "./ViewWithLeftNav";
+import ViewWithLeftNav from './ViewWithLeftNav';
 
 export default ViewWithLeftNav;

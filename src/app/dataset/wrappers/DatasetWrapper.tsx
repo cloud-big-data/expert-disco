@@ -45,7 +45,7 @@ const sample: IBoardData = {
       _id: 'colyoooooo',
       dataType: DataTypes.string,
       value: 'col 6',
-    }
+    },
   ],
   rows: [
     {
@@ -75,8 +75,8 @@ const sample: IBoardData = {
           _id: 'yo15',
           value: 'hi',
         },
-      ]
-    },    
+      ],
+    },
     {
       _id: 'blahh',
       cells: [
@@ -104,10 +104,10 @@ const sample: IBoardData = {
           _id: 'yo12345o',
           value: 'yo',
         },
-      ]
+      ],
     },
-  ]
-}
+  ],
+};
 
 enum DatasetUserTypes {
   owner,
@@ -118,18 +118,19 @@ enum DatasetUserTypes {
 
 const getUserType = (
   userId: string,
-  visibility: IBoardData['visibilitySettings']
+  visibility: IBoardData['visibilitySettings'],
 ): DatasetUserTypes => {
   if (userId === visibility.owner) {
-    return DatasetUserTypes.owner
-  } else if (visibility.editors.includes(userId)) {
-    return DatasetUserTypes.editor;
-  } else if (visibility.viewers.includes(userId)) {
-    return DatasetUserTypes.viewer;
-  } else {
-    return DatasetUserTypes.unauthorized;
+    return DatasetUserTypes.owner;
   }
-}
+  if (visibility.editors.includes(userId)) {
+    return DatasetUserTypes.editor;
+  }
+  if (visibility.viewers.includes(userId)) {
+    return DatasetUserTypes.viewer;
+  }
+  return DatasetUserTypes.unauthorized;
+};
 
 export const initialBoardState = {
   cellsState: {
@@ -146,58 +147,56 @@ export const initialBoardState = {
     selectedColumn: -1,
     activeColumn: -1,
     draggedColumns: [],
-  }
-}
+  },
+};
 
 const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
-  
+
   useEffect(() => {
     setBoardData(sample);
-  }, [])
+  }, []);
 
   if (!user.userId || !user.email) {
     return (
       <div className="absolute__center">
         <Loading />
       </div>
-    )
+    );
   }
 
   if (!boardData) {
     return (
-      <React.Fragment>
+      <>
         <CustomerNav email={user.email} />
         <div className="absolute__center">
           <Loading />
         </div>
-      </React.Fragment>
-    )
+      </>
+    );
   }
 
-  const userType = getUserType(
-    user.userId,
-    boardData?.visibilitySettings
-  );
-  
+  const userType = getUserType(user.userId, boardData?.visibilitySettings);
+
   return (
-    <DatasetContext.Provider value={{
-      boardData,
-      setBoardData:
-        [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType)
+    <DatasetContext.Provider
+      value={{
+        boardData,
+        setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
+          userType,
+        )
           ? setBoardData
           : null,
-      boardState,
-      setBoardState,
-    }}>
+        boardState,
+        setBoardState,
+      }}
+    >
       <CustomerNav email={user.email} />
-      {userType === DatasetUserTypes.owner && (
-        <DatasetWrapperOwner />
-      )}
+      {userType === DatasetUserTypes.owner && <DatasetWrapperOwner />}
     </DatasetContext.Provider>
-  )
-}
+  );
+};
 
 export default DatasetWrapper;
