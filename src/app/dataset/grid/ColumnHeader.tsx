@@ -117,7 +117,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           onChange={e =>
             setBoardData!({
               ...boardData,
-              columns: returnUpdatedCells({
+              columns: returnUpdatedCells<IColumn>({
                 iterable: boardData.columns,
                 cellUpdates: [
                   {

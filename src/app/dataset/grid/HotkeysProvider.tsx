@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IBoardData, IBoardState, IRow } from 'app/dataset/types';
+import { IBoardData, IBoardState, ICell, IRow } from 'app/dataset/types';
 import * as R from 'ramda';
 import returnUpdatedCells from 'app/dataset/lib/returnUpdatedCells';
 import useClippy from 'use-clippy';
@@ -65,7 +65,7 @@ const HotkeysProvider: React.FC<{
           ...boardData,
           rows: R.map((row: IRow) => ({
             ...row,
-            cells: returnUpdatedCells({
+            cells: returnUpdatedCells<ICell>({
               iterable: row.cells,
               cellUpdates,
             })!,

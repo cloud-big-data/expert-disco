@@ -177,7 +177,7 @@ const Cell: React.FC<ICellProps> = ({
               ...boardData,
               rows: R.map((row: IRow) => ({
                 ...row,
-                cells: returnUpdatedCells({
+                cells: returnUpdatedCells<ICell>({
                   iterable: row.cells,
                   cellUpdates: [
                     {
