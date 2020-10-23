@@ -1,14 +1,9 @@
-import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import hotkeys from 'hotkeys-js';
+import React, { useEffect, useRef, useState } from 'react';
 import { IBoardData, IBoardState, IRow } from 'app/dataset/types';
 import * as R from 'ramda';
 import returnUpdatedCells from 'app/dataset/lib/returnUpdatedCells';
 import useClippy from 'use-clippy';
-import { HotKeys } from 'react-hotkeys';
-import { useHotkeys, useIsHotkeyPressed } from 'react-hotkeys-hook';
-import { IReducerAction } from 'types';
 import getCellValueById from '../lib/getCellValueById';
-import Row from './Row';
 
 const HotkeysProvider: React.FC<{
   boardState: IBoardState;
@@ -17,7 +12,7 @@ const HotkeysProvider: React.FC<{
   setBoardData: (boardData: IBoardData) => void;
 }> = ({ boardState, setBoardState, boardData, setBoardData, children }) => {
   const [clipboard, setClipboard] = useClippy();
-  const [cut, toggleCut] = useState<{ cellId?: string; cutting: boolean }>({
+  const [, toggleCut] = useState<{ cellId?: string; cutting: boolean }>({
     cutting: false,
   });
   const keysPressed = useRef<string[]>([]);

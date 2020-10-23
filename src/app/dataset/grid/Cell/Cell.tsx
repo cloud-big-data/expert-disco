@@ -7,7 +7,6 @@ import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { ICell, IRow } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
-import HotkeysProvider from '../HotkeysProvider';
 
 interface ICellProps extends ICell {
   rowId: string;
