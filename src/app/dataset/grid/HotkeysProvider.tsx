@@ -12,13 +12,11 @@ const HotkeysProvider: React.FC<{
   setBoardData: (boardData: IBoardData) => void;
 }> = ({ boardState, setBoardState, boardData, setBoardData, children }) => {
   const [clipboard, setClipboard] = useClippy();
-  const [, toggleCut] = useState<{ cellId?: string; cutting: boolean }>({
+  const [cut, toggleCut] = useState<{ cellId?: string; cutting: boolean }>({
     cutting: false,
   });
   const keysPressed = useRef<string[]>([]);
   const setKeysPressed = (keys: string[]) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     keysPressed.current = [...new Set(keys)];
   };
   const { selectedCell } = boardState.cellsState;
@@ -46,14 +44,30 @@ const HotkeysProvider: React.FC<{
 
     const handlePaste = () => {
       const pasteClipboard = (targetCell: string) => {
+        const baseCellUpdates = [
+          {
+            cellId: targetCell,
+            updatedValue: clipboard,
+          },
+        ];
+
+        const cellUpdates = cut.cutting
+          ? [
+              ...baseCellUpdates,
+              {
+                cellId: cut.cellId ?? '',
+                updatedValue: '',
+              },
+            ]
+          : baseCellUpdates;
+
         setBoardData({
           ...boardData,
           rows: R.map((row: IRow) => ({
             ...row,
             cells: returnUpdatedCells({
               iterable: row.cells,
-              cellId: targetCell,
-              updatedValue: clipboard,
+              cellUpdates,
             })!,
           }))(boardData.rows),
         });
@@ -67,19 +81,6 @@ const HotkeysProvider: React.FC<{
           copyingCell: '',
         },
       });
-      // if (cut.cutting) {
-      //   setBoardData({
-      //     ...boardData,
-      //     rows: R.map((row: IRow) => ({
-      //       ...row,
-      //       cells: returnUpdatedCells({
-      //         iterable: row.cells,
-      //         cellId: cut.cellId!,
-      //         updatedValue: '',
-      //       })!,
-      //     }))(boardData.rows),
-      //   });
-      // }
     };
 
     const handleKeydown = (e: KeyboardEvent) => {
@@ -96,13 +97,12 @@ const HotkeysProvider: React.FC<{
           cutting: true,
         });
         handleCopy();
-      } else {
-        toggleCut({
-          cutting: false,
-        });
       }
       if (has('v') && has('Meta')) {
         handlePaste();
+        toggleCut({
+          cutting: false,
+        });
       }
     };
 
@@ -122,6 +122,8 @@ const HotkeysProvider: React.FC<{
     boardData,
     boardState,
     clipboard,
+    cut,
+    cut.cutting,
     keysPressed,
     selectedCell,
     setBoardData,

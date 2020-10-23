@@ -179,8 +179,12 @@ const Cell: React.FC<ICellProps> = ({
                 ...row,
                 cells: returnUpdatedCells({
                   iterable: row.cells,
-                  cellId: _id,
-                  updatedValue: e.target.value,
+                  cellUpdates: [
+                    {
+                      cellId: _id,
+                      updatedValue: e.target.value,
+                    },
+                  ],
                 })!,
               }))(boardData.rows),
             })

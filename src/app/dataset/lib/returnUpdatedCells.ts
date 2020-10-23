@@ -1,24 +1,26 @@
-import { ICell, IColumn } from "../types";
-import * as R from "ramda";
-
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /**
  * returns array of rows with an updated value
  */
 const returnUpdatedCells = ({
   iterable,
-  cellId,
-  updatedValue
+  cellUpdates,
 }: {
-  iterable: ICell[] | IColumn[];
-  cellId: string;
-  updatedValue: string;
+  // todo fix iterable type
+  iterable: any[];
+  cellUpdates: Array<{
+    cellId: string;
+    updatedValue: string;
+  }>;
 }) =>
-    R.map(
-      R.ifElse(
-        R.propEq("_id", cellId),
-        R.assoc("value", updatedValue),
-        (item) => item
-      )
-    )(iterable)
+  iterable.map((cell: any) =>
+    cellUpdates.some(update => update.cellId === cell._id)
+      ? {
+          ...cell,
+          value: cellUpdates.find(update => update.cellId === cell._id)!
+            .updatedValue,
+        }
+      : cell,
+  );
 
 export default returnUpdatedCells;

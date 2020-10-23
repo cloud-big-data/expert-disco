@@ -6,9 +6,8 @@ interface ValueSet {
 export enum DataTypes {
   number,
   string,
-  date
+  date,
 }
-
 
 export interface ICell {
   _id: string;
@@ -21,8 +20,7 @@ export interface IColumn extends ICell {
    * colWidth: The width of the column, in px.
    */
   colWidth?: number;
-};
-
+}
 
 export interface IRow {
   _id: string;
@@ -32,13 +30,13 @@ export interface IRow {
    */
   rowHeight?: number;
   dragging?: boolean;
-};
+}
 
 type UserId = string;
 
 /**
  * The data stored in the grid itself. This information should persist from session to session.
- * For the viewable, non-persistent state of the board, use IBoardState 
+ * For the viewable, non-persistent state of the board, use IBoardState
  */
 export interface IBoardData {
   updatedAt: string;
@@ -53,12 +51,11 @@ export interface IBoardData {
   rows: IRow[];
 }
 
-
 /**
- * The non-persistent state of the grid. 
- * This interfaces with viewable properties of the grid that should not persist from session to session, and 
+ * The non-persistent state of the grid.
+ * This interfaces with viewable properties of the grid that should not persist from session to session, and
  * should not be stored in the database.
- * 
+ *
  * Board data (cells and columns is stored in IGridData)
  */
 export interface IBoardState {
@@ -67,14 +64,14 @@ export interface IBoardState {
     selectedCell: string;
     highlightedCells: string[];
     copyingCell: string;
-  }
+  };
   rowsState: {
     selectedRow: string;
     draggedRows: string[];
-  }
+  };
   columnsState: {
     selectedColumn: number;
     activeColumn: number;
     draggedColumns: number[];
-  }
+  };
 }
