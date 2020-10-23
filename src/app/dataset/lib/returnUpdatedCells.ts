@@ -12,15 +12,18 @@ const returnUpdatedCells = ({
     cellId: string;
     updatedValue: string;
   }>;
-}) =>
-  iterable.map((cell: any) =>
-    cellUpdates.some(update => update.cellId === cell._id)
+}) => {
+  const existingUpdate = (cell: any) =>
+    cellUpdates.find(update => update.cellId === cell._id);
+
+  return iterable.map((cell: any) =>
+    existingUpdate(cell)
       ? {
           ...cell,
-          value: cellUpdates.find(update => update.cellId === cell._id)!
-            .updatedValue,
+          value: existingUpdate(cell)!.updatedValue,
         }
       : cell,
   );
+};
 
 export default returnUpdatedCells;
