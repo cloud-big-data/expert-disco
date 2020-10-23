@@ -7,7 +7,7 @@ import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { ICell, IRow } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
-import CellEventsProvider from './CellEventsProvider';
+import HotkeysProvider from '../HotkeysProvider';
 
 interface ICellProps extends ICell {
   rowId: string;
@@ -106,7 +106,16 @@ const Cell: React.FC<ICellProps> = ({
   const { cellsState } = boardState;
 
   useEffect(() => {
-    inputRef.current?.focus();
+    // todo fixme and add optional chaining
+    /*
+      For some very strange reason, the TS compiler randomly decided that it didn't want me using optional chaining here.
+      Just here.
+      Nowhere else in the codebase.
+      So, I appeased it's tyrannical desires and removed it here. 
+    */
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, [active]);
 
   return (
@@ -139,59 +148,48 @@ const Cell: React.FC<ICellProps> = ({
         })
       }
     >
-      <CellEventsProvider
-        hiddenInputRef={hiddenInputRef}
-        isCopying={isCopying}
-        value={value}
-        boardState={boardState}
-        setBoardState={setBoardState}
-        boardData={boardData}
-        setBoardData={setBoardData!}
-        _id={_id}
-      >
-        <div style={{ position: 'absolute', left: '-99999px' }}>
-          <input
-            ref={hiddenInputRef}
-            id={_id}
-            readOnly
-            type="text"
-            value={value ?? ''}
-          />
-        </div>
-        {active ? (
-          <ActiveInput
-            ref={inputRef}
-            value={(value as string) ?? ''}
-            type="text"
-            onKeyDown={e => {
-              if (e.key === 'Enter')
-                setBoardState({
-                  ...boardState,
-                  cellsState: {
-                    ...boardState.cellsState,
-                    activeCell: '',
-                    selectedCell: _id,
-                  },
-                });
-            }}
-            onChange={e =>
-              setBoardData!({
-                ...boardData,
-                rows: R.map((row: IRow) => ({
-                  ...row,
-                  cells: returnUpdatedCells({
-                    iterable: row.cells,
-                    cellId: _id,
-                    updatedValue: e.target.value,
-                  })!,
-                }))(boardData.rows),
-              })
-            }
-          />
-        ) : (
-          value
-        )}
-      </CellEventsProvider>
+      <div style={{ position: 'absolute', left: '-99999px' }}>
+        <input
+          ref={hiddenInputRef}
+          id={_id}
+          readOnly
+          type="text"
+          value={value ?? ''}
+        />
+      </div>
+      {active ? (
+        <ActiveInput
+          ref={inputRef}
+          value={(value as string) ?? ''}
+          type="text"
+          onKeyDown={e => {
+            if (e.key === 'Enter')
+              setBoardState({
+                ...boardState,
+                cellsState: {
+                  ...boardState.cellsState,
+                  activeCell: '',
+                  selectedCell: _id,
+                },
+              });
+          }}
+          onChange={e =>
+            setBoardData!({
+              ...boardData,
+              rows: R.map((row: IRow) => ({
+                ...row,
+                cells: returnUpdatedCells({
+                  iterable: row.cells,
+                  cellId: _id,
+                  updatedValue: e.target.value,
+                })!,
+              }))(boardData.rows),
+            })
+          }
+        />
+      ) : (
+        value
+      )}
     </CellContainer>
   );
 };

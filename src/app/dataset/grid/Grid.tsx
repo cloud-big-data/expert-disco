@@ -6,6 +6,7 @@ import styled from 'styled-components/macro';
 import { initialBoardState } from '../wrappers/DatasetWrapper';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';
+import HotkeysProvider from './HotkeysProvider';
 import Row from './Row';
 
 const GridContainer = styled.div`
@@ -14,7 +15,7 @@ const GridContainer = styled.div`
   width: 100%;
   flex-direction: column;
   margin-top: 1rem;
-  padding: .25rem;
+  padding: 0.25rem;
 `;
 const ColumnsContainer = styled.div`
   width: 100%;
@@ -52,25 +53,24 @@ lifted state:
 - cell content
 */
 
-
 const Grid: React.FC = () => {
   const dataset = useContext(DatasetContext);
   const gridRef = useRef<HTMLDivElement>(null);
-  const {boardData, boardState, setBoardState} = dataset!;
+  const { boardData, setBoardData, boardState, setBoardState } = dataset!;
 
   useHandleClickOutside(gridRef, () => {
     setBoardState(initialBoardState);
-  })
-  
+  });
+
   if (!dataset) {
     return (
       <div className="absolute__center">
         <Loading />
       </div>
-    )
+    );
   }
 
-  const {rows, columns} = boardData;
+  const { rows, columns } = boardData;
 
   return (
     <GridContainer ref={gridRef}>
@@ -79,41 +79,48 @@ const Grid: React.FC = () => {
         boardState={boardState}
         setBoardState={setBoardState}
       >
-        <ColumnsContainer>
-          {columns.map((col, index) =>
-            <ColumnHeader
-              key={col._id}
-              {...col}
-              columnIndex={index}
-              position={{
-                firstColumn: index === 0,
-                lastColumn: index === columns.length - 1,
-              }}
-            />
-          )}
-          <AddColumn>
-            <i className="fad fa-plus-circle" />
-          </AddColumn>
-        </ColumnsContainer>
-        <RowsContainer>
-          {rows.map((row, index) => 
-            <Row
-              key={row._id}
-              {...row}
-              rowIndex={index}
-              position={{
-                firstRow: index === 0,
-                lastRow: index === rows.length - 1,
-              }}
-            />
-          )}
-          <AddRow>
-            <i className="fad fa-plus-circle" />
-          </AddRow>
-        </RowsContainer>
+        <HotkeysProvider
+          boardState={boardState}
+          setBoardState={setBoardState}
+          boardData={boardData}
+          setBoardData={setBoardData!}
+        >
+          <ColumnsContainer>
+            {columns.map((col, index) => (
+              <ColumnHeader
+                key={col._id}
+                {...col}
+                columnIndex={index}
+                position={{
+                  firstColumn: index === 0,
+                  lastColumn: index === columns.length - 1,
+                }}
+              />
+            ))}
+            <AddColumn>
+              <i className="fad fa-plus-circle" />
+            </AddColumn>
+          </ColumnsContainer>
+          <RowsContainer>
+            {rows.map((row, index) => (
+              <Row
+                key={row._id}
+                {...row}
+                rowIndex={index}
+                position={{
+                  firstRow: index === 0,
+                  lastRow: index === rows.length - 1,
+                }}
+              />
+            ))}
+            <AddRow>
+              <i className="fad fa-plus-circle" />
+            </AddRow>
+          </RowsContainer>
+        </HotkeysProvider>
       </EventsProvider>
     </GridContainer>
-  )
-}
+  );
+};
 
 export default Grid;

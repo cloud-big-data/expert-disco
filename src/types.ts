@@ -1,4 +1,4 @@
-export interface IReducerAction {
+export interface IReducerAction<PayloadSchema> {
   type: string;
-  payload: any;
+  payload: PayloadSchema;
 }

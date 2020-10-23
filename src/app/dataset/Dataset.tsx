@@ -24,28 +24,25 @@ const FormulaBarContainer = styled.div`
   align-items: center;
   input {
     width: 100%;
-    margin-left: .25rem;
+    margin-left: 0.25rem;
   }
 `;
 
 const Dataset: React.FC<{
   readOnly?: boolean;
-}> = () => {
+}> = () => (
   // const params = useParams();
 
-  return (
-    <DatasetContainer>
-      {/* <ToolbarContainer>
+  <DatasetContainer>
+    {/* <ToolbarContainer>
         <p>Tools</p>
       </ToolbarContainer> */}
-      <FormulaBarContainer>
-        <InputField onChange={e => null} icon={<i className="fad fa-function" />} />
-      </FormulaBarContainer>
-      <ParentGridContainer>
-        <Grid />
-      </ParentGridContainer>
-    </DatasetContainer>
-  )
-}
-
+    <FormulaBarContainer>
+      <InputField onChange={e => null} icon={<i className="fad fa-function" />} />
+    </FormulaBarContainer>
+    <ParentGridContainer>
+      <Grid />
+    </ParentGridContainer>
+  </DatasetContainer>
+);
 export default Dataset;
