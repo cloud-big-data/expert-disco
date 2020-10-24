@@ -1,5 +1,5 @@
-import React from 'react';
 import { Redirect } from 'react-router-dom';
+import React from 'react';
 
 const PublicRoute: React.FC<{
   children: React.ReactNode;

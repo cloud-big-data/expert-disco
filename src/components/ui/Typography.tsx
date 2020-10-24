@@ -1,5 +1,5 @@
-import React from 'react';
 import styled from 'styled-components/macro';
+import React from 'react';
 import Styles from 'styles/Styles';
 
 interface IText {

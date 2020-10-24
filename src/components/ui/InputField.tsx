@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import styled from 'styled-components/macro';
+import React, { useState } from 'react';
 import Styles from 'styles/Styles';
 
 const InputContainer = styled.div<{

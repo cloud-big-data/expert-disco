@@ -51,6 +51,8 @@ const PasswordReset: React.FC = () => {
         case 'TokenExpiredError':
           toggleTokenExpired(true);
           return;
+        default:
+          return;
       }
     }
 

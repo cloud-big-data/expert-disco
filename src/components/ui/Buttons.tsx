@@ -1,8 +1,8 @@
-import React from 'react';
 import styled from 'styled-components/macro';
+import React from 'react';
 import Styles from 'styles/Styles';
 
-interface button {
+interface IButton {
   id?: string;
   children: React.ReactNode;
   onClick?: () => void;
@@ -99,7 +99,7 @@ const Button = styled.button<{
       : ''}
 `;
 
-const ButtonPrimary: React.FC<button> = props => (
+const ButtonPrimary: React.FC<IButton> = props => (
   <Button
     disabled={props.disabled ? props.disabled : false}
     onClick={props.onClick && props.onClick}
@@ -110,7 +110,7 @@ const ButtonPrimary: React.FC<button> = props => (
   </Button>
 );
 
-const ButtonSecondary: React.FC<button> = props => (
+const ButtonSecondary: React.FC<IButton> = props => (
   <Button
     disabled={props.disabled}
     onClick={props.onClick && props.onClick}
@@ -121,7 +121,7 @@ const ButtonSecondary: React.FC<button> = props => (
   </Button>
 );
 
-const ButtonTertiary: React.FC<button> = props => (
+const ButtonTertiary: React.FC<IButton> = props => (
   <Button
     disabled={props.disabled}
     onClick={props.onClick && props.onClick}
@@ -132,7 +132,7 @@ const ButtonTertiary: React.FC<button> = props => (
   </Button>
 );
 
-const ButtonDanger: React.FC<button> = props => (
+const ButtonDanger: React.FC<IButton> = props => (
   <Button
     disabled={props.disabled}
     onClick={props.onClick && props.onClick}

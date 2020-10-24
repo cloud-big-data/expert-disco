@@ -1,4 +1,4 @@
-interface ValueSet {
+export interface ValueSet {
   label: string;
   value: string;
 }

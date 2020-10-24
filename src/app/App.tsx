@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import React, { useContext } from 'react';
 import CustomerNav from 'components/nav';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
