@@ -14,13 +14,21 @@ const GridContainer = styled.div`
   flex-direction: column;
   margin-top: 1rem;
   padding: 0.25rem;
+  max-width: 100%;
+  overflow: auto;
 `;
 const ColumnsContainer = styled.div`
   width: 100%;
   flex: 0 1 100%;
   display: flex;
   align-items: center;
-  margin-left: 2rem;
+  &:before {
+    content: '';
+    display: flex;
+    width: 32px;
+    max-width: 32px;
+    flex: 1 0 auto;
+  }
 `;
 const RowsContainer = styled.div`
   width: 100%;
@@ -34,22 +42,6 @@ const RowsContainer = styled.div`
     flex: 0 1 auto;
   } */
 `;
-const AddColumn = styled.div`
-  margin-left: 2rem;
-`;
-const AddRow = styled.div`
-  margin-top: 1rem;
-`;
-
-/*
-local state:
-- cell(s) is/are highlighted
-- cell(s) is/are active
-
-lifted state:
-- column/row width/height
-- cell content
-*/
 
 const Grid: React.FC = () => {
   const dataset = useContext(DatasetContext);
@@ -90,9 +82,6 @@ const Grid: React.FC = () => {
                 }}
               />
             ))}
-            <AddColumn>
-              <i className="fad fa-plus-circle" />
-            </AddColumn>
           </ColumnsContainer>
           <RowsContainer>
             {rows.map((row, index) => (
@@ -106,9 +95,6 @@ const Grid: React.FC = () => {
                 }}
               />
             ))}
-            <AddRow>
-              <i className="fad fa-plus-circle" />
-            </AddRow>
           </RowsContainer>
         </HotkeysProvider>
       </EventsProvider>

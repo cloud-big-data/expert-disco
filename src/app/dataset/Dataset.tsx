@@ -7,22 +7,29 @@ import styled from 'styled-components/macro';
 import Grid from './grid';
 import getCellValueById from './lib/getCellValueById';
 import returnUpdatedCells from './lib/returnUpdatedCells';
+import Toolbar from './toolbar';
 import { initialBoardState } from './wrappers/DatasetWrapper';
 
 const DatasetContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: sticky;
-  max-height: 100%;
+  max-height: 90vh;
+  overflow: hidden;
   padding: 1rem;
 `;
 const ParentGridContainer = styled.div`
   flex: 0 1 auto;
   display: flex;
   width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
 `;
-// const ToolbarContainer = styled.div`
-// `;
+const ToolbarContainer = styled.div`
+  display: flex;
+  padding: 1rem 2.25rem;
+`;
 const FormulaBarContainer = styled.div`
   display: flex;
   align-items: center;
@@ -46,9 +53,9 @@ const Dataset: React.FC<{
 
   return (
     <DatasetContainer ref={datasetRef}>
-      {/* <ToolbarContainer>
-        <p>Tools</p>
-      </ToolbarContainer> */}
+      <ToolbarContainer>
+        <Toolbar />
+      </ToolbarContainer>
       <FormulaBarContainer>
         <InputField
           inputRef={inputRef}

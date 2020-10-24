@@ -13,8 +13,10 @@ const RowContainer = styled.div`
 `;
 
 const RowIndexContainer = styled.div`
-  width: 2rem;
+  width: 32px;
+  max-width: 32px;
   display: flex;
+  flex: 1 0 auto;
   align-items: center;
   justify-content: center;
   cursor: pointer;

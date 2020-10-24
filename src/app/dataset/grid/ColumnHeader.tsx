@@ -24,10 +24,12 @@ const ColumnHeaderContainer = styled.div<{
   cursor: pointer;
   background: #f1eff3;
   display: flex;
+  flex: 1 0 auto;
   justify-content: center;
   align-items: center;
   height: 2rem;
-  width: ${props => props.colWidth}rem;
+  width: ${props => props.colWidth}px;
+  padding: 0.5rem;
 
   &:hover {
     font-weight: bold;

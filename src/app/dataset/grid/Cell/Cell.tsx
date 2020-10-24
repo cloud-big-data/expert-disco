@@ -31,9 +31,10 @@ const CellContainer = styled.div<{
   display: flex;
   align-items: center;
   height: 100%;
-  width: ${defaults.COL_WIDTH}rem;
+  width: ${defaults.COL_WIDTH}px;
   padding: .5rem;
   cursor: pointer;
+  flex: 1 0 auto;
 
   border-top: 2px solid ${Styles.faintBorderColor};
   border-left: 2px solid ${Styles.faintBorderColor};
@@ -105,13 +106,6 @@ const Cell: React.FC<ICellProps> = ({
   const { cellsState } = boardState;
 
   useEffect(() => {
-    // todo fixme and add optional chaining
-    /*
-      For some very strange reason, the TS compiler randomly decided that it didn't want me using optional chaining here.
-      Just here.
-      Nowhere else in the codebase.
-      So, I appeased it's tyrannical desires and removed it here. 
-    */
     if (inputRef.current) {
       inputRef.current.focus();
     }
