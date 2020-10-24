@@ -35,12 +35,6 @@ const RowsContainer = styled.div`
   flex: 1 0 100%;
   display: flex;
   flex-direction: column;
-  /* .shrink-wrapped {
-    border: 1px solid red;
-    display: flex;
-    flex-direction: column;
-    flex: 0 1 auto;
-  } */
 `;
 
 const Grid: React.FC = () => {
