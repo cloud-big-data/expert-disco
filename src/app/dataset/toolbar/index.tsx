@@ -1,3 +1,3 @@
-import Toolbar from './Toolbar';
+import Toolbar from './DatasestToolbar';
 
 export default Toolbar;

@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
-const CustomerNavContainer = styled.div`
+const CustomerNavContainer = styled.div<{ wide?: boolean }>`
   z-index: 1000;
   display: flex;
   position: sticky;
@@ -19,7 +19,8 @@ const CustomerNavContainer = styled.div`
   }
 
   .inner {
-    max-width: ${Styles.defaultMaxWidth};
+    max-width: ${props => (props.wide ? '100%' : Styles.defaultMaxWidth)};
+    padding: ${props => (props.wide ? '0 2rem' : '')};
     display: flex;
     width: 100%;
     margin: 0 auto;
@@ -100,14 +101,17 @@ const UserDropdownExpanded = styled.div`
   }
 `;
 
-const CustomerNav: React.FC<{ email: string }> = ({ email }) => {
+const CustomerNav: React.FC<{
+  email: string;
+  wide?: boolean;
+}> = ({ email, wide }) => {
   const [dropdownOpen, toggleDropdownOpen] = useState(false);
   const expandedRef = useRef<HTMLDivElement>(null);
   useHandleClickOutside(expandedRef, () => toggleDropdownOpen(false));
   const location = useLocation();
 
   return (
-    <CustomerNavContainer>
+    <CustomerNavContainer wide={wide}>
       <div className="inner">
         <Link style={{ textDecoration: 'none' }} to="/home">
           <span className="customer-nav__icon">Skyvue.io</span>

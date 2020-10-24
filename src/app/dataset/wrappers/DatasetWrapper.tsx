@@ -2,8 +2,10 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useEffect, useState } from 'react';
-import { DataTypes, IBoardState, IBoardData } from '../types';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import * as R from 'ramda';
+import { DataTypes, IBoardState, IBoardData, IChangeHistory } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
 const sample: IBoardData = {
@@ -157,9 +159,12 @@ const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
+  const changeHistoryRef = useRef<IChangeHistory[]>([]);
+  const currentRevision = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     setBoardData(sample);
+    currentRevision.current = uuidv4();
   }, []);
 
   if (!user.userId || !user.email) {
@@ -186,17 +191,28 @@ const DatasetWrapper: React.FC = () => {
   return (
     <DatasetContext.Provider
       value={{
+        currentRevision,
         boardData,
         setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
           userType,
         )
-          ? setBoardData
+          ? (boardData: IBoardData) => {
+              changeHistoryRef.current = [
+                ...R.uniqBy(R.prop('revisionId'), changeHistoryRef.current),
+                {
+                  ...boardData,
+                  revisionId: uuidv4(),
+                },
+              ];
+              setBoardData(boardData);
+            }
           : null,
         boardState,
         setBoardState,
+        changeHistoryRef,
       }}
     >
-      <CustomerNav email={user.email} />
+      <CustomerNav wide email={user.email} />
       {userType === DatasetUserTypes.owner && <DatasetWrapperOwner />}
     </DatasetContext.Provider>
   );

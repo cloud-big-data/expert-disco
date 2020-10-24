@@ -3,11 +3,10 @@ import DatasetContext from 'contexts/DatasetContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
-// import { useParams } from 'react-router-dom';
 import Grid from './grid';
 import getCellValueById from './lib/getCellValueById';
 import returnUpdatedCells from './lib/returnUpdatedCells';
-import Toolbar from './toolbar';
+import DatasestToolbar from './toolbar';
 import { initialBoardState } from './wrappers/DatasetWrapper';
 
 const DatasetContainer = styled.div`
@@ -25,6 +24,7 @@ const ParentGridContainer = styled.div`
   max-width: 100%;
   max-height: 100%;
   overflow: auto;
+  padding-right: 2rem;
 `;
 const ToolbarContainer = styled.div`
   display: flex;
@@ -54,7 +54,7 @@ const Dataset: React.FC<{
   return (
     <DatasetContainer ref={datasetRef}>
       <ToolbarContainer>
-        <Toolbar />
+        <DatasestToolbar />
       </ToolbarContainer>
       <FormulaBarContainer>
         <InputField

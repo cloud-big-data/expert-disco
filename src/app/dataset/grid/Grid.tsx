@@ -1,4 +1,3 @@
-import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
@@ -38,17 +37,9 @@ const RowsContainer = styled.div`
 `;
 
 const Grid: React.FC = () => {
-  const dataset = useContext(DatasetContext);
-  const { boardData, setBoardData, boardState, setBoardState } = dataset!;
-
-  if (!dataset) {
-    return (
-      <div className="absolute__center">
-        <Loading />
-      </div>
-    );
-  }
-
+  const { boardData, setBoardData, boardState, setBoardState } = useContext(
+    DatasetContext,
+  )!;
   const { rows, columns } = boardData;
 
   return (
