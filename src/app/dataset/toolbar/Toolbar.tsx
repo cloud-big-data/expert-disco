@@ -15,6 +15,8 @@ const BoardActionsContainer = styled.div`
 const Toolbar: React.FC = () => {
   const { boardData, setBoardData } = useContext(DatasetContext)!;
   const boardActions = makeToolbarActions(boardData);
+  const colLen = boardData.columns.length;
+
   return (
     <>
       <BoardActionsContainer>
@@ -34,7 +36,9 @@ const Toolbar: React.FC = () => {
         >
           Add row
         </ButtonPrimary>
-        <ButtonPrimary onClick={() => setBoardData!(boardActions.newColumn())}>
+        <ButtonPrimary
+          onClick={() => setBoardData!(boardActions.newColumn(`col ${colLen + 1}`))}
+        >
           Add Column
         </ButtonPrimary>
       </BoardActionsContainer>
