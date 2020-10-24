@@ -2,8 +2,7 @@ import { ButtonPrimary } from 'components/ui/Buttons';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import { v4 as uuidv4 } from 'uuid';
-import { DataTypes } from '../types';
+import { makeToolbarActions } from '../lib/toolbarActions';
 
 const BoardActionsContainer = styled.div`
   display: flex;
@@ -15,54 +14,14 @@ const BoardActionsContainer = styled.div`
 
 const Toolbar: React.FC = () => {
   const { boardData, setBoardData } = useContext(DatasetContext)!;
+  const boardActions = makeToolbarActions(boardData);
   return (
     <>
       <BoardActionsContainer>
-        <ButtonPrimary
-          onClick={() =>
-            setBoardData!({
-              ...boardData,
-              rows: [
-                ...boardData.rows,
-                {
-                  _id: uuidv4(),
-                  cells: boardData.rows[0].cells.map(cell => ({
-                    ...cell,
-                    _id: uuidv4(),
-                    value: '',
-                  })),
-                },
-              ],
-            })
-          }
-        >
+        <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
           Add row
         </ButtonPrimary>
-        <ButtonPrimary
-          onClick={() =>
-            setBoardData!({
-              ...boardData,
-              columns: [
-                ...boardData.columns,
-                {
-                  _id: uuidv4(),
-                  value: '',
-                  dataType: DataTypes.string,
-                },
-              ],
-              rows: boardData.rows.map(row => ({
-                ...row,
-                cells: [
-                  ...row.cells,
-                  {
-                    _id: uuidv4(),
-                    value: '',
-                  },
-                ],
-              })),
-            })
-          }
-        >
+        <ButtonPrimary onClick={() => setBoardData!(boardActions.newColumn())}>
           Add Column
         </ButtonPrimary>
       </BoardActionsContainer>
