@@ -1,9 +1,7 @@
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
-import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import { initialBoardState } from '../wrappers/DatasetWrapper';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';
 import HotkeysProvider from './HotkeysProvider';
@@ -55,12 +53,7 @@ lifted state:
 
 const Grid: React.FC = () => {
   const dataset = useContext(DatasetContext);
-  const gridRef = useRef<HTMLDivElement>(null);
   const { boardData, setBoardData, boardState, setBoardState } = dataset!;
-
-  useHandleClickOutside(gridRef, () => {
-    setBoardState(initialBoardState);
-  });
 
   if (!dataset) {
     return (
@@ -73,7 +66,7 @@ const Grid: React.FC = () => {
   const { rows, columns } = boardData;
 
   return (
-    <GridContainer ref={gridRef}>
+    <GridContainer>
       <EventsProvider
         boardData={boardData}
         boardState={boardState}

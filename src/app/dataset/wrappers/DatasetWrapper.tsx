@@ -148,6 +148,9 @@ export const initialBoardState = {
     activeColumn: -1,
     draggedColumns: [],
   },
+  formulaBar: {
+    active: false,
+  },
 };
 
 const DatasetWrapper: React.FC = () => {

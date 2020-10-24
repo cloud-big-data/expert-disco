@@ -140,7 +140,9 @@ const EventsProvider: React.FC<{
     if (
       !['Tab', 'Enter', 'ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(
         key,
-      )
+      ) ||
+      boardState.columnsState.activeColumn !== -1 || // Make sure there is no active column
+      boardState.formulaBar.active
     )
       return;
 

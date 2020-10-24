@@ -6,6 +6,7 @@ const InputContainer = styled.div<{
   error: boolean;
   active: boolean;
 }>`
+  transition-duration: 0.2s;
   display: flex;
   width: 100%;
   border: ${props =>
@@ -19,10 +20,12 @@ const InputContainer = styled.div<{
   border-radius: .625rem;
 
   &:hover {
-    border: 1px solid ${Styles.purple};
-    i {
-      color: ${Styles.purple};
-    }
+    ${props =>
+      props.active
+        ? ``
+        : `
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    `}
   }
   .icon__container {
     display: flex;
@@ -45,6 +48,7 @@ const Input = styled.input<{
   error?: boolean;
   icon?: boolean;
 }>`
+  width: 100%;
   border-radius: 0.625rem;
   height: 3rem;
   border: none;
@@ -66,6 +70,8 @@ const InputField: React.FC<{
   error?: boolean;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   icon?: React.ReactNode;
+  onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }> = props => {
   const [active, setActive] = useState(false);
 
@@ -73,6 +79,7 @@ const InputField: React.FC<{
     <InputContainer active={active} error={!!props.error}>
       {props.icon && <div className="icon__container">{props.icon}</div>}
       <Input
+        ref={props.inputRef}
         placeholder={props.placeholder}
         className={props.className}
         id={props.id}
@@ -84,7 +91,10 @@ const InputField: React.FC<{
         error={props.error}
         onKeyDown={props.onKeyDown}
         icon={!!props.icon}
-        onFocus={() => setActive(true)}
+        onFocus={e => {
+          setActive(true);
+          props.onFocus?.(e);
+        }}
         onBlur={() => setActive(false)}
       />
     </InputContainer>

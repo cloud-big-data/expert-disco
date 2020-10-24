@@ -74,4 +74,7 @@ export interface IBoardState {
     activeColumn: number;
     draggedColumns: number[];
   };
+  formulaBar: {
+    active: boolean;
+  };
 }

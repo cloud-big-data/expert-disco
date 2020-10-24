@@ -104,15 +104,16 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           value={value ?? ''}
           type="text"
           onKeyDown={e => {
-            if (e.key === 'Enter')
+            if (e.key === 'Enter') {
               setBoardState({
                 ...boardState,
                 columnsState: {
                   ...boardState.columnsState,
-                  selectedColumn: -1,
+                  selectedColumn: columnIndex,
                   activeColumn: -1,
                 },
               });
+            }
           }}
           onChange={e =>
             setBoardData!({
