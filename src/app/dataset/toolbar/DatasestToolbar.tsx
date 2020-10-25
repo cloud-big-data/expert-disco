@@ -70,10 +70,12 @@ const DatasestToolbar: React.FC = () => {
         <TimeTravel
           onClick={dataset.redo}
           disabled={
-            changeHistoryRef.current.length === 0 ||
-            currentRevision?.current ===
-              changeHistoryRef.current[changeHistoryRef.current.length - 1]
-                ?.revisionId
+            false
+
+            // changeHistoryRef.current.length === 0 ||
+            // currentRevision?.current ===
+            //   changeHistoryRef.current[changeHistoryRef.current.length - 1]
+            //     ?.revisionId
           }
         >
           <i className="fad fa-redo" />

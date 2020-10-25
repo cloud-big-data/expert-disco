@@ -205,15 +205,11 @@ const EventsProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (boardState.cellsState.activeCell !== '') return;
     if (!currentRevision) return;
-    const uid = uuidv4();
 
-    currentRevision.current = uid;
+    currentRevision.current = changeHistoryRef.current.length - 1;
     changeHistoryRef.current = [
-      ...R.uniqBy(R.prop('revisionId'), changeHistoryRef.current),
-      {
-        ...boardData,
-        revisionId: uid,
-      },
+      ...R.uniqBy(R.prop('rows'), changeHistoryRef.current),
+      boardData,
     ];
   }, [
     boardData,

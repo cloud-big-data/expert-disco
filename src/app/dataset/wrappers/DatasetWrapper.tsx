@@ -5,7 +5,7 @@ import UserContext from 'contexts/userContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import * as R from 'ramda';
-import { DataTypes, IBoardState, IBoardData, IChangeHistory } from '../types';
+import { DataTypes, IBoardState, IBoardData } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
 const sample: IBoardData = {
@@ -159,12 +159,11 @@ const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
-  const changeHistoryRef = useRef<IChangeHistory[]>([]);
-  const currentRevision = useRef<string | undefined>(undefined);
+  const changeHistoryRef = useRef<IBoardData[]>([]);
+  const currentRevision = useRef<number>(0);
 
   useEffect(() => {
     setBoardData(sample);
-    currentRevision.current = uuidv4();
   }, []);
 
   if (!user.userId || !user.email) {
@@ -202,30 +201,30 @@ const DatasetWrapper: React.FC = () => {
         setBoardState,
         changeHistoryRef,
         undo: () => {
-          if (
-            !currentRevision ||
-            !currentRevision.current ||
-            currentRevision.current === changeHistoryRef.current[0].revisionId
-          )
-            return;
-
-          const current = changeHistoryRef.current.findIndex(
-            x => x.revisionId === currentRevision.current,
-          );
-          const newBoardData = changeHistoryRef.current[current - 1];
-          currentRevision.current = newBoardData.revisionId;
-          setBoardData!(R.omit(['revisionId'], newBoardData));
+          // if (
+          //   !currentRevision ||
+          //   !currentRevision.current ||
+          //   currentRevision.current === changeHistoryRef.current[0].revisionId
+          // )
+          //   return;
+          // const current = changeHistoryRef.current.findIndex(
+          //   x => x.revisionId === currentRevision.current,
+          // );
+          // const newBoardData = changeHistoryRef.current[current - 1];
+          // currentRevision.current = newBoardData.revisionId;
+          // setBoardData!(R.omit(['revisionId'], newBoardData));
         },
         redo: () => {
-          if (
-            !currentRevision ||
-            !currentRevision.current ||
-            currentRevision.current ===
-              changeHistoryRef.current[changeHistoryRef.current.length - 1]
-                .revisionId
-          )
-            return;
-          console.log('redoing');
+          // console.log(changeHistoryRef.current, currentRevision.current);
+          // if (
+          //   !currentRevision ||
+          //   !currentRevision.current ||
+          //   currentRevision.current ===
+          //     changeHistoryRef.current[changeHistoryRef.current.length - 1]
+          //       .revisionId
+          // )
+          //   return;
+          // console.log('redoing');
         },
       }}
     >

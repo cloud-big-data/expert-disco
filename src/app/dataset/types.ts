@@ -51,10 +51,6 @@ export interface IBoardData {
   rows: IRow[];
 }
 
-export interface IChangeHistory extends IBoardData {
-  revisionId: string;
-}
-
 /**
  * The non-persistent state of the grid.
  * This interfaces with viewable properties of the grid that should not persist from session to session, and
