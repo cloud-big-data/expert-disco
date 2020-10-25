@@ -1,5 +1,5 @@
 import { IBoardState, IBoardData } from 'app/dataset/types';
-import { createContext, MutableRefObject } from 'react';
+import { createContext } from 'react';
 
 interface IDatasetContext {
   boardData: IBoardData;
@@ -7,7 +7,8 @@ interface IDatasetContext {
   boardState: IBoardState;
   setBoardState: (boardState: IBoardState) => void;
   changeHistoryRef: React.MutableRefObject<IBoardData[]>;
-  currentRevision?: MutableRefObject<number>;
+  currentRevision: number;
+  setCurrentRevision: (revision: number) => void;
   undo: () => void;
   redo: () => void;
 }

@@ -59,23 +59,13 @@ const DatasestToolbar: React.FC = () => {
   return (
     <BoardActionsContainer>
       <div className="left">
-        <TimeTravel
-          onClick={dataset.undo}
-          disabled={changeHistoryRef.current.length === 0}
-        >
+        <TimeTravel onClick={dataset.undo} disabled={currentRevision === 0}>
           <i className="fad fa-undo" />
           <Label>Undo</Label>
         </TimeTravel>
         <TimeTravel
           onClick={dataset.redo}
-          disabled={
-            false
-
-            // changeHistoryRef.current.length === 0 ||
-            // currentRevision?.current ===
-            //   changeHistoryRef.current[changeHistoryRef.current.length - 1]
-            //     ?.revisionId
-          }
+          disabled={currentRevision === changeHistoryRef.current.length - 1}
         >
           <i className="fad fa-redo" />
           <Label>Redo</Label>

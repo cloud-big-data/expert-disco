@@ -37,19 +37,12 @@ const RowsContainer = styled.div`
 `;
 
 const Grid: React.FC = () => {
-  const { boardData, setBoardData, boardState, setBoardState } = useContext(
-    DatasetContext,
-  )!;
+  const { boardData } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
   return (
     <GridContainer>
       <EventsProvider>
-        <HotkeysProvider
-          boardState={boardState}
-          setBoardState={setBoardState}
-          boardData={boardData}
-          setBoardData={setBoardData!}
-        >
+        <HotkeysProvider>
           <ColumnsContainer>
             {columns.map((col, index) => (
               <ColumnHeader

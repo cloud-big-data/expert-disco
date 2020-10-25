@@ -3,6 +3,7 @@ import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import * as R from 'ramda';
 import { DataTypes, IBoardState, IBoardData } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
@@ -157,12 +158,18 @@ const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
+  const [currentRevision, setCurrentRevision] = useState(0);
   const changeHistoryRef = useRef<IBoardData[]>([]);
-  const currentRevision = useRef<number>(0);
 
   useEffect(() => {
+    changeHistoryRef.current = [sample];
     setBoardData(sample);
   }, []);
+
+  // useEffect(() => {
+  //   if (currentRevision === 0) return;
+  //   setBoardData(changeHistoryRef.current[currentRevision]);
+  // }, [currentRevision]);
 
   if (!user.userId || !user.email) {
     return (
@@ -184,11 +191,18 @@ const DatasetWrapper: React.FC = () => {
   }
 
   const userType = getUserType(user.userId, boardData?.visibilitySettings);
+  const saveToChangeHistory = () => {
+    changeHistoryRef.current = [
+      ...R.uniqBy(R.prop('rows'), changeHistoryRef.current),
+      boardData,
+    ];
+  };
 
   return (
     <DatasetContext.Provider
       value={{
         currentRevision,
+        setCurrentRevision,
         boardData,
         setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
           userType,
@@ -196,33 +210,32 @@ const DatasetWrapper: React.FC = () => {
           ? setBoardData
           : null,
         boardState,
-        setBoardState,
+        setBoardState: (boardState: IBoardState) =>
+          setBoardState(prevBoardState => {
+            if (
+              prevBoardState.cellsState.activeCell !== '' &&
+              boardState.cellsState.activeCell === '' &&
+              prevBoardState.cellsState.selectedCell !== '' &&
+              boardState.cellsState.selectedCell !== ''
+            ) {
+              saveToChangeHistory();
+              setCurrentRevision(currentRevision + 1);
+            }
+
+            return boardState;
+          }),
         changeHistoryRef,
         undo: () => {
-          // if (
-          //   !currentRevision ||
-          //   !currentRevision.current ||
-          //   currentRevision.current === changeHistoryRef.current[0].revisionId
-          // )
-          //   return;
-          // const current = changeHistoryRef.current.findIndex(
-          //   x => x.revisionId === currentRevision.current,
-          // );
-          // const newBoardData = changeHistoryRef.current[current - 1];
-          // currentRevision.current = newBoardData.revisionId;
-          // setBoardData!(R.omit(['revisionId'], newBoardData));
+          if (currentRevision === 0) return;
+          const newRevision = currentRevision - 1;
+          setBoardData(changeHistoryRef.current[newRevision]);
+          setCurrentRevision(newRevision);
         },
         redo: () => {
-          // console.log(changeHistoryRef.current, currentRevision.current);
-          // if (
-          //   !currentRevision ||
-          //   !currentRevision.current ||
-          //   currentRevision.current ===
-          //     changeHistoryRef.current[changeHistoryRef.current.length - 1]
-          //       .revisionId
-          // )
-          //   return;
-          // console.log('redoing');
+          if (currentRevision === changeHistoryRef.current.length - 1) return;
+          const newRevision = currentRevision + 1;
+          setBoardData(changeHistoryRef.current[newRevision]);
+          setCurrentRevision(newRevision);
         },
       }}
     >

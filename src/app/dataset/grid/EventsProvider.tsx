@@ -1,16 +1,10 @@
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect } from 'react';
-import * as R from 'ramda';
 import findCellCoordinates from '../lib/findCellIndex';
 
 const EventsProvider: React.FC = ({ children }) => {
-  const {
-    boardState,
-    boardData,
-    setBoardState,
-    currentRevision,
-    changeHistoryRef,
-  } = useContext(DatasetContext)!;
+  const { boardState, boardData, setBoardState } = useContext(DatasetContext)!;
+
   const { selectedCell, activeCell } = boardState.cellsState;
   const [rowIndex, cellIndex] = selectedCell
     ? findCellCoordinates(boardData.rows, selectedCell)
@@ -200,22 +194,6 @@ const EventsProvider: React.FC = ({ children }) => {
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
   });
-
-  useEffect(() => {
-    if (boardState.cellsState.activeCell !== '') return;
-    if (!currentRevision) return;
-
-    currentRevision.current = changeHistoryRef.current.length - 1;
-    changeHistoryRef.current = [
-      ...R.uniqBy(R.prop('rows'), changeHistoryRef.current),
-      boardData,
-    ];
-  }, [
-    boardData,
-    boardState.cellsState.activeCell,
-    changeHistoryRef,
-    currentRevision,
-  ]);
 
   return <>{children}</>;
 };

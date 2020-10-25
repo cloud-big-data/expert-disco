@@ -1,16 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { IBoardData, IBoardState, ICell, IRow } from 'app/dataset/types';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { ICell, IRow } from 'app/dataset/types';
 import * as R from 'ramda';
 import returnUpdatedCells from 'app/dataset/lib/returnUpdatedCells';
 import useClippy from 'use-clippy';
+import DatasetContext from 'contexts/DatasetContext';
 import getCellValueById from '../lib/getCellValueById';
 
-const HotkeysProvider: React.FC<{
-  boardState: IBoardState;
-  setBoardState: (boardState: IBoardState) => void;
-  boardData: IBoardData;
-  setBoardData: (boardData: IBoardData) => void;
-}> = ({ boardState, setBoardState, boardData, setBoardData, children }) => {
+const HotkeysProvider: React.FC = ({ children }) => {
+  const {
+    boardState,
+    setBoardState,
+    boardData,
+    setBoardData,
+    undo,
+    redo,
+  } = useContext(DatasetContext)!;
+
   const [clipboard, setClipboard] = useClippy();
   const [cut, toggleCut] = useState<{ cellId?: string; cutting: boolean }>({
     cutting: false,
@@ -22,7 +27,7 @@ const HotkeysProvider: React.FC<{
   const { selectedCell } = boardState.cellsState;
 
   const checkKeyEvent = (e: KeyboardEvent) =>
-    ['Meta', 'c', 'v', 'x'].includes(e.key);
+    ['Meta', 'Shift', 'c', 'v', 'x', 'z'].includes(e.key);
 
   const has = (key: string) => keysPressed.current.includes(key);
 
@@ -61,7 +66,7 @@ const HotkeysProvider: React.FC<{
             ]
           : baseCellUpdates;
 
-        setBoardData({
+        setBoardData!({
           ...boardData,
           rows: R.map((row: IRow) => ({
             ...row,
@@ -104,6 +109,12 @@ const HotkeysProvider: React.FC<{
           cutting: false,
         });
       }
+      if (has('z') && has('Meta')) {
+        undo();
+      }
+      if (has('z') && has('Meta') && has('Shift')) {
+        redo();
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -125,10 +136,12 @@ const HotkeysProvider: React.FC<{
     cut,
     cut.cutting,
     keysPressed,
+    redo,
     selectedCell,
     setBoardData,
     setBoardState,
     setClipboard,
+    undo,
   ]);
 
   return <>{children}</>;
