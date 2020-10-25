@@ -4,7 +4,6 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import * as R from 'ramda';
 import { makeToolbarActions } from '../lib/toolbarActions';
 
 const BoardActionsContainer = styled.div`
