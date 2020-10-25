@@ -1,5 +1,5 @@
 import { IBoardData, IBoardState } from 'app/dataset/types';
-import findCellCoordinates from '../../lib/findCellIndex';
+import findCellCoordinates from './findCellIndex';
 
 interface IHandleKeyPress {
   setBoardState: (boardState: IBoardState) => void;
@@ -7,7 +7,7 @@ interface IHandleKeyPress {
   boardData: IBoardData;
 }
 
-const useHandleKeyPress = ({
+const makeHandleKeyPress = ({
   setBoardState,
   boardState,
   boardData,
@@ -200,4 +200,4 @@ const useHandleKeyPress = ({
   return handleKeyPress;
 };
 
-export default useHandleKeyPress;
+export default makeHandleKeyPress;

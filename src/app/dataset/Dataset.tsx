@@ -14,6 +14,7 @@ const DatasetContainer = styled.div`
   flex-direction: column;
   position: sticky;
   max-height: 90vh;
+  min-height: 90vh;
   overflow: hidden;
   padding: 1rem;
 `;

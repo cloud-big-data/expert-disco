@@ -68,16 +68,21 @@ const DangerText: React.FC<IText> = props => (
   </TextContainer>
 );
 
-const LabelContainer = styled.span`
+const LabelContainer = styled.span<{ unBold?: boolean }>`
   display: flex;
-  font-weight: 600;
+  font-weight: ${props => (props.unBold ? 500 : 600)};
 `;
 
 const Label: React.FC<{
   id?: string;
   style?: React.CSSProperties;
+  unBold?: boolean;
   children: React.ReactNode;
-}> = props => <LabelContainer id={props.id}>{props.children}</LabelContainer>;
+}> = props => (
+  <LabelContainer unBold={props.unBold} id={props.id}>
+    {props.children}
+  </LabelContainer>
+);
 
 const HelperContainer = styled.p`
   font-size: 0.75rem;

@@ -1,9 +1,11 @@
+import RightClickMenu from 'components/RightClickMenu';
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import returnUpdatedCells from '../lib/returnUpdatedCells';
+import { makeToolbarActions } from '../lib/toolbarActions';
 import { IColumn } from '../types';
 import { defaults } from './constants';
 import { ActiveInput } from './styles';
@@ -60,9 +62,12 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   columnIndex,
   _id,
 }) => {
+  const [showRightClickMenu, toggleShowRightClickMenu] = useState(false);
+
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
     DatasetContext,
   )!;
+  const boardActions = makeToolbarActions(boardData);
   const inputRef = useRef<HTMLInputElement>(null);
   const active = boardState.columnsState.activeColumn === columnIndex;
 
@@ -74,6 +79,10 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
 
   return (
     <ColumnHeaderContainer
+      onContextMenu={e => {
+        e.preventDefault();
+        toggleShowRightClickMenu(!showRightClickMenu);
+      }}
       position={position}
       active={active}
       colWidth={colWidth ?? defaults.COL_WIDTH}
@@ -100,6 +109,22 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         })
       }
     >
+      {showRightClickMenu && (
+        <RightClickMenu
+          closeMenu={() => toggleShowRightClickMenu(false)}
+          options={[
+            {
+              label: 'Remove column',
+              onClick: () => {
+                setBoardData!(boardActions.removeColumn(_id));
+              },
+              icon: (
+                <i style={{ color: Styles.red }} className="fal fa-times-circle" />
+              ),
+            },
+          ]}
+        />
+      )}
       {active ? (
         <ActiveInput
           ref={inputRef}

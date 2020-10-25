@@ -50,5 +50,16 @@ export const makeToolbarActions = (boardData: IBoardData) => {
         ],
       })),
     }),
+    removeColumn: (colId: string) => {
+      const targetIndex = boardData.columns.findIndex(col => col._id === colId);
+      return {
+        ...boardData,
+        columns: boardData.columns.filter(col => col._id !== colId),
+        rows: boardData.rows.map(row => ({
+          ...row,
+          cells: row.cells.filter((cell, index) => index !== targetIndex),
+        })),
+      };
+    },
   };
 };

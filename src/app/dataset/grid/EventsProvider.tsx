@@ -1,10 +1,10 @@
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect } from 'react';
-import useHandleKeyPress from './hooks/useHandleKeyPress';
+import makeHandleKeyPress from '../lib/makeHandleKeyPress';
 
 const EventsProvider: React.FC = ({ children }) => {
   const { boardState, boardData, setBoardState } = useContext(DatasetContext)!;
-  const handleKeyPress = useHandleKeyPress({
+  const handleKeyPress = makeHandleKeyPress({
     setBoardState,
     boardState,
     boardData,
