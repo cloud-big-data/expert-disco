@@ -41,14 +41,9 @@ const Grid: React.FC = () => {
     DatasetContext,
   )!;
   const { rows, columns } = boardData;
-
   return (
     <GridContainer>
-      <EventsProvider
-        boardData={boardData}
-        boardState={boardState}
-        setBoardState={setBoardState}
-      >
+      <EventsProvider>
         <HotkeysProvider
           boardState={boardState}
           setBoardState={setBoardState}

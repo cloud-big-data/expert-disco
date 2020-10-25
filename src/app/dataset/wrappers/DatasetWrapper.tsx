@@ -196,20 +196,37 @@ const DatasetWrapper: React.FC = () => {
         setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
           userType,
         )
-          ? (boardData: IBoardData) => {
-              changeHistoryRef.current = [
-                ...R.uniqBy(R.prop('revisionId'), changeHistoryRef.current),
-                {
-                  ...boardData,
-                  revisionId: uuidv4(),
-                },
-              ];
-              setBoardData(boardData);
-            }
+          ? setBoardData
           : null,
         boardState,
         setBoardState,
         changeHistoryRef,
+        undo: () => {
+          if (
+            !currentRevision ||
+            !currentRevision.current ||
+            currentRevision.current === changeHistoryRef.current[0].revisionId
+          )
+            return;
+
+          const current = changeHistoryRef.current.findIndex(
+            x => x.revisionId === currentRevision.current,
+          );
+          const newBoardData = changeHistoryRef.current[current - 1];
+          currentRevision.current = newBoardData.revisionId;
+          setBoardData!(R.omit(['revisionId'], newBoardData));
+        },
+        redo: () => {
+          if (
+            !currentRevision ||
+            !currentRevision.current ||
+            currentRevision.current ===
+              changeHistoryRef.current[changeHistoryRef.current.length - 1]
+                .revisionId
+          )
+            return;
+          console.log('redoing');
+        },
       }}
     >
       <CustomerNav wide email={user.email} />

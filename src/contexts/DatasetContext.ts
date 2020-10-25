@@ -8,6 +8,8 @@ interface IDatasetContext {
   setBoardState: (boardState: IBoardState) => void;
   changeHistoryRef: React.MutableRefObject<IChangeHistory[]>;
   currentRevision?: MutableRefObject<string | undefined>;
+  undo: () => void;
+  redo: () => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);

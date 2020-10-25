@@ -47,9 +47,13 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
 `;
 
 const DatasestToolbar: React.FC = () => {
-  const { boardData, setBoardData, changeHistoryRef, currentRevision } = useContext(
-    DatasetContext,
-  )!;
+  const {
+    boardData,
+    setBoardData,
+    changeHistoryRef,
+    currentRevision,
+    ...dataset
+  } = useContext(DatasetContext)!;
   const boardActions = makeToolbarActions(boardData);
   const colLen = boardData.columns.length;
 
@@ -57,27 +61,21 @@ const DatasestToolbar: React.FC = () => {
     <BoardActionsContainer>
       <div className="left">
         <TimeTravel
-          onClick={() => {
-            if (
-              !currentRevision ||
-              currentRevision?.current === changeHistoryRef.current[0].revisionId
-            )
-              return;
-
-            const current = changeHistoryRef.current.findIndex(
-              x => x.revisionId === currentRevision.current,
-            );
-
-            setBoardData!(
-              R.omit(['revisionId'], changeHistoryRef.current[current - 1]),
-            );
-          }}
+          onClick={dataset.undo}
           disabled={changeHistoryRef.current.length === 0}
         >
           <i className="fad fa-undo" />
           <Label>Undo</Label>
         </TimeTravel>
-        <TimeTravel>
+        <TimeTravel
+          onClick={dataset.redo}
+          disabled={
+            changeHistoryRef.current.length === 0 ||
+            currentRevision?.current ===
+              changeHistoryRef.current[changeHistoryRef.current.length - 1]
+                ?.revisionId
+          }
+        >
           <i className="fad fa-redo" />
           <Label>Redo</Label>
         </TimeTravel>

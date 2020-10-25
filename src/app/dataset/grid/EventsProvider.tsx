@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react';
+import DatasetContext from 'contexts/DatasetContext';
+import React, { useContext, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import * as R from 'ramda';
 import findCellCoordinates from '../lib/findCellIndex';
-import { IBoardData, IBoardState } from '../types';
 
-const EventsProvider: React.FC<{
-  boardState: IBoardState;
-  boardData: IBoardData;
-  setBoardState: (state: IBoardState) => void;
-}> = ({ boardState, setBoardState, boardData, children }) => {
+const EventsProvider: React.FC = ({ children }) => {
+  const {
+    boardState,
+    boardData,
+    setBoardState,
+    currentRevision,
+    changeHistoryRef,
+  } = useContext(DatasetContext)!;
   const { selectedCell, activeCell } = boardState.cellsState;
   const [rowIndex, cellIndex] = selectedCell
     ? findCellCoordinates(boardData.rows, selectedCell)
@@ -196,6 +201,26 @@ const EventsProvider: React.FC<{
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
   });
+
+  useEffect(() => {
+    if (boardState.cellsState.activeCell !== '') return;
+    if (!currentRevision) return;
+    const uid = uuidv4();
+
+    currentRevision.current = uid;
+    changeHistoryRef.current = [
+      ...R.uniqBy(R.prop('revisionId'), changeHistoryRef.current),
+      {
+        ...boardData,
+        revisionId: uid,
+      },
+    ];
+  }, [
+    boardData,
+    boardState.cellsState.activeCell,
+    changeHistoryRef,
+    currentRevision,
+  ]);
 
   return <>{children}</>;
 };

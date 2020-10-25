@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
+import { v4 as uuidv4 } from 'uuid';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { ICell, IRow } from '../../types';
 import { defaults } from '../constants';
@@ -98,9 +99,15 @@ const Cell: React.FC<ICellProps> = ({
   position,
   isCopying,
 }) => {
-  const { boardState, setBoardState, boardData, setBoardData } = useContext(
-    DatasetContext,
-  )!;
+  const {
+    boardState,
+    setBoardState,
+    boardData,
+    setBoardData,
+    currentRevision,
+    changeHistoryRef,
+  } = useContext(DatasetContext)!;
+
   const inputRef = useRef<HTMLInputElement>(null);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const { cellsState } = boardState;
