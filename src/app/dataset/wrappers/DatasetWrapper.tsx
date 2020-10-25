@@ -227,9 +227,9 @@ const DatasetWrapper: React.FC = () => {
         changeHistoryRef,
         undo: () => {
           if (currentRevision === 0) return;
-          const newRevision = currentRevision - 1;
-          setBoardData(changeHistoryRef.current[newRevision]);
-          setCurrentRevision(newRevision);
+          const prevRevision = currentRevision - 1;
+          setBoardData(changeHistoryRef.current[prevRevision]);
+          setCurrentRevision(prevRevision);
         },
         redo: () => {
           if (currentRevision === changeHistoryRef.current.length - 1) return;

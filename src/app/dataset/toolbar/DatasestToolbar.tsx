@@ -56,16 +56,22 @@ const DatasestToolbar: React.FC = () => {
   const boardActions = makeToolbarActions(boardData);
   const colLen = boardData.columns.length;
 
+  const undoDisabled = currentRevision === 0;
+  const redoDisabled = !changeHistoryRef.current[currentRevision + 1];
+
   return (
     <BoardActionsContainer>
       <div className="left">
-        <TimeTravel onClick={dataset.undo} disabled={currentRevision === 0}>
+        <TimeTravel
+          onClick={undoDisabled ? undefined : dataset.undo}
+          disabled={undoDisabled}
+        >
           <i className="fad fa-undo" />
           <Label>Undo</Label>
         </TimeTravel>
         <TimeTravel
-          onClick={dataset.redo}
-          disabled={currentRevision === changeHistoryRef.current.length - 1}
+          onClick={redoDisabled ? undefined : dataset.redo}
+          disabled={redoDisabled}
         >
           <i className="fad fa-redo" />
           <Label>Redo</Label>

@@ -18,11 +18,11 @@ const DatasetContainer = styled.div`
   padding: 1rem;
 `;
 const ParentGridContainer = styled.div`
-  flex: 0 1 auto;
+  flex: 1 0 auto;
   display: flex;
   width: 100%;
   max-width: 100%;
-  max-height: 100%;
+  height: 100%;
   overflow: auto;
   padding-right: 2rem;
 `;
