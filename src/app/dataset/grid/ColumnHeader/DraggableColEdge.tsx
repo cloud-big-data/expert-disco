@@ -28,13 +28,15 @@ const DraggableColEdge: React.FC<{
   colWidth: number;
   colId: string;
 }> = ({ colWidth, colId }) => {
-  const edgeRef = useRef<HTMLDivElement>(null);
   const { boardData, setBoardData } = useContext(DatasetContext)!;
   const [hovering, toggleHovering] = useState(false);
+  const [mouseIsDown, toggleMouseIsDown] = useState(false);
+
   const xRef = useRef<HTMLDivElement>(null);
   const startDragPos = useRef<number | null>(null);
+  const edgeRef = useRef<HTMLDivElement>(null);
+
   const boardActions = makeBoardActions(boardData);
-  const [mouseIsDown, toggleMouseIsDown] = useState(false);
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
@@ -54,12 +56,16 @@ const DraggableColEdge: React.FC<{
       xRef.current.style.left = `${e.pageX}px`;
     };
     const handleMouseUp = (e: MouseEvent) => {
-      if (mouseIsDown) {
-        toggleMouseIsDown(false);
-        const newWidth = colWidth + (e.pageX - startDragPos.current!);
-        document.querySelector('body')!.style.cursor = 'unset';
-        setBoardData!(boardActions.changeColWidth(colId, newWidth));
-      }
+      if (!mouseIsDown) return;
+      toggleMouseIsDown(false);
+      document.querySelector('body')!.style.cursor = 'unset';
+
+      setBoardData!(
+        boardActions.changeColWidth(
+          colId,
+          colWidth + (e.pageX - startDragPos.current!),
+        ),
+      );
     };
 
     document.addEventListener('mousedown', handleMouseDown);
