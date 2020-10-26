@@ -4,11 +4,12 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import returnUpdatedCells from '../lib/returnUpdatedCells';
-import { makeToolbarActions } from '../lib/toolbarActions';
-import { IColumn } from '../types';
-import { defaults } from './constants';
-import { ActiveInput } from './styles';
+import returnUpdatedCells from '../../lib/returnUpdatedCells';
+import { makeBoardActions } from '../../lib/makeBoardActions';
+import { IColumn } from '../../types';
+import { defaults } from '../constants';
+import { ActiveInput } from '../styles';
+import DraggableColEdge from './DraggableColEdge';
 
 interface IColumnHeaderProps extends IColumn {
   columnIndex: number;
@@ -23,15 +24,15 @@ const ColumnHeaderContainer = styled.div<{
   position: IColumnHeaderProps['position'];
   active: boolean;
 }>`
-  cursor: pointer;
   background: #f1eff3;
   display: flex;
   flex: 1 0 auto;
-  justify-content: center;
   align-items: center;
   height: 2rem;
   width: ${props => props.colWidth}px;
+  max-width: ${props => props.colWidth}px;
   padding: 0.5rem;
+  padding-right: 0;
 
   &:hover {
     font-weight: bold;
@@ -63,11 +64,10 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   _id,
 }) => {
   const [showRightClickMenu, toggleShowRightClickMenu] = useState(false);
-
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
     DatasetContext,
   )!;
-  const boardActions = makeToolbarActions(boardData);
+  const boardActions = makeBoardActions(boardData);
   const inputRef = useRef<HTMLInputElement>(null);
   const active = boardState.columnsState.activeColumn === columnIndex;
 
@@ -160,6 +160,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       ) : (
         <Label>{value}</Label>
       )}
+      <DraggableColEdge colWidth={colWidth ?? defaults.COL_WIDTH} colId={_id} />
     </ColumnHeaderContainer>
   );
 };

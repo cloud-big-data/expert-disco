@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DataTypes, IBoardData } from '../types';
 
-export const makeToolbarActions = (boardData: IBoardData) => {
+export const makeBoardActions = (boardData: IBoardData) => {
   const colLength = boardData.columns.length;
   return {
     /**
@@ -61,5 +61,12 @@ export const makeToolbarActions = (boardData: IBoardData) => {
         })),
       };
     },
+    changeColWidth: (colId: string, newWidth: number) => ({
+      ...boardData,
+      columns: boardData.columns.map(col => ({
+        ...col,
+        colWidth: col._id === colId ? newWidth : col.colWidth,
+      })),
+    }),
   };
 };

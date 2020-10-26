@@ -19,6 +19,7 @@ interface ICellProps extends ICell {
     firstColumn: boolean;
   };
   isCopying: boolean;
+  colWidth?: number;
 }
 
 const CellContainer = styled.div<{
@@ -27,11 +28,13 @@ const CellContainer = styled.div<{
   selected?: boolean;
   position: ICellProps['position'];
   isCopying: boolean;
+  width: number;
 }>`
   display: flex;
   align-items: center;
   height: 100%;
-  width: ${defaults.COL_WIDTH}px;
+  width: ${props => props.width}px;
+  max-width: ${props => props.width}px;
   padding: .5rem;
   cursor: pointer;
   flex: 1 0 auto;
@@ -97,6 +100,7 @@ const Cell: React.FC<ICellProps> = ({
   selected,
   position,
   isCopying,
+  colWidth,
 }) => {
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
     DatasetContext,
@@ -114,6 +118,7 @@ const Cell: React.FC<ICellProps> = ({
 
   return (
     <CellContainer
+      width={colWidth ?? defaults.COL_WIDTH}
       isCopying={isCopying}
       active={active}
       highlighted={highlighted}

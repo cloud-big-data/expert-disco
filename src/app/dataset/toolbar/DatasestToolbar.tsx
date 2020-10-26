@@ -4,7 +4,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { makeToolbarActions } from '../lib/toolbarActions';
+import { makeBoardActions } from '../lib/makeBoardActions';
 
 const BoardActionsContainer = styled.div`
   display: flex;
@@ -53,7 +53,7 @@ const DatasestToolbar: React.FC = () => {
     currentRevision,
     ...dataset
   } = useContext(DatasetContext)!;
-  const boardActions = makeToolbarActions(boardData);
+  const boardActions = makeBoardActions(boardData);
   const colLen = boardData.columns.length;
 
   const undoDisabled = currentRevision === 0;

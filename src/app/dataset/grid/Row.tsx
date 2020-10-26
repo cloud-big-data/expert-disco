@@ -36,7 +36,7 @@ interface IRowProps extends IRow {
 }
 
 const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
-  const { boardState, setBoardState } = useContext(DatasetContext)!;
+  const { boardState, setBoardState, boardData } = useContext(DatasetContext)!;
   return (
     <RowContainer>
       <RowIndexContainer
@@ -73,6 +73,7 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
             firstColumn: index === 0,
           }}
           isCopying={boardState.cellsState.copyingCell === cell._id}
+          colWidth={boardData.columns[index].colWidth}
           {...cell}
         />
       ))}
