@@ -109,9 +109,7 @@ const Login: React.FC = () => {
     }
 
     toggleBadLogin(false);
-    if (!badLogin) {
-      tryLogin();
-    }
+    tryLogin();
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
