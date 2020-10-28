@@ -108,7 +108,6 @@ const Cell: React.FC<ICellProps> = ({
   )!;
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const hiddenInputRef = useRef<HTMLInputElement>(null);
   const { cellsState } = boardState;
 
   useEffect(() => {
@@ -148,15 +147,6 @@ const Cell: React.FC<ICellProps> = ({
         })
       }
     >
-      <div style={{ position: 'absolute', left: '-99999px' }}>
-        <input
-          ref={hiddenInputRef}
-          id={_id}
-          readOnly
-          type="text"
-          value={value ?? ''}
-        />
-      </div>
       {active ? (
         <ActiveInput
           ref={inputRef}

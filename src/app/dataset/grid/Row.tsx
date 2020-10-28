@@ -40,6 +40,8 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
   return (
     <RowContainer>
       <RowIndexContainer
+        data-row-index={rowIndex}
+        className="row__index"
         onClick={() => {
           setBoardState({
             ...boardState,

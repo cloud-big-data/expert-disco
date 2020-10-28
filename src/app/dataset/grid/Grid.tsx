@@ -1,5 +1,6 @@
 import DatasetContext from 'contexts/DatasetContext';
 import GridContext from 'contexts/GridContext';
+import useFindVisibleRows from 'hooks/useFindVisibleRows';
 import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
 import ColumnHeader from './ColumnHeader';
@@ -45,6 +46,9 @@ const Grid: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const { boardData } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
+  const [firstVisibleRow, lastVisibleRow] = useFindVisibleRows(gridRef);
+
+  console.log(firstVisibleRow, lastVisibleRow);
   return (
     <GridContext.Provider
       value={{

@@ -10,6 +10,7 @@ import { IColumn } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 import DraggableColEdge from './DraggableColEdge';
+import ColumnTypeIcon from './ColumnTypeIcon';
 
 interface IColumnHeaderProps extends IColumn {
   columnIndex: number;
@@ -63,6 +64,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   position,
   columnIndex,
   _id,
+  dataType,
 }) => {
   const [showRightClickMenu, toggleShowRightClickMenu] = useState(false);
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
@@ -110,6 +112,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         })
       }
     >
+      <ColumnTypeIcon dataType={dataType} />
       {showRightClickMenu && (
         <RightClickMenu
           closeMenu={() => toggleShowRightClickMenu(false)}

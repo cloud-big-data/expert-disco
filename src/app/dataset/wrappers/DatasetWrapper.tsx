@@ -24,12 +24,12 @@ const sample: IBoardData = {
     },
     {
       _id: 'colyoo',
-      dataType: DataTypes.string,
+      dataType: DataTypes.number,
       value: 'col 2',
     },
     {
       _id: 'colyooo',
-      dataType: DataTypes.string,
+      dataType: DataTypes.date,
       value: 'col 3',
     },
     {
@@ -166,21 +166,21 @@ const DatasetWrapper: React.FC = () => {
     setBoardData(sample);
   }, []);
 
+  const loader = (
+    <div className="absolute__center">
+      <Loading />
+    </div>
+  );
+
   if (!user.userId || !user.email) {
-    return (
-      <div className="absolute__center">
-        <Loading />
-      </div>
-    );
+    return loader;
   }
 
   if (!boardData) {
     return (
       <>
         <CustomerNav email={user.email} />
-        <div className="absolute__center">
-          <Loading />
-        </div>
+        {loader}
       </>
     );
   }
