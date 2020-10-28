@@ -41,7 +41,6 @@ const DraggableColEdge: React.FC<{
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
       e.stopPropagation?.();
-      e.preventDefault?.();
       if (e.target !== edgeRef.current) return;
       document.querySelector('body')!.style.cursor = 'grab';
       toggleMouseIsDown(true);
@@ -59,7 +58,9 @@ const DraggableColEdge: React.FC<{
       if (!mouseIsDown) return;
       toggleMouseIsDown(false);
       document.querySelector('body')!.style.cursor = 'unset';
+      const newWidth = colWidth + (e.pageX - startDragPos.current!);
 
+      if (newWidth < 5) return;
       setBoardData!(
         boardActions.changeColWidth(
           colId,

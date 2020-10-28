@@ -6,13 +6,16 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
 const CustomerNavContainer = styled.div<{ wide?: boolean }>`
+  top: 0;
   z-index: 1000;
   display: flex;
   position: sticky;
+  background: white;
   padding: ${Styles.defaultPadding};
   box-shadow: ${Styles.xsBoxShadow};
   margin: 0 auto;
   width: 100%;
+  max-height: 4rem;
   .customer-nav__icon {
     font-size: 1.25rem;
     font-weight: bold;

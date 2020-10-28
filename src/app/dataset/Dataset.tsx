@@ -13,10 +13,9 @@ const DatasetContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: sticky;
-  max-height: 90vh;
-  min-height: 90vh;
   overflow: hidden;
   padding: 1rem;
+  max-height: calc(100% - 4rem);
 `;
 const ParentGridContainer = styled.div`
   flex: 1 0 auto;
@@ -26,10 +25,13 @@ const ParentGridContainer = styled.div`
   height: 100%;
   overflow: auto;
   padding-right: 2rem;
+  background: white;
 `;
 const ToolbarContainer = styled.div`
   display: flex;
   padding: 1rem 2.25rem;
+  position: sticky;
+  top: 0;
 `;
 const FormulaBarContainer = styled.div`
   display: flex;

@@ -12,15 +12,19 @@ const GridContainer = styled.div`
   width: 100%;
   flex-direction: column;
   margin-top: 1rem;
-  padding: 0.25rem;
+  padding: 0 0.25rem;
   max-width: 100%;
   overflow: auto;
+  max-height: 75vh;
 `;
 const ColumnsContainer = styled.div`
   width: 100%;
   flex: 0 1 100%;
   display: flex;
   align-items: center;
+  background: white;
+  position: sticky;
+  top: 0;
   &:before {
     content: '';
     display: flex;
