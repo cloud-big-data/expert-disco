@@ -35,6 +35,7 @@ const CellContainer = styled.div<{
   height: 100%;
   width: ${props => props.width}px;
   max-width: ${props => props.width}px;
+  overflow: hidden;
   padding: .5rem;
   cursor: pointer;
   flex: 1 0 auto;

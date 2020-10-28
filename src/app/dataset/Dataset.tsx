@@ -62,6 +62,7 @@ const Dataset: React.FC<{
       <FormulaBarContainer>
         <InputField
           inputRef={inputRef}
+          disabled={selectedCell === ''}
           value={
             selectedCell !== '' ? getCellValueById(boardData.rows, selectedCell) : ''
           }

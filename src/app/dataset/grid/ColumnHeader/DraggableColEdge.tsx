@@ -1,5 +1,6 @@
 import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
 import DatasetContext from 'contexts/DatasetContext';
+import GridContext from 'contexts/GridContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
@@ -29,6 +30,7 @@ const DraggableColEdge: React.FC<{
   colId: string;
 }> = ({ colWidth, colId }) => {
   const { boardData, setBoardData } = useContext(DatasetContext)!;
+  const { gridRef } = useContext(GridContext)!;
   const [hovering, toggleHovering] = useState(false);
   const [mouseIsDown, toggleMouseIsDown] = useState(false);
 
@@ -40,19 +42,25 @@ const DraggableColEdge: React.FC<{
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
+      if (
+        !gridRef.current?.contains(e.target as Node) &&
+        e.target !== edgeRef.current
+      )
+        return;
+
       e.stopPropagation?.();
-      if (e.target !== edgeRef.current) return;
+      e.preventDefault?.();
+      if (!hovering) return;
       document.querySelector('body')!.style.cursor = 'grab';
       toggleMouseIsDown(true);
-
       startDragPos.current = e.pageX;
       if (xRef.current) {
-        xRef.current.style.left = `${e.pageX}px`;
+        xRef.current.style.left = `${e.pageX - 20}px`;
       }
     };
     const handleMouseMove = (e: MouseEvent) => {
       if (!xRef.current) return;
-      xRef.current.style.left = `${e.pageX}px`;
+      xRef.current.style.left = `${e.pageX - 20}px`;
     };
     const handleMouseUp = (e: MouseEvent) => {
       if (!mouseIsDown) return;
@@ -60,7 +68,7 @@ const DraggableColEdge: React.FC<{
       document.querySelector('body')!.style.cursor = 'unset';
       const newWidth = colWidth + (e.pageX - startDragPos.current!);
 
-      if (newWidth < 5) return;
+      if (newWidth < 15) return;
       setBoardData!(
         boardActions.changeColWidth(
           colId,
@@ -78,7 +86,7 @@ const DraggableColEdge: React.FC<{
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [boardActions, colId, colWidth, mouseIsDown, setBoardData]);
+  }, [boardActions, colId, colWidth, gridRef, hovering, mouseIsDown, setBoardData]);
 
   return (
     <ColEdgeContainer

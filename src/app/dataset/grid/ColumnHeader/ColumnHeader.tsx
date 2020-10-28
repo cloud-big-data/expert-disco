@@ -31,6 +31,7 @@ const ColumnHeaderContainer = styled.div<{
   height: 2rem;
   width: ${props => props.colWidth}px;
   max-width: ${props => props.colWidth}px;
+  overflow: hidden;
   padding: 0.5rem;
   padding-right: 0;
 

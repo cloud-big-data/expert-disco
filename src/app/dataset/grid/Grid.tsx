@@ -1,5 +1,6 @@
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext } from 'react';
+import GridContext from 'contexts/GridContext';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';
@@ -41,41 +42,48 @@ const RowsContainer = styled.div`
 `;
 
 const Grid: React.FC = () => {
+  const gridRef = useRef<HTMLDivElement>(null);
   const { boardData } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
   return (
-    <GridContainer>
-      <EventsProvider>
-        <HotkeysProvider>
-          <ColumnsContainer>
-            {columns.map((col, index) => (
-              <ColumnHeader
-                key={col._id}
-                {...col}
-                columnIndex={index}
-                position={{
-                  firstColumn: index === 0,
-                  lastColumn: index === columns.length - 1,
-                }}
-              />
-            ))}
-          </ColumnsContainer>
-          <RowsContainer>
-            {rows.map((row, index) => (
-              <Row
-                key={row._id}
-                {...row}
-                rowIndex={index}
-                position={{
-                  firstRow: index === 0,
-                  lastRow: index === rows.length - 1,
-                }}
-              />
-            ))}
-          </RowsContainer>
-        </HotkeysProvider>
-      </EventsProvider>
-    </GridContainer>
+    <GridContext.Provider
+      value={{
+        gridRef,
+      }}
+    >
+      <GridContainer ref={gridRef}>
+        <EventsProvider>
+          <HotkeysProvider>
+            <ColumnsContainer>
+              {columns.map((col, index) => (
+                <ColumnHeader
+                  key={col._id}
+                  {...col}
+                  columnIndex={index}
+                  position={{
+                    firstColumn: index === 0,
+                    lastColumn: index === columns.length - 1,
+                  }}
+                />
+              ))}
+            </ColumnsContainer>
+            <RowsContainer>
+              {rows.map((row, index) => (
+                <Row
+                  key={row._id}
+                  {...row}
+                  rowIndex={index}
+                  position={{
+                    firstRow: index === 0,
+                    lastRow: index === rows.length - 1,
+                  }}
+                />
+              ))}
+            </RowsContainer>
+          </HotkeysProvider>
+        </EventsProvider>
+      </GridContainer>
+    </GridContext.Provider>
   );
 };
 

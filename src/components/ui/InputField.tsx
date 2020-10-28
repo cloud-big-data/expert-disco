@@ -5,10 +5,12 @@ import Styles from 'styles/Styles';
 const InputContainer = styled.div<{
   error: boolean;
   active: boolean;
+  disabled?: boolean;
 }>`
-  transition-duration: 0.2s;
+  transition-duration: 0.1s;
   display: flex;
   width: 100%;
+  background: ${props => (props.disabled ? 'rgba(239, 239, 239, 0.3)' : 'white')};
   border: ${props =>
     props.error ? `1px solid ${Styles.red}` : '1px solid rgba(0, 0, 0, 0.1)'};
   ${props =>
@@ -55,7 +57,11 @@ const Input = styled.input<{
   color: ${Styles.fontColor};
   padding: ${props => (props.icon ? '0.5rem .75rem .5rem 0' : '.5rem .75rem')};
   outline: none;
-  transition-duration: 0.2s;
+  transition-duration: 0.1s;
+
+  &:disabled {
+    background: rgba(239, 239, 239, 0.3);
+  }
 `;
 
 const InputField: React.FC<{
@@ -72,15 +78,17 @@ const InputField: React.FC<{
   icon?: React.ReactNode;
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputRef?: React.RefObject<HTMLInputElement>;
+  disabled?: boolean;
 }> = props => {
   const [active, setActive] = useState(false);
 
   return (
-    <InputContainer active={active} error={!!props.error}>
+    <InputContainer disabled={props.disabled} active={active} error={!!props.error}>
       {props.icon && <div className="icon__container">{props.icon}</div>}
       <Input
         ref={props.inputRef}
         placeholder={props.placeholder}
+        disabled={props.disabled}
         className={props.className}
         id={props.id}
         style={props.style}

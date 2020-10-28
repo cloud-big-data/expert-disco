@@ -166,11 +166,6 @@ const DatasetWrapper: React.FC = () => {
     setBoardData(sample);
   }, []);
 
-  // useEffect(() => {
-  //   if (currentRevision === 0) return;
-  //   setBoardData(changeHistoryRef.current[currentRevision]);
-  // }, [currentRevision]);
-
   if (!user.userId || !user.email) {
     return (
       <div className="absolute__center">
