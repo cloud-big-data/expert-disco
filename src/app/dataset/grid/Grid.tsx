@@ -17,6 +17,7 @@ const GridContainer = styled.div`
   padding: 0 0.25rem;
   max-width: 100%;
   overflow: auto;
+  height: 75vh;
   max-height: 75vh;
 `;
 const ColumnsContainer = styled.div`

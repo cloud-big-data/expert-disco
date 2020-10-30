@@ -1,4 +1,4 @@
-import RightClickMenu from 'components/RightClickMenu';
+import DropdownMenu from 'components/DropdownMenu';
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -58,6 +58,22 @@ const ColumnHeaderContainer = styled.div<{
       : ``}
 `;
 
+const MenuTrigger = styled.div`
+  cursor: pointer;
+  transition-duration: 0.2s;
+  display: flex;
+  margin-left: auto;
+  align-self: center;
+  margin-right: 0.25rem;
+  opacity: 0.4;
+  &:hover {
+    opacity: 1;
+    i {
+      color: ${Styles.blue};
+    }
+  }
+`;
+
 const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   value,
   colWidth,
@@ -66,7 +82,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   _id,
   dataType,
 }) => {
-  const [showRightClickMenu, toggleShowRightClickMenu] = useState(false);
+  const [showContextMenu, toggleShowContextMenu] = useState(false);
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
     DatasetContext,
   )!;
@@ -75,16 +91,34 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   const active = boardState.columnsState.activeColumn === columnIndex;
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    inputRef.current?.focus();
   }, [active]);
+
+  const MENU_OPTIONS = [
+    {
+      label: 'Remove column',
+      onClick: () => {
+        setBoardData!(boardActions.removeColumn(_id));
+      },
+      icon: <i style={{ color: Styles.red }} className="fal fa-times-circle" />,
+    },
+    {
+      label: 'Sort',
+      onClick: () => undefined,
+      icon: <i style={{ color: Styles.orange }} className="fad fa-sort" />,
+    },
+    {
+      label: 'Format',
+      onClick: () => undefined,
+      icon: <i style={{ color: Styles.blue }} className="fad fa-remove-format" />,
+    },
+  ];
 
   return (
     <ColumnHeaderContainer
       onContextMenu={e => {
         e.preventDefault();
-        toggleShowRightClickMenu(!showRightClickMenu);
+        toggleShowContextMenu(!showContextMenu);
       }}
       position={position}
       active={active}
@@ -113,20 +147,10 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       }
     >
       <ColumnTypeIcon dataType={dataType} />
-      {showRightClickMenu && (
-        <RightClickMenu
-          closeMenu={() => toggleShowRightClickMenu(false)}
-          options={[
-            {
-              label: 'Remove column',
-              onClick: () => {
-                setBoardData!(boardActions.removeColumn(_id));
-              },
-              icon: (
-                <i style={{ color: Styles.red }} className="fal fa-times-circle" />
-              ),
-            },
-          ]}
+      {showContextMenu && (
+        <DropdownMenu
+          closeMenu={() => toggleShowContextMenu(false)}
+          options={MENU_OPTIONS}
         />
       )}
       {active ? (
@@ -164,6 +188,15 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       ) : (
         <Label>{value}</Label>
       )}
+      <MenuTrigger
+        onDoubleClick={e => e.stopPropagation()}
+        onClick={e => {
+          e.stopPropagation();
+          toggleShowContextMenu(true);
+        }}
+      >
+        <i className="fas fa-chevron-square-down" />
+      </MenuTrigger>
       <DraggableColEdge colWidth={colWidth ?? defaults.COL_WIDTH} colId={_id} />
     </ColumnHeaderContainer>
   );

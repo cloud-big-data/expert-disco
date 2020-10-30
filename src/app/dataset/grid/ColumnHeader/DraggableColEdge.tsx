@@ -4,18 +4,16 @@ import GridContext from 'contexts/GridContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { defaults } from '../constants';
 
 const ColEdgeContainer = styled.div<{
   hovering: boolean;
-  width: number;
 }>`
   display: flex;
-  margin-left: auto;
+  flex: 0 1;
   padding-right: 2rem;
   height: 2rem;
-  width: 0px;
-  border-right: 3px solid ${props => (props.hovering ? Styles.blue : 'transparent')};
+  margin-right: -2rem;
+  border-left: 3px solid ${props => (props.hovering ? Styles.blue : 'transparent')};
   cursor: ew-resize;
 `;
 
@@ -91,7 +89,6 @@ const DraggableColEdge: React.FC<{
   return (
     <ColEdgeContainer
       ref={edgeRef}
-      width={colWidth ?? defaults.COL_WIDTH}
       hovering={hovering}
       onMouseEnter={() => toggleHovering(true)}
       onMouseLeave={() => toggleHovering(false)}

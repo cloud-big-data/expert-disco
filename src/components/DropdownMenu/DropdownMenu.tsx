@@ -5,6 +5,7 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
 const RightClickMenuContainer = styled.div`
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -13,20 +14,31 @@ const RightClickMenuContainer = styled.div`
   border-radius: ${Styles.defaultBorderRadius};
   box-shadow: ${Styles.smBoxShadow};
   padding: ${Styles.defaultPadding};
-  margin-bottom: -5rem;
+  margin-bottom: -8rem;
   max-width: 15rem;
+  min-width: 12rem;
+  margin-left: 0.25rem;
+  z-index: 200;
 `;
 
 const MenuOption = styled.div`
+  cursor: pointer;
   display: flex;
   align-items: center;
+  margin-top: 0.3rem;
 
   .icon__container {
     margin-right: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
-const RightClickMenu: React.FC<{
+const DropdownMenu: React.FC<{
   closeMenu: () => void;
   options: Array<{
     label: string;
@@ -59,11 +71,13 @@ const RightClickMenu: React.FC<{
           }}
         >
           <div className="icon__container">{opt.icon}</div>
-          <Label unBold>{opt.label}</Label>
+          <Label hoverBold unBold>
+            {opt.label}
+          </Label>
         </MenuOption>
       ))}
     </RightClickMenuContainer>
   );
 };
 
-export default RightClickMenu;
+export default DropdownMenu;
