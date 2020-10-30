@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useEffect, useRef } from 'react';
+import * as R from 'ramda';
 
 const useFindVisibleRows = (
   gridRef: React.RefObject<HTMLDivElement>,
@@ -10,30 +10,29 @@ const useFindVisibleRows = (
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return;
+
     const handleScroll = () => {
       clearTimeout(scrollTimeout.current);
       scrollTimeout.current = setTimeout(() => {
-        const indeces = [...grid.querySelectorAll('div.row__index')]
-          .filter(node => {
-            const { top } = node.getBoundingClientRect();
-            return top > grid.scrollTop;
-          })
-          // @ts-ignore
-          .map(node => parseInt(node.dataset.rowIndex, 10));
+        const getVisibleIndeces = R.pipe(
+          R.find(
+            (node: any) =>
+              node.getBoundingClientRect().top > grid.getBoundingClientRect().top,
+          ),
+          R.pathOr('0', ['dataset', 'rowIndex']),
+          parseInt,
+          item => (item - 20 < 0 ? 0 : item - 20),
+          item => [item, item + 100] as [number, number],
+        );
 
-        const firstTup = indeces[0] - 20 < 0 ? 0 : indeces[0] - 20;
-        const secondTup = indeces[0] + 100;
-
-        if (firstTup !== visibleRows[0] && secondTup !== visibleRows[1]) {
-          setVisibleRows([firstTup, secondTup]);
-        }
+        const rowNodeList = [...grid.querySelectorAll('div.row__index')];
+        setVisibleRows(getVisibleIndeces(rowNodeList));
       }, 200);
     };
 
     grid.addEventListener('scroll', handleScroll);
-
     return () => grid.removeEventListener('scroll', handleScroll);
-  }, [gridRef, visibleRows]);
+  }, [gridRef]);
 
   return visibleRows;
 };
