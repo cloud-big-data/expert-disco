@@ -4,6 +4,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import * as R from 'ramda';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
 import { IColumn } from '../../types';
@@ -171,18 +172,21 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             }
           }}
           onChange={e =>
-            setBoardData!({
-              ...boardData,
-              columns: returnUpdatedCells<IColumn>({
-                iterable: boardData.columns,
-                cellUpdates: [
-                  {
-                    cellId: _id,
-                    updatedValue: e.target.value,
-                  },
-                ],
-              }),
-            })
+            setBoardData!(
+              R.assoc(
+                'columns',
+                returnUpdatedCells<IColumn>({
+                  iterable: boardData.columns,
+                  cellUpdates: [
+                    {
+                      cellId: _id,
+                      updatedValue: e.target.value,
+                    },
+                  ],
+                }),
+                boardData,
+              ),
+            )
           }
         />
       ) : (

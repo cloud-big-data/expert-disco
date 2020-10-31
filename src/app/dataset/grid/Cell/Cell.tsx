@@ -3,8 +3,8 @@ import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
-import returnUpdatedCells from '../../lib/returnUpdatedCells';
-import { ICell, IRow } from '../../types';
+import editCellsAndReturnBoard from 'app/dataset/lib/editCellsAndReturnBoard';
+import { ICell, IBoardState } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 
@@ -123,21 +123,15 @@ const Cell: React.FC<ICellProps> = ({
       position={position}
       selected={selected}
       onClick={() =>
-        setBoardState({
-          ...boardState,
-          columnsState: R.set(
-            R.lensProp('selectedColumn'),
-            -1,
-            boardState.columnsState,
-          ),
-          cellsState: R.set(R.lensProp('selectedCell'), _id, boardState.cellsState),
-        })
+        setBoardState(
+          R.pipe(
+            R.assocPath(['columnsState', 'selectedColumn'], -1),
+            R.assocPath(['cellsState', 'selectedCell'], _id),
+          )(boardState) as IBoardState,
+        )
       }
       onDoubleClick={() =>
-        setBoardState({
-          ...boardState,
-          cellsState: R.set(R.lensProp('activeCell'), _id, boardState.cellsState),
-        })
+        setBoardState(R.assocPath(['cellsState', 'activeCell'], _id, boardState))
       }
     >
       {active ? (
@@ -146,33 +140,30 @@ const Cell: React.FC<ICellProps> = ({
           value={(value as string) ?? ''}
           type="text"
           onKeyDown={e => {
-            if (e.key === 'Enter')
-              setBoardState({
-                ...boardState,
-                cellsState: {
-                  ...boardState.cellsState,
-                  activeCell: '',
-                  selectedCell: _id,
-                },
-              });
+            if (e.key !== 'Enter') return;
+            const setCells = (key: string, value: any) =>
+              R.over(R.lensProp('cellsState'), R.assoc(key, value));
+
+            setBoardState(
+              R.pipe(
+                setCells('activeCell', ''),
+                setCells('selectedCell', _id),
+              )(boardState) as IBoardState,
+            );
           }}
-          onChange={e =>
-            setBoardData!({
-              ...boardData,
-              rows: R.map((row: IRow) => ({
-                ...row,
-                cells: returnUpdatedCells<ICell>({
-                  iterable: row.cells,
-                  cellUpdates: [
-                    {
-                      cellId: _id,
-                      updatedValue: e.target.value,
-                    },
-                  ],
-                })!,
-              }))(boardData.rows),
-            })
-          }
+          onChange={e => {
+            setBoardData!(
+              editCellsAndReturnBoard(
+                [
+                  {
+                    cellId: _id,
+                    updatedValue: e.target.value,
+                  },
+                ],
+                boardData,
+              ),
+            );
+          }}
         />
       ) : (
         value

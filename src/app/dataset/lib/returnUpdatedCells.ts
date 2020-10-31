@@ -1,4 +1,10 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+export interface ICellUpdates<IterableType> {
+  iterable: IterableType[];
+  cellUpdates: Array<{
+    cellId: string;
+    updatedValue: string;
+  }>;
+}
 
 // type IterableType<T extends { _id: string; value: string | number | null }>
 /**
@@ -9,14 +15,7 @@ const returnUpdatedCells = <
 >({
   iterable,
   cellUpdates,
-}: {
-  // todo fix iterable type
-  iterable: IterableType[];
-  cellUpdates: Array<{
-    cellId: string;
-    updatedValue: string;
-  }>;
-}): IterableType[] => {
+}: ICellUpdates<IterableType>): IterableType[] => {
   const existingUpdate = (cell: IterableType) =>
     cellUpdates.find(update => update.cellId === cell._id);
 

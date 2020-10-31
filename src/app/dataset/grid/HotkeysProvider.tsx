@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ICell, IRow } from 'app/dataset/types';
 import * as R from 'ramda';
-import returnUpdatedCells from 'app/dataset/lib/returnUpdatedCells';
 import useClippy from 'use-clippy';
 import DatasetContext from 'contexts/DatasetContext';
 import getCellValueById from '../lib/getCellValueById';
+import editCellsAndReturnBoard from '../lib/editCellsAndReturnBoard';
 
 const HotkeysProvider: React.FC = ({ children }) => {
   const {
@@ -59,16 +58,7 @@ const HotkeysProvider: React.FC = ({ children }) => {
             ]
           : baseCellUpdates;
 
-        setBoardData!({
-          ...boardData,
-          rows: R.map((row: IRow) => ({
-            ...row,
-            cells: returnUpdatedCells<ICell>({
-              iterable: row.cells,
-              cellUpdates,
-            })!,
-          }))(boardData.rows),
-        });
+        setBoardData!(editCellsAndReturnBoard(cellUpdates, boardData));
       };
 
       pasteClipboard(selectedCell);

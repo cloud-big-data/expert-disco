@@ -5,7 +5,7 @@ import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Grid from './grid';
 import getCellValueById from './lib/getCellValueById';
-import returnUpdatedCells from './lib/returnUpdatedCells';
+import editCellsAndReturnBoard from './lib/editCellsAndReturnBoard';
 import DatasestToolbar from './toolbar';
 import { initialBoardState } from './wrappers/DatasetWrapper';
 
@@ -76,18 +76,12 @@ const Dataset: React.FC<{
             }
           }}
           onChange={e =>
-            setBoardData!({
-              ...boardData,
-              rows: boardData.rows.map(row => ({
-                ...row,
-                cells: returnUpdatedCells({
-                  iterable: row.cells,
-                  cellUpdates: [
-                    { cellId: selectedCell, updatedValue: e.target.value },
-                  ],
-                }),
-              })),
-            })
+            setBoardData!(
+              editCellsAndReturnBoard(
+                [{ cellId: selectedCell, updatedValue: e.target.value }],
+                boardData,
+              ),
+            )
           }
           icon={<i className="fad fa-function" />}
         />
