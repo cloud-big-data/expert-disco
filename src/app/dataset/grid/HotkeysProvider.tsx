@@ -32,19 +32,12 @@ const HotkeysProvider: React.FC = ({ children }) => {
   const has = (key: string) => keysPressed.current.includes(key);
 
   useEffect(() => {
-    const handleCopy = () => {
-      const setCopiedCell = (selectedCell: string) => {
-        setBoardState({
-          ...boardState,
-          cellsState: {
-            ...boardState.cellsState,
-            copyingCell: selectedCell,
-          },
-        });
-      };
+    const setCopiedCell = (selectedCell: string) =>
+      R.set(R.lensPath(['cellsState', 'copyingCell']), selectedCell, boardState);
 
+    const handleCopy = () => {
       setClipboard(getCellValueById(boardData.rows, selectedCell));
-      setCopiedCell(selectedCell);
+      setBoardState(setCopiedCell(selectedCell));
     };
 
     const handlePaste = () => {
@@ -79,13 +72,7 @@ const HotkeysProvider: React.FC = ({ children }) => {
       };
 
       pasteClipboard(selectedCell);
-      setBoardState({
-        ...boardState,
-        cellsState: {
-          ...boardState.cellsState,
-          copyingCell: '',
-        },
-      });
+      setBoardState(setCopiedCell(''));
     };
 
     const handleKeydown = (e: KeyboardEvent) => {

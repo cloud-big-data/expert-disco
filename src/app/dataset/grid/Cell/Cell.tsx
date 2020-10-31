@@ -106,9 +106,7 @@ const Cell: React.FC<ICellProps> = ({
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
     DatasetContext,
   )!;
-
   const inputRef = useRef<HTMLInputElement>(null);
-  const { cellsState } = boardState;
 
   useEffect(() => {
     if (inputRef.current) {
@@ -127,23 +125,18 @@ const Cell: React.FC<ICellProps> = ({
       onClick={() =>
         setBoardState({
           ...boardState,
-          columnsState: {
-            ...boardState.columnsState,
-            selectedColumn: -1,
-          },
-          cellsState: {
-            ...cellsState,
-            selectedCell: _id,
-          },
+          columnsState: R.set(
+            R.lensProp('selectedColumn'),
+            -1,
+            boardState.columnsState,
+          ),
+          cellsState: R.set(R.lensProp('selectedCell'), _id, boardState.cellsState),
         })
       }
       onDoubleClick={() =>
         setBoardState({
           ...boardState,
-          cellsState: {
-            ...cellsState,
-            activeCell: _id,
-          },
+          cellsState: R.set(R.lensProp('activeCell'), _id, boardState.cellsState),
         })
       }
     >
