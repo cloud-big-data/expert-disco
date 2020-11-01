@@ -13,10 +13,16 @@ const SingleEmpty: React.FC<IViewProps> = ({
   const [value, setValue] = useState('');
   return (
     <Container>
+      <h3>Add a new column</h3>
       <Text style={{ width: '100%' }} len="short" size="sm">
-        What would you like to name this column?
+        Column name:
       </Text>
-      <InputField value={value} onChange={e => setValue(e.target.value)} />
+      <InputField
+        placeholder="Column a"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        icon={<i className="fad fa-columns" />}
+      />
       <ButtonPrimary
         onClick={() => {
           closeModal();

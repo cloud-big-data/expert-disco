@@ -1,5 +1,5 @@
 import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
-import Modal from 'components/Modal';
+import Modal from 'components/ui/Modal';
 import ButtonWithOptions from 'components/ui/ButtonWithOptions';
 import DatasetContext from 'contexts/DatasetContext';
 // import DatasetContext from 'contexts/DatasetContext';

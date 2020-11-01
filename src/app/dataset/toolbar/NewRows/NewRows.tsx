@@ -1,4 +1,4 @@
-import Modal from 'components/Modal';
+import Modal from 'components/ui/Modal';
 import ButtonWithOptions from 'components/ui/ButtonWithOptions';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useState } from 'react';
