@@ -1,10 +1,9 @@
-import { ButtonPrimary } from 'components/ui/Buttons';
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { makeBoardActions } from '../lib/makeBoardActions';
+import NewRows from './NewRows';
 
 const BoardActionsContainer = styled.div`
   display: flex;
@@ -53,8 +52,7 @@ const DatasestToolbar: React.FC = () => {
     currentRevision,
     ...dataset
   } = useContext(DatasetContext)!;
-  const boardActions = makeBoardActions(boardData);
-  const colLen = boardData.columns.length;
+  // const colLen = boardData.columns.length;
 
   const undoDisabled = currentRevision === 0;
   const redoDisabled = !changeHistoryRef.current[currentRevision + 1];
@@ -78,14 +76,15 @@ const DatasestToolbar: React.FC = () => {
         </TimeTravel>
       </div>
       <div className="right">
-        <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
+        <NewRows />
+        {/* <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
           Add row
         </ButtonPrimary>
         <ButtonPrimary
           onClick={() => setBoardData!(boardActions.newColumn(`col ${colLen + 1}`))}
         >
           Add Column
-        </ButtonPrimary>
+        </ButtonPrimary> */}
       </div>
     </BoardActionsContainer>
   );

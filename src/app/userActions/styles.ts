@@ -3,7 +3,7 @@ import Styles from 'styles/Styles';
 
 export const UserContainer = styled.div`
   width: 50%;
-  box-shadow: ${Styles.smBoxShadow};
+  box-shadow: ${Styles.boxShadow};
   border-radius: 1rem;
   padding: 1.5rem;
   position: absolute;
