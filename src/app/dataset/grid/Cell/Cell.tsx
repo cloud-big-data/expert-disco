@@ -1,9 +1,12 @@
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
 import editCellsAndReturnBoard from 'app/dataset/lib/editCellsAndReturnBoard';
+import DropdownMenu from 'components/DropdownMenu';
+import useClippy from 'use-clippy';
+import getCellValueById from 'app/dataset/lib/getCellValueById';
 import { ICell, IBoardState } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
@@ -103,16 +106,39 @@ const Cell: React.FC<ICellProps> = ({
   isCopying,
   colWidth,
 }) => {
+  const [, setClipboard] = useClippy();
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
     DatasetContext,
   )!;
   const inputRef = useRef<HTMLInputElement>(null);
+  const [showContextMenu, setShowContextMenu] = useState(false);
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    inputRef.current?.focus();
   }, [active]);
+
+  const handleCopy = () => {
+    setClipboard(getCellValueById(boardData.rows, _id));
+    setBoardState(R.set(R.lensPath(['cellsState', 'copyingCell']), _id, boardState));
+  };
+
+  const MENU_OPTIONS = [
+    {
+      label: 'copy',
+      onClick: handleCopy,
+      icon: <i className="fad fa-copy" />,
+    },
+    {
+      label: 'paste',
+      onClick: () => null,
+      icon: <i className="far fa-paste" />,
+    },
+    {
+      label: 'cut',
+      onClick: () => null,
+      icon: <i className="fad fa-cut" />,
+    },
+  ];
 
   return (
     <CellContainer
@@ -122,6 +148,10 @@ const Cell: React.FC<ICellProps> = ({
       highlighted={highlighted}
       position={position}
       selected={selected}
+      onContextMenu={e => {
+        e.preventDefault();
+        setShowContextMenu(!showContextMenu);
+      }}
       onClick={() =>
         setBoardState(
           R.pipe(
@@ -167,6 +197,12 @@ const Cell: React.FC<ICellProps> = ({
         />
       ) : (
         value
+      )}
+      {showContextMenu && (
+        <DropdownMenu
+          closeMenu={() => setShowContextMenu(false)}
+          options={MENU_OPTIONS}
+        />
       )}
     </CellContainer>
   );

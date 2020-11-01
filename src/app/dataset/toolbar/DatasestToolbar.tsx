@@ -4,6 +4,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import NewRows from './NewRows';
+import NewColumns from './NewColumns';
 
 const BoardActionsContainer = styled.div`
   display: flex;
@@ -15,6 +16,7 @@ const BoardActionsContainer = styled.div`
     display: flex;
   }
   .right {
+    display: flex;
     margin-left: auto;
     button {
       margin-left: 1rem;
@@ -76,6 +78,7 @@ const DatasestToolbar: React.FC = () => {
         </TimeTravel>
       </div>
       <div className="right">
+        <NewColumns />
         <NewRows />
         {/* <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
           Add row

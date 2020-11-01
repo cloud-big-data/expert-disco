@@ -6,13 +6,19 @@ import Styles from 'styles/Styles';
 import { makeBoardActions } from '../lib/makeBoardActions';
 
 const NewRows: React.FC = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(true);
+  enum NewRowViews {
+    multipleEmpty,
+    fromUpload,
+  }
+
+  const [view, setView] = useState(NewRowViews.multipleEmpty);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const { boardData, setBoardData } = useContext(DatasetContext)!;
   const boardActions = makeBoardActions(boardData);
   return (
     <>
       <ButtonWithOptions
-        pos={{ right: 3.25 }}
+        pos={{ right: 2.25 }}
         options={[
           {
             label: 'Empty row',
@@ -21,14 +27,20 @@ const NewRows: React.FC = () => {
           },
           {
             label: 'Add multiple empty rows',
-            onClick: () => setBoardData!(boardActions.newRow()),
+            onClick: () => {
+              setView(NewRowViews.multipleEmpty);
+              setModalIsOpen(true);
+            },
             icon: (
               <i style={{ color: Styles.purple }} className="fad fa-line-columns" />
             ),
           },
           {
-            label: 'New rows from upload',
-            onClick: () => setBoardData!(boardActions.newRow()),
+            label: 'New rows from file upload',
+            onClick: () => {
+              setView(NewRowViews.fromUpload);
+              setModalIsOpen(true);
+            },
             icon: <i style={{ color: Styles.blue }} className="far fa-file-plus" />,
           },
         ]}
@@ -36,7 +48,10 @@ const NewRows: React.FC = () => {
         Add rows
       </ButtonWithOptions>
       {modalIsOpen && (
-        <Modal closeModal={() => setModalIsOpen(false)}>Hello world</Modal>
+        <Modal closeModal={() => setModalIsOpen(false)}>
+          {view === NewRowViews.multipleEmpty && <p>Multiple empty</p>}
+          {view === NewRowViews.fromUpload && <p>From upload</p>}
+        </Modal>
       )}
     </>
   );

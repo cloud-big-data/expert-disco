@@ -71,6 +71,7 @@ const DangerText: React.FC<IText> = props => (
 const LabelContainer = styled.span<{
   unBold?: boolean;
   hoverBold?: boolean;
+  hoverPurple?: boolean;
 }>`
   display: flex;
   font-weight: ${props => (props.unBold ? 500 : 600)};
@@ -82,6 +83,15 @@ const LabelContainer = styled.span<{
     }
   `
       : ``}
+
+  ${props =>
+    props.hoverPurple
+      ? `
+    &:hover {
+      color: ${Styles.purple};
+    }
+  `
+      : ''}
 `;
 
 const Label: React.FC<{
@@ -89,9 +99,15 @@ const Label: React.FC<{
   style?: React.CSSProperties;
   unBold?: boolean;
   hoverBold?: boolean;
+  hoverPurple?: boolean;
   children: React.ReactNode;
 }> = props => (
-  <LabelContainer hoverBold={props.hoverBold} unBold={props.unBold} id={props.id}>
+  <LabelContainer
+    hoverPurple={props.hoverPurple}
+    hoverBold={props.hoverBold}
+    unBold={props.unBold}
+    id={props.id}
+  >
     {props.children}
   </LabelContainer>
 );

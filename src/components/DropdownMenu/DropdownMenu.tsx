@@ -69,8 +69,9 @@ const DropdownMenu: React.FC<{
 }> = ({ closeMenu, options, pos }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   useHandleClickOutside(menuRef, closeMenu);
-  usePushToFront();
+  usePushToFront(menuRef);
 
+  // handles closing the context menu if you target the context menu on another node
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {
       if (!menuRef.current?.contains(e.target as Node)) {
@@ -83,7 +84,7 @@ const DropdownMenu: React.FC<{
   }, [closeMenu]);
 
   return (
-    <RightClickMenuContainer pos={pos} ref={menuRef}>
+    <RightClickMenuContainer className="push-to-front" pos={pos} ref={menuRef}>
       {options.map(opt => (
         <MenuOption
           key={opt.label}
@@ -93,7 +94,7 @@ const DropdownMenu: React.FC<{
           }}
         >
           <div className="icon__container">{opt.icon}</div>
-          <Label hoverBold unBold>
+          <Label hoverPurple unBold>
             {opt.label}
           </Label>
         </MenuOption>
