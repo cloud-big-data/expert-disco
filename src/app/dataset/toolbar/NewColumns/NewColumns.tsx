@@ -1,8 +1,11 @@
+import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
 import Modal from 'components/Modal';
 import ButtonWithOptions from 'components/ui/ButtonWithOptions';
+import DatasetContext from 'contexts/DatasetContext';
 // import DatasetContext from 'contexts/DatasetContext';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Styles from 'styles/Styles';
+import SingleEmpty from './views/SingleEmpty';
 // import { makeBoardActions } from '../lib/makeBoardActions';
 
 const NewColumns: React.FC = () => {
@@ -15,8 +18,15 @@ const NewColumns: React.FC = () => {
 
   const [view, setView] = useState(NewColumnViews.singleEmpty);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // const { boardData, setBoardData } = useContext(DatasetContext)!;
-  // const boardActions = makeBoardActions(boardData);
+  const { boardData, setBoardData } = useContext(DatasetContext)!;
+  const boardActions = makeBoardActions(boardData);
+
+  const viewProps = {
+    boardActions,
+    setBoardData: setBoardData!,
+    closeModal: () => setModalIsOpen(false),
+  };
+
   return (
     <>
       <ButtonWithOptions
@@ -64,7 +74,7 @@ const NewColumns: React.FC = () => {
       </ButtonWithOptions>
       {modalIsOpen && (
         <Modal closeModal={() => setModalIsOpen(false)}>
-          {view === NewColumnViews.singleEmpty && <p>single empty</p>}
+          {view === NewColumnViews.singleEmpty && <SingleEmpty {...viewProps} />}
           {view === NewColumnViews.multipleEmpty && <p>Multiple empty</p>}
           {view === NewColumnViews.aggregateColumn && <p>aggregateColumn</p>}
           {view === NewColumnViews.fromUpload && <p>From upload</p>}

@@ -35,7 +35,7 @@ export const makeBoardActions = (boardData: IBoardData) => {
         ...boardData.columns,
         {
           _id: uuidv4(),
-          value: value ?? '',
+          value: value || `Column ${boardData.columns.length + 1}`,
           dataType: DataTypes.string,
         },
       ],

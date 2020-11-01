@@ -107,6 +107,7 @@ const Label: React.FC<{
     hoverBold={props.hoverBold}
     unBold={props.unBold}
     id={props.id}
+    style={props.style}
   >
     {props.children}
   </LabelContainer>

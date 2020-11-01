@@ -3,7 +3,7 @@ import ButtonWithOptions from 'components/ui/ButtonWithOptions';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useState } from 'react';
 import Styles from 'styles/Styles';
-import { makeBoardActions } from '../lib/makeBoardActions';
+import { makeBoardActions } from '../../lib/makeBoardActions';
 
 const NewRows: React.FC = () => {
   enum NewRowViews {
