@@ -7,7 +7,7 @@ import Styles from 'styles/Styles';
 import * as R from 'ramda';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
-import { IColumn } from '../../types';
+import { IBoardState, IColumn } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 import DraggableColEdge from './DraggableColEdge';
@@ -125,26 +125,17 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       active={active}
       colWidth={colWidth ?? defaults.COL_WIDTH}
       onDoubleClick={() =>
-        setBoardState({
-          ...boardState,
-          columnsState: {
-            ...boardState.columnsState,
-            activeColumn: columnIndex,
-          },
-        })
+        setBoardState(
+          R.assocPath(['columnsState', 'activeColumn'], columnIndex, boardState),
+        )
       }
       onClick={() =>
-        setBoardState({
-          ...boardState,
-          columnsState: {
-            ...boardState.columnsState,
-            selectedColumn: columnIndex,
-          },
-          rowsState: {
-            ...boardState.rowsState,
-            selectedRow: '',
-          },
-        })
+        setBoardState(
+          R.pipe(
+            R.assocPath(['columnsState', 'selectedColumn'], columnIndex),
+            R.assocPath(['rowsState', 'selectedRow'], ''),
+          )(boardState) as IBoardState,
+        )
       }
     >
       <ColumnTypeIcon dataType={dataType} />
@@ -160,16 +151,15 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           value={value ?? ''}
           type="text"
           onKeyDown={e => {
-            if (e.key === 'Enter') {
-              setBoardState({
-                ...boardState,
-                columnsState: {
-                  ...boardState.columnsState,
-                  selectedColumn: columnIndex,
-                  activeColumn: -1,
-                },
-              });
-            }
+            if (e.key !== 'Enter') return;
+            const set = (key: string, value: any) =>
+              R.over(R.lensProp('columnsState'), R.assoc(key, value));
+            setBoardState(
+              R.pipe(
+                set('selectedColumn', 'columnIndex'),
+                set('activeColumn', -1),
+              )(boardState),
+            );
           }}
           onChange={e =>
             setBoardData!(
@@ -177,12 +167,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
                 'columns',
                 returnUpdatedCells<IColumn>({
                   iterable: boardData.columns,
-                  cellUpdates: [
-                    {
-                      cellId: _id,
-                      updatedValue: e.target.value,
-                    },
-                  ],
+                  cellUpdates: [{ cellId: _id, updatedValue: e.target.value }],
                 }),
                 boardData,
               ),
