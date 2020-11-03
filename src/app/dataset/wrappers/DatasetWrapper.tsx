@@ -4,6 +4,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as R from 'ramda';
+import io from 'socket.io-client';
 import { DataTypes, IBoardState, IBoardData } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
@@ -160,6 +161,20 @@ const DatasetWrapper: React.FC = () => {
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   const [currentRevision, setCurrentRevision] = useState(0);
   const changeHistoryRef = useRef<IBoardData[]>([]);
+
+  const socket = io('ws://localhost:3030', {
+    query: {
+      testing: 'testing123',
+    },
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    reconnectionAttempts: Infinity,
+  });
+
+  socket.on('connect', () => {
+    console.log('connected');
+  });
 
   useEffect(() => {
     changeHistoryRef.current = [sample];
