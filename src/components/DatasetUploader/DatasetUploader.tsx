@@ -18,31 +18,9 @@ const DatasetUploader: React.FC = () => {
   const { accessToken } = useContext(UserContext);
   const onDrop = useCallback(
     acceptedFiles => {
-      acceptedFiles.forEach((file: any) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = e => {
-          skyvueFetch(accessToken!).post('/datasets/upload', {
-            name: file.name,
-            file: e.target?.result,
-          });
-        };
-
-        // reader.readAsBinaryString(e[0]);
-        // reader.onabort = () => console.log('file reading was aborted');
-        // reader.onerror = () => console.log('file reading has failed');
-        // reader.onload = () => {
-        //   reader.readAsText(file);
-        //   console.log(reader);
-
-        // };
-        // reader.readAsArrayBuffer(file);
-
-        // reader.onloadend = function (e) {
-        //   console.log('hi');
-        // };
-        // reader.readAsDataURL(selectedFile);
-      });
+      const formData = new FormData();
+      formData.append('csv', acceptedFiles[0]);
+      skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
     },
     [accessToken],
   );

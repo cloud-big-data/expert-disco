@@ -3,6 +3,7 @@ const skyvueFetch = (
 ): {
   get: (url: string) => Promise<any>;
   post: (url: string, body: { [key: string]: any }) => Promise<any>;
+  postFile: (url: string, file: FormData) => Promise<any>;
   patch: (url: string, body: { [key: string]: any }) => Promise<any>;
   delete: (url: string, body: { [key: string]: any }) => Promise<any>;
 } => {
@@ -11,16 +12,21 @@ const skyvueFetch = (
   const headers = {
     Authorization: `Bearer ${accessToken}`,
     'x-refresh-token': localStorage.getItem('refreshToken') ?? '',
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
   };
 
   const makeCall = async (url: string, options: any) => {
     const finalUrl = `${baseUrl}${url}`;
     try {
       const res = await fetch(finalUrl, {
-        headers,
+        headers: options.file
+          ? { ...headers }
+          : {
+              ...headers,
+              'Content-Type': 'application/json',
+            },
         method: options.method,
-        body: JSON.stringify(options.body),
+        body: options.file ?? JSON.stringify(options.body),
       });
 
       try {
@@ -45,6 +51,8 @@ const skyvueFetch = (
       }),
     post: async (url: string, body: { [key: string]: any }) =>
       makeCall(url, { method: 'POST', body }),
+    postFile: async (url: string, file: FormData) =>
+      makeCall(url, { method: 'POST', file }),
     patch: async (url: string, body: { [key: string]: any }) =>
       makeCall(url, { method: 'PATCH', body }),
     delete: async (url: string, body: { [key: string]: any }) =>
