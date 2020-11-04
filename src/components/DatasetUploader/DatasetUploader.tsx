@@ -3,7 +3,6 @@ import React, { useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import skyvueFetch from 'services/skyvueFetch';
 import styled from 'styled-components/macro';
-import stringify from 'csv-stringify';
 
 const DropzoneContainer = styled.div`
   display: flex;
