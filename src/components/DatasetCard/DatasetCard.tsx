@@ -49,7 +49,9 @@ const DatasetCard: React.FC<{
     <DatasetCardContainer>
       <div className="meta__bar">
         <div className="time-ago__container">
-          <Helper style={{ lineHeight: 0 }}>{humanizeTimeAgo(timestamp)}</Helper>
+          <Helper style={{ lineHeight: 0 }}>
+            Last updated: {humanizeTimeAgo(timestamp)}
+          </Helper>
         </div>
         <div className="actions">
           <i className="far fa-cog" />

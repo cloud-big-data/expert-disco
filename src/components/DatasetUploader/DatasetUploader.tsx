@@ -10,7 +10,6 @@ import UploadErrorState from './UploadErrorState';
 
 const DropzoneContainer = styled.div`
   display: flex;
-  /* border: 1px dashed red; */
   flex: 1 0 auto;
   height: 100%;
   & > div {
