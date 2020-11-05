@@ -1,12 +1,16 @@
 import UserContext from 'contexts/userContext';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import skyvueFetch from 'services/skyvueFetch';
 import styled from 'styled-components/macro';
+import ActiveDragState from './ActiveDragState';
+import UploadCompleteState from './UploadCompleteState';
+import UploaderEmptyState from './UploaderEmptyState';
+import UploadErrorState from './UploadErrorState';
 
 const DropzoneContainer = styled.div`
   display: flex;
-  border: 1px dashed red;
+  /* border: 1px dashed red; */
   flex: 1 0 auto;
   height: 100%;
   & > div {
@@ -14,25 +18,42 @@ const DropzoneContainer = styled.div`
   }
 `;
 
-const DatasetUploader: React.FC = () => {
+const DatasetUploader: React.FC<{
+  closeModal?: () => void;
+}> = ({ closeModal }) => {
+  const [uploadComplete, setUploadComplete] = useState(false);
+  const [error, setError] = useState(false);
   const { accessToken } = useContext(UserContext);
   const onDrop = useCallback(
     acceptedFiles => {
-      const formData = new FormData();
-      formData.append('csv', acceptedFiles[0]);
-      skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
+      acceptedFiles.forEach((file: any) => {
+        try {
+          const formData = new FormData();
+          formData.append('csv', file);
+          skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
+          setUploadComplete(true);
+        } catch (e) {
+          console.error(e);
+          setError(true);
+        }
+      });
     },
     [accessToken],
   );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     <DropzoneContainer>
       <div {...getRootProps()}>
         <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>Drop the files here ...</p>
+        {error ? (
+          <UploadErrorState returnToUpload={() => setError(false)} />
+        ) : uploadComplete ? (
+          <UploadCompleteState closeModal={closeModal} />
+        ) : isDragActive ? (
+          <ActiveDragState />
         ) : (
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <UploaderEmptyState />
         )}
       </div>
     </DropzoneContainer>

@@ -5,7 +5,7 @@ import Styles from 'styles/Styles';
 interface IButton {
   id?: string;
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   disabled?: boolean;
 }
 
@@ -91,6 +91,7 @@ const Button = styled.button<{
   ${props =>
     props.danger
       ? `
+    border: none;
     background-color: ${Styles.red};
     &:hover {
       background-color: #fa9596;

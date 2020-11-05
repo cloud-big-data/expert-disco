@@ -17,7 +17,8 @@ const ModalContainer = styled.div`
   #x {
     margin-left: auto;
     position: absolute;
-    right: 2rem;
+    top: 0;
+    right: 1rem;
     padding: 0;
     color: rgba(0, 0, 0, 0.4);
     &:hover {

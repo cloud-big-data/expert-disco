@@ -49,7 +49,7 @@ const MyDatasets: React.FC = () => {
         </ButtonPrimary>
         {newDatasetModalIsOpen && (
           <Modal closeModal={() => setNewDatasetModalIsOpen(false)}>
-            <DatasetUploader />
+            <DatasetUploader closeModal={() => setNewDatasetModalIsOpen(false)} />
           </Modal>
         )}
       </div>
