@@ -2,7 +2,6 @@ import UserContext from 'contexts/userContext';
 import React, { useContext, useState } from 'react';
 import { RefetchOptions } from 'react-query/types/core/query';
 import skyvueFetch from 'services/skyvueFetch';
-import { resolveProjectReferencePath } from 'typescript';
 import DatasetCardBody from './DatasetCardBody';
 import EditDatasetModal from './EditDatasetModal';
 
