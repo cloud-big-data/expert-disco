@@ -4,8 +4,8 @@ import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
 import React, { useContext, useRef, useState } from 'react';
 import * as R from 'ramda';
-import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
+import useDatasetsSockets from 'hooks/useDatasetsSockets';
 import { IBoardState, IBoardData } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
@@ -63,27 +63,17 @@ const DatasetWrapper: React.FC = () => {
     datasetId: string;
   }>();
 
-  if (user.userId && params.datasetId) {
-    const socket = io('ws://localhost:3030', {
-      query: {
-        datasetId: params.datasetId,
-        userId: user.userId,
-      },
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-    });
-
-    socket.on('connect', () => {
-      socket.emit('join', params.datasetId);
-      socket.emit('loadDataset');
-
-      socket.on('initialDatasetReceived', (res: IBoardData) => {
-        setBoardData(res);
-        changeHistoryRef.current = [res];
-      });
-    });
-  }
+  useDatasetsSockets(
+    {
+      userId: user.userId,
+      datasetId: params.datasetId,
+    },
+    {
+      boardData,
+      setBoardData,
+    },
+    changeHistoryRef,
+  );
 
   const loader = (
     <div className="absolute__center">
