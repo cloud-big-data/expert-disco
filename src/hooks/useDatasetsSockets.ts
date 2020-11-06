@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 import { IBoardData } from 'app/dataset/types';
 
+const getDatasetsWSUrl = () => {
+  if (process.env.NODE_ENV === 'production')
+    return 'https://xs.datasets.skyvueservices.com';
+  return 'ws://localhost:3030';
+};
+
 const useDatasetsSockets = (
   query: { userId: string | null; datasetId?: string },
   board: {
@@ -15,7 +21,7 @@ const useDatasetsSockets = (
 
   useEffect(() => {
     if (!userId || !datasetId) return;
-    const socket = io('ws://localhost:3030', {
+    const socket = io(getDatasetsWSUrl(), {
       query: {
         datasetId,
         userId,
@@ -32,7 +38,6 @@ const useDatasetsSockets = (
 
     socket.on('initialDatasetReceived', (res: IBoardData) => {
       if (!boardData) {
-        console.log('called');
         setBoardData(res);
         changeHistoryRef.current = [res];
       }

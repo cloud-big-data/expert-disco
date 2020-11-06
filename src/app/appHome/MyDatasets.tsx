@@ -52,9 +52,12 @@ const ListContainer = styled.div`
 const MyDatasets: React.FC = () => {
   const { accessToken } = useContext(UserContext);
   const [newDatasetModalIsOpen, setNewDatasetModalIsOpen] = useState(false);
-  const { isLoading, data } = useQuery(newDatasetModalIsOpen, () =>
+  const { isLoading, data, refetch } = useQuery(newDatasetModalIsOpen, () =>
     skyvueFetch(accessToken!).get('/datasets'),
   );
+
+  const { error } = data ?? {};
+  if (error) return <p>Error occurred!</p>;
 
   const datasets: Array<{
     title: string;
@@ -101,6 +104,7 @@ const MyDatasets: React.FC = () => {
             datasetId={dataset._id}
             timestamp={dataset.updatedAt}
             title={dataset.title}
+            refetch={refetch}
           />
         ))}
       </ListContainer>

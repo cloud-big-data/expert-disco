@@ -25,11 +25,11 @@ const DatasetUploader: React.FC<{
   const { accessToken } = useContext(UserContext);
   const onDrop = useCallback(
     acceptedFiles => {
-      acceptedFiles.forEach((file: any) => {
+      acceptedFiles.forEach(async (file: any) => {
         try {
           const formData = new FormData();
           formData.append('csv', file);
-          skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
+          await skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
           setUploadComplete(true);
         } catch (e) {
           console.error(e);
