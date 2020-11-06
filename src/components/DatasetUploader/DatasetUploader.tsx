@@ -7,6 +7,7 @@ import ActiveDragState from './ActiveDragState';
 import UploadCompleteState from './UploadCompleteState';
 import UploaderEmptyState from './UploaderEmptyState';
 import UploadErrorState from './UploadErrorState';
+import UploadLoadingState from './UploadLoadingState';
 
 const DropzoneContainer = styled.div`
   display: flex;
@@ -22,20 +23,23 @@ const DatasetUploader: React.FC<{
 }> = ({ closeModal }) => {
   const [uploadComplete, setUploadComplete] = useState(false);
   const [error, setError] = useState(false);
+  const [loadingState, setLoadingState] = useState(false);
   const { accessToken } = useContext(UserContext);
   const onDrop = useCallback(
     acceptedFiles => {
+      setLoadingState(true);
       acceptedFiles.forEach(async (file: any) => {
         try {
           const formData = new FormData();
           formData.append('csv', file);
           await skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
-          setUploadComplete(true);
         } catch (e) {
           console.error(e);
           setError(true);
         }
       });
+      setLoadingState(false);
+      setUploadComplete(true);
     },
     [accessToken],
   );
@@ -45,7 +49,9 @@ const DatasetUploader: React.FC<{
     <DropzoneContainer>
       <div {...getRootProps()}>
         <input {...getInputProps()} />
-        {error ? (
+        {loadingState ? (
+          <UploadLoadingState />
+        ) : error ? (
           <UploadErrorState returnToUpload={() => setError(false)} />
         ) : uploadComplete ? (
           <UploadCompleteState closeModal={closeModal} />

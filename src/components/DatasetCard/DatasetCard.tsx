@@ -1,3 +1,4 @@
+import DropdownMenu from 'components/DropdownMenu';
 import UserContext from 'contexts/userContext';
 import React, { useContext, useState } from 'react';
 import { RefetchOptions } from 'react-query/types/core/query';
@@ -13,6 +14,7 @@ const DatasetCard: React.FC<{
   refetch: (options?: RefetchOptions | undefined) => Promise<any>;
 }> = ({ datasetId, title, description, timestamp, refetch }) => {
   const { accessToken } = useContext(UserContext);
+  const [contextMenuIsOpen, setContextMenuIsOpen] = useState(false);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
   const [deleteConf, setDeleteConf] = useState(false);
   const closeModal = () => {
@@ -33,6 +35,24 @@ const DatasetCard: React.FC<{
     setEditModalIsOpen(false);
   };
 
+  const OPTIONS = [
+    {
+      label: 'Open in new tab',
+      onClick: () => undefined,
+      icon: <i className="fad fa-external-link" />,
+    },
+    // {
+    //   label: 'Sort',
+    //   onClick: () => undefined,
+    //   icon: <i style={{ color: Styles.orange }} className="fad fa-sort" />,
+    // },
+    // {
+    //   label: 'Format',
+    //   onClick: () => undefined,
+    //   icon: <i style={{ color: Styles.blue }} className="fad fa-remove-format" />,
+    // },
+  ];
+
   return (
     <>
       <DatasetCardBody
@@ -41,6 +61,7 @@ const DatasetCard: React.FC<{
         timestamp={timestamp}
         description={description}
         setEditModalIsOpen={setEditModalIsOpen}
+        setContextMenuIsOpen={() => setContextMenuIsOpen(!contextMenuIsOpen)}
       />
 
       {editModalIsOpen && (
@@ -51,6 +72,13 @@ const DatasetCard: React.FC<{
           initialTitle={title}
           updateDataset={updateDataset}
           deleteDataset={deleteDataset}
+        />
+      )}
+
+      {contextMenuIsOpen && (
+        <DropdownMenu
+          options={OPTIONS}
+          closeMenu={() => setContextMenuIsOpen(false)}
         />
       )}
     </>

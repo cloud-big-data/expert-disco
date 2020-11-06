@@ -41,7 +41,6 @@ type UserId = string;
 export interface IBoardData {
   updatedAt: string;
   createdAt: string;
-  title: string;
   visibilitySettings: {
     owner: UserId;
     editors: UserId[];

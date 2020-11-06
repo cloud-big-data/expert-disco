@@ -8,6 +8,7 @@ interface IButton {
   onClick?: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   disabled?: boolean;
   style?: React.CSSProperties;
+  className?: string;
 }
 
 const Button = styled.button<{
@@ -108,6 +109,7 @@ const ButtonPrimary: React.FC<IButton> = props => (
     id={props.id}
     primary
     style={props.style}
+    className={props.className}
   >
     {props.children}
   </Button>
@@ -120,6 +122,7 @@ const ButtonSecondary: React.FC<IButton> = props => (
     id={props.id}
     secondary
     style={props.style}
+    className={props.className}
   >
     {props.children}
   </Button>
@@ -132,6 +135,7 @@ const ButtonTertiary: React.FC<IButton> = props => (
     id={props.id}
     tertiary
     style={props.style}
+    className={props.className}
   >
     {props.children}
   </Button>
@@ -144,6 +148,7 @@ const ButtonDanger: React.FC<IButton> = props => (
     id={props.id}
     danger
     style={props.style}
+    className={props.className}
   >
     {props.children}
   </Button>

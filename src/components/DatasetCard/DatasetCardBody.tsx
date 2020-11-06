@@ -18,7 +18,7 @@ const DatasetCardContainer = styled.div`
   min-height: 7rem;
 
   &:hover {
-    border-color: ${Styles.green};
+    border-color: ${Styles.blue};
   }
 
   .meta__bar {
@@ -43,11 +43,23 @@ const DatasetCardBody: React.FC<{
   timestamp: string;
   description?: string;
   setEditModalIsOpen: (open: boolean) => void;
-}> = ({ datasetId, title, timestamp, description, setEditModalIsOpen }) => (
+  setContextMenuIsOpen: () => void;
+}> = ({
+  datasetId,
+  title,
+  timestamp,
+  description,
+  setEditModalIsOpen,
+  setContextMenuIsOpen,
+}) => (
   <Link
     className="no-hover"
     style={{ textDecoration: 'none' }}
     to={`/dataset/${datasetId}`}
+    onContextMenu={e => {
+      e.preventDefault();
+      setContextMenuIsOpen();
+    }}
   >
     <DatasetCardContainer>
       <div className="meta__bar">
