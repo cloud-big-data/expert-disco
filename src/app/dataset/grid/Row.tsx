@@ -26,6 +26,9 @@ const RowIndexContainer = styled.div`
       font-weight: bold;
     }
   }
+  p {
+    font-size: 0.5rem;
+  }
 `;
 
 interface IRowProps extends IRow {
