@@ -4,7 +4,8 @@ const findCellCoordinates = (iterable: IRow[], cellId: string): [number, number]
   const rowIndex = iterable.findIndex(row =>
     row.cells.find(cell => cell._id === cellId),
   );
-  const cellIndex = iterable[rowIndex].cells.findIndex(cell => cell._id === cellId);
+  const cellIndex =
+    iterable[rowIndex]?.cells.findIndex(cell => cell._id === cellId) ?? -1;
 
   return [rowIndex, cellIndex];
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { IBoardData } from 'app/dataset/types';
+import * as R from 'ramda';
 
 const getDatasetsWSUrl = () => {
   if (process.env.NODE_ENV === 'production')
@@ -36,7 +37,6 @@ const useDatasetsSockets = (
 
     socket.on('connect', () => {
       setSocket(socket);
-      socket.emit('join', datasetId);
       if (!boardData) {
         socket.emit('loadDataset');
       }
@@ -49,9 +49,25 @@ const useDatasetsSockets = (
       }
     });
 
+    socket.on('slice', (res: IBoardData) => {
+      const lastIndex = (iterable: IBoardData['rows']) =>
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        R.prop('index', R.last(iterable));
+
+      if (lastIndex(res.rows) !== lastIndex(boardData!.rows)) {
+        setBoardData(res);
+      }
+    });
+
     socket.on('returnDiff', (data: any) => {
       console.log(data);
     });
+
+    return () =>
+      ['connect', 'initialDatasetReceived', 'slice', 'returnDiff'].forEach(cnxn =>
+        socket.off(cnxn),
+      );
   }, [userId, datasetId, boardData, setBoardData, changeHistoryRef]);
 
   return socketObj;

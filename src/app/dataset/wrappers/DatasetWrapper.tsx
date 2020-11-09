@@ -2,7 +2,7 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import * as R from 'ramda';
 import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
@@ -59,8 +59,7 @@ const DatasetWrapper: React.FC = () => {
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   const [currentRevision, setCurrentRevision] = useState(0);
   const changeHistoryRef = useRef<IBoardData[]>([]);
-  const saveTimeout = useRef<any>(null);
-  const queuedSave = useRef<any>();
+
   const params = useParams<{
     datasetId: string;
   }>();
@@ -76,18 +75,6 @@ const DatasetWrapper: React.FC = () => {
     },
     changeHistoryRef,
   );
-
-  useEffect(() => {
-    const sendSave = () => {
-      clearTimeout(saveTimeout.current);
-      queuedSave.current?.();
-    };
-    window.addEventListener('beforeunload', sendSave);
-
-    return () => {
-      window.removeEventListener('beforeunload', sendSave);
-    };
-  }, [socket]);
 
   const loader = (
     <div className="absolute__center">
@@ -120,31 +107,38 @@ const DatasetWrapper: React.FC = () => {
     setBoardData(prevBoardData => {
       if (!prevBoardData) return newBoardData;
 
-      clearTimeout(saveTimeout.current);
-      queuedSave.current = () => {
-        socket?.emit('diff', {
-          colDiff: R.difference(newBoardData.columns, prevBoardData.columns),
-          rowDiff: R.difference(newBoardData.rows, prevBoardData.rows),
-        });
-      };
-      saveTimeout.current = setTimeout(queuedSave.current, 10000);
+      socket?.emit('diff', {
+        colDiff: R.difference(newBoardData.columns, prevBoardData.columns),
+        rowDiff: R.difference(newBoardData.rows, prevBoardData.rows),
+      });
 
       return newBoardData;
     });
   };
 
+  const getRowSlice = (first: number, last: number) => {
+    socket?.emit('getSlice', { first, last });
+  };
+
   return (
     <DatasetContext.Provider
       value={{
-        currentRevision,
-        setCurrentRevision,
         boardData,
+        boardState,
+        changeHistoryRef,
+        currentRevision,
+        getRowSlice,
+        redo: () => {
+          if (currentRevision === changeHistoryRef.current.length - 1) return;
+          const newRevision = currentRevision + 1;
+          setBoardData(changeHistoryRef.current[newRevision]);
+          setCurrentRevision(newRevision);
+        },
         setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
           userType,
         )
           ? _setBoardData
           : null,
-        boardState,
         setBoardState: (boardState: IBoardState) =>
           setBoardState(prevBoardState => {
             if (
@@ -159,18 +153,12 @@ const DatasetWrapper: React.FC = () => {
 
             return boardState;
           }),
-        changeHistoryRef,
+        setCurrentRevision,
         undo: () => {
           if (currentRevision === 0) return;
           const prevRevision = currentRevision - 1;
           setBoardData(changeHistoryRef.current[prevRevision]);
           setCurrentRevision(prevRevision);
-        },
-        redo: () => {
-          if (currentRevision === changeHistoryRef.current.length - 1) return;
-          const newRevision = currentRevision + 1;
-          setBoardData(changeHistoryRef.current[newRevision]);
-          setCurrentRevision(newRevision);
         },
       }}
     >

@@ -3,6 +3,7 @@ import GridContext from 'contexts/GridContext';
 import useFindVisibleRows from 'hooks/useFindVisibleRows';
 import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
+import * as R from 'ramda';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';
 import HotkeysProvider from './HotkeysProvider';
@@ -45,13 +46,16 @@ const RowsContainer = styled.div`
 
 const Grid: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
-  const { boardData } = useContext(DatasetContext)!;
+  const { boardData, getRowSlice } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
-  const [firstVisibleRow, lastVisibleRow] = useFindVisibleRows(gridRef);
+  const [firstVisibleRow, lastVisibleRow] = useFindVisibleRows(gridRef, {
+    first: boardData.rows[0]?.index ?? 0,
+    last: R.last(boardData.rows)?.index ?? 30,
+  });
 
   useEffect(() => {
-    // Will handle visible row changes here
-  }, [firstVisibleRow, lastVisibleRow]);
+    getRowSlice(firstVisibleRow, lastVisibleRow);
+  }, [firstVisibleRow, getRowSlice, lastVisibleRow]);
 
   return (
     <GridContext.Provider

@@ -11,6 +11,7 @@ interface IDatasetContext {
   setCurrentRevision: (revision: number) => void;
   undo: () => void;
   redo: () => void;
+  getRowSlice: (start: number, end: number) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);
