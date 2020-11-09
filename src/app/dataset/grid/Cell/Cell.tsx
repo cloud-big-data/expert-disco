@@ -42,7 +42,6 @@ const CellContainer = styled.div<{
   padding: .5rem;
   cursor: pointer;
   flex: 1 0 auto;
-
   border-top: 2px solid ${Styles.faintBorderColor};
   border-left: 2px solid ${Styles.faintBorderColor};
   ${props =>
@@ -76,8 +75,16 @@ const CellContainer = styled.div<{
     props.selected
       ? `
     border: 2px solid ${Styles.purple};
-    border-radius: ${Styles.defaultBorderRadius};
+    border-radius: ${Styles.defaultBorderRadius}; 
+    box-shadow: ${Styles.smBoxShadow};
   `
+      : ''}
+
+  ${props =>
+    props.active
+      ? `
+      box-shadow: ${Styles.smBoxShadow};
+      `
       : ''}
 
   ${props =>
@@ -112,6 +119,8 @@ const Cell: React.FC<ICellProps> = ({
   )!;
   const inputRef = useRef<HTMLInputElement>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
+  const [localValue, setLocalValue] = useState(value);
+  const typingTimeout = useRef<any>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -167,7 +176,7 @@ const Cell: React.FC<ICellProps> = ({
       {active ? (
         <ActiveInput
           ref={inputRef}
-          value={(value as string) ?? ''}
+          value={localValue ?? ''}
           type="text"
           onKeyDown={e => {
             if (e.key !== 'Enter') return;
@@ -182,17 +191,23 @@ const Cell: React.FC<ICellProps> = ({
             );
           }}
           onChange={e => {
-            setBoardData!(
-              editCellsAndReturnBoard(
-                [
-                  {
-                    cellId: _id,
-                    updatedValue: e.target.value,
-                  },
-                ],
-                boardData,
-              ),
-            );
+            const { value } = e.target;
+            setLocalValue(e.target.value);
+            clearTimeout(typingTimeout.current);
+
+            typingTimeout.current = setTimeout(() => {
+              setBoardData!(
+                editCellsAndReturnBoard(
+                  [
+                    {
+                      cellId: _id,
+                      updatedValue: (value as string) ?? '',
+                    },
+                  ],
+                  boardData,
+                ),
+              );
+            }, 200);
           }}
         />
       ) : (
