@@ -2,7 +2,8 @@ import { Helper } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import { IRow } from '../types';
+import * as R from 'ramda';
+import { IBoardState, IRow } from '../types';
 import Cell from './Cell';
 import { defaults } from './constants';
 
@@ -42,19 +43,14 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
       <RowIndexContainer
         data-row-index={rowIndex}
         className="row__index"
-        onClick={() => {
-          setBoardState({
-            ...boardState,
-            rowsState: {
-              ...boardState.rowsState,
-              selectedRow: _id,
-            },
-            columnsState: {
-              ...boardState.columnsState,
-              selectedColumn: -1,
-            },
-          });
-        }}
+        onClick={() =>
+          setBoardState(
+            R.pipe(
+              R.assocPath(['rowsState', 'selectedRow'], _id),
+              R.assocPath(['columnsState', 'selectedColumn'], -1),
+            )(boardState) as IBoardState,
+          )
+        }
       >
         <Helper>{rowIndex}</Helper>
       </RowIndexContainer>

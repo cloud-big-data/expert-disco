@@ -20,6 +20,7 @@ export const makeBoardActions = (boardData: IBoardData) => {
           ...boardData.rows,
           {
             _id: uuidv4(),
+            index: boardData.rows.length,
             cells: boardData.rows[0].cells.map((cell, index) => ({
               ...cell,
               _id: uuidv4(),

@@ -25,6 +25,7 @@ export interface IColumn extends ICell {
 export interface IRow {
   _id: string;
   cells: ICell[];
+  index: number;
   /**
    * rowHeight: The height of the row, in px.
    */

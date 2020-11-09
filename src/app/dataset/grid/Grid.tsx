@@ -80,7 +80,7 @@ const Grid: React.FC = () => {
                 <Row
                   key={row._id}
                   {...row}
-                  rowIndex={index}
+                  rowIndex={row.index}
                   position={{
                     firstRow: index === 0,
                     lastRow: index === rows.length - 1,
