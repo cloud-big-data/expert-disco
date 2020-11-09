@@ -64,11 +64,22 @@ const useDatasetsSockets = (
       console.log(data);
     });
 
-    return () =>
+    window.addEventListener('unload', () => socket.emit('unload'));
+
+    return () => {
       ['connect', 'initialDatasetReceived', 'slice', 'returnDiff'].forEach(cnxn =>
         socket.off(cnxn),
       );
+    };
   }, [userId, datasetId, boardData, setBoardData, changeHistoryRef]);
+
+  useEffect(() => {
+    window.addEventListener('unload', () => socketObj?.emit('unload'));
+
+    return () => {
+      window.removeEventListener('unload', () => socketObj?.emit('unload'));
+    };
+  }, [socketObj]);
 
   return socketObj;
 };
