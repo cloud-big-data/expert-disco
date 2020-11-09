@@ -2,7 +2,7 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as R from 'ramda';
 import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
@@ -59,11 +59,13 @@ const DatasetWrapper: React.FC = () => {
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   const [currentRevision, setCurrentRevision] = useState(0);
   const changeHistoryRef = useRef<IBoardData[]>([]);
+  const saveTimeout = useRef<any>(null);
+  const queuedSave = useRef<any>();
   const params = useParams<{
     datasetId: string;
   }>();
 
-  useDatasetsSockets(
+  const socket = useDatasetsSockets(
     {
       userId: user.userId,
       datasetId: params.datasetId,
@@ -74,6 +76,18 @@ const DatasetWrapper: React.FC = () => {
     },
     changeHistoryRef,
   );
+
+  useEffect(() => {
+    const sendSave = () => {
+      clearTimeout(saveTimeout.current);
+      queuedSave.current?.();
+    };
+    window.addEventListener('beforeunload', sendSave);
+
+    return () => {
+      window.removeEventListener('beforeunload', sendSave);
+    };
+  }, [socket]);
 
   const loader = (
     <div className="absolute__center">
@@ -102,6 +116,23 @@ const DatasetWrapper: React.FC = () => {
     ];
   };
 
+  const _setBoardData = (newBoardData: IBoardData) => {
+    setBoardData(prevBoardData => {
+      if (!prevBoardData) return newBoardData;
+
+      clearTimeout(saveTimeout.current);
+      queuedSave.current = () => {
+        socket?.emit('diff', {
+          colDiff: R.difference(newBoardData.columns, prevBoardData.columns),
+          rowDiff: R.difference(newBoardData.rows, prevBoardData.rows),
+        });
+      };
+      saveTimeout.current = setTimeout(queuedSave.current, 10000);
+
+      return newBoardData;
+    });
+  };
+
   return (
     <DatasetContext.Provider
       value={{
@@ -111,7 +142,7 @@ const DatasetWrapper: React.FC = () => {
         setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
           userType,
         )
-          ? setBoardData
+          ? _setBoardData
           : null,
         boardState,
         setBoardState: (boardState: IBoardState) =>

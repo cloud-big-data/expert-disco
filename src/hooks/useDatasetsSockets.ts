@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { IBoardData } from 'app/dataset/types';
 
@@ -18,6 +18,9 @@ const useDatasetsSockets = (
 ) => {
   const { userId, datasetId } = query;
   const { boardData, setBoardData } = board;
+  const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     if (!userId || !datasetId) return;
@@ -32,8 +35,11 @@ const useDatasetsSockets = (
     });
 
     socket.on('connect', () => {
+      setSocket(socket);
       socket.emit('join', datasetId);
-      socket.emit('loadDataset');
+      if (!boardData) {
+        socket.emit('loadDataset');
+      }
     });
 
     socket.on('initialDatasetReceived', (res: IBoardData) => {
@@ -42,7 +48,13 @@ const useDatasetsSockets = (
         changeHistoryRef.current = [res];
       }
     });
+
+    socket.on('returnDiff', (data: any) => {
+      console.log(data);
+    });
   }, [userId, datasetId, boardData, setBoardData, changeHistoryRef]);
+
+  return socketObj;
 };
 
 export default useDatasetsSockets;
