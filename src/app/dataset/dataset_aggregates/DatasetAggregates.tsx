@@ -1,9 +1,9 @@
 import { ButtonTertiary } from 'components/ui/Buttons';
+import Card from 'components/ui/Card';
 import ViewWithLeftNav from 'components/ViewWithLeftNav';
 // import DatasetContext from 'contexts/DatasetContext';
 import React, { useState } from 'react';
 import styled from 'styled-components/macro';
-import Styles from 'styles/Styles';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
   display: flex;
@@ -48,16 +48,6 @@ const AggregatesContainer = styled.div`
   h6 {
     margin: 0 0 1rem;
   }
-`;
-
-const SummaryCard = styled.div`
-  display: flex;
-  flex: 1 0 auto;
-  box-shadow: ${Styles.boxShadow};
-  padding: 1rem 1.5rem;
-  border-radius: ${Styles.defaultBorderRadius};
-  background: white;
-  border: 2px solid ${Styles.faintBorderColor};
 `;
 
 const ChangeHistoryContainer = styled.div`
@@ -122,14 +112,14 @@ const DatasetAggregates: React.FC = () => {
             setView={setActiveView}
             options={VIEWS}
           >
-            <SummaryCard>
+            <Card>
               <h6>{VIEWS.find(view => view.value === activeView)?.label ?? ''}</h6>
-            </SummaryCard>
+            </Card>
           </ViewWithLeftNav>
           <ChangeHistoryContainer>
-            <SummaryCard>
+            <Card>
               <h6>Change history</h6>
-            </SummaryCard>
+            </Card>
           </ChangeHistoryContainer>
         </AggregatesContainer>
       ) : (
