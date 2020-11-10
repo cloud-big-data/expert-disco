@@ -40,8 +40,6 @@ type UserId = string;
  * For the viewable, non-persistent state of the board, use IBoardState
  */
 export interface IBoardData {
-  updatedAt: string;
-  createdAt: string;
   visibilitySettings: {
     owner: UserId;
     editors: UserId[];
@@ -49,6 +47,12 @@ export interface IBoardData {
   };
   columns: IColumn[];
   rows: IRow[];
+}
+
+export interface IBoardMeta {
+  title: string;
+  updatedAt: string;
+  createdAt: string;
 }
 
 /**

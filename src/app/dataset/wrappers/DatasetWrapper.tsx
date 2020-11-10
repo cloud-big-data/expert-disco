@@ -6,6 +6,8 @@ import React, { useContext, useRef, useState } from 'react';
 import * as R from 'ramda';
 import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
+import { useQuery } from 'react-query';
+import skyvueFetch from 'services/skyvueFetch';
 import { IBoardState, IBoardData } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
@@ -59,6 +61,13 @@ const DatasetWrapper: React.FC = () => {
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   const [currentRevision, setCurrentRevision] = useState(0);
   const changeHistoryRef = useRef<IBoardData[]>([]);
+  const { datasetId } = useParams<{ datasetId: string }>();
+
+  const { data } = useQuery(datasetId, () =>
+    user.accessToken
+      ? skyvueFetch(user.accessToken).get(`/datasets/${datasetId}`)
+      : () => undefined,
+  );
 
   const params = useParams<{
     datasetId: string;
@@ -123,6 +132,11 @@ const DatasetWrapper: React.FC = () => {
   return (
     <DatasetContext.Provider
       value={{
+        datasetMeta: {
+          title: data?.title,
+          createdAt: data?.createdAt,
+          updatedAt: data?.updatedAt,
+        },
         boardData,
         boardState,
         changeHistoryRef,

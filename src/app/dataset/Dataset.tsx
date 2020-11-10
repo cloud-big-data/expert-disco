@@ -3,11 +3,14 @@ import DatasetContext from 'contexts/DatasetContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
+import { Helper } from 'components/ui/Typography';
+import humanizeTimeAgo from 'utils/humanizeTimeAgo';
 import Grid from './grid';
 import getCellValueById from './lib/getCellValueById';
 import editCellsAndReturnBoard from './lib/editCellsAndReturnBoard';
 import DatasestToolbar from './toolbar';
 import { initialBoardState } from './wrappers/DatasetWrapper';
+import DatasetAggregates from './dataset_aggregates';
 
 const DatasetContainer = styled.div`
   display: flex;
@@ -17,6 +20,24 @@ const DatasetContainer = styled.div`
   padding: 1rem;
   max-height: calc(100% - 4rem);
 `;
+
+const MetaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  padding: 0 2.25rem;
+  h5 {
+    margin-bottom: 0;
+  }
+`;
+
+const AggregatesContainer = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 1rem 2.25rem;
+`;
+
 const ParentGridContainer = styled.div`
   flex: 1 0 auto;
   display: flex;
@@ -44,9 +65,14 @@ const Dataset: React.FC<{
   readOnly?: boolean;
 }> = () => {
   const datasetRef = useRef<HTMLDivElement>(null);
-  const { boardData, setBoardData, boardState, setBoardState } = useContext(
-    DatasetContext,
-  )!;
+  const {
+    boardData,
+    setBoardData,
+    boardState,
+    setBoardState,
+    datasetMeta,
+  } = useContext(DatasetContext)!;
+
   const { selectedCell } = boardState.cellsState;
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -56,6 +82,13 @@ const Dataset: React.FC<{
 
   return (
     <DatasetContainer ref={datasetRef}>
+      <AggregatesContainer>
+        <DatasetAggregates />
+      </AggregatesContainer>
+      <MetaContainer>
+        <h5>{datasetMeta.title}</h5>
+        <Helper>Created {humanizeTimeAgo(datasetMeta.createdAt)}</Helper>
+      </MetaContainer>
       <ToolbarContainer>
         <DatasestToolbar />
       </ToolbarContainer>

@@ -82,6 +82,9 @@ const Button = styled.button<{
 
       &:hover {
         color: ${Styles.purple};
+        * {
+          color: ${Styles.purple};
+        }
       }
 
       &:disabled {

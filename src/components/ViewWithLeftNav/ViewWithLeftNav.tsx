@@ -13,16 +13,25 @@ interface IViewWithLeftNav {
   activeView: string;
   children: React.ReactNode;
   setView: (view: string) => void;
+  cancelPadding?: boolean;
 }
 
-const Container = styled.div<{ stackNav: boolean }>`
+const Container = styled.div<{
+  stackNav: boolean;
+  cancelPadding?: boolean;
+}>`
   display: grid;
-  grid-template-columns: 1fr 3fr;
   grid-column-gap: 1rem;
   grid-row-gap: 1rem;
+  grid-template-columns: 1fr 3fr;
   width: 100%;
   @media (max-width: ${Styles.defaultMaxWidth}) {
-    padding: ${Styles.defaultPadding};
+    ${props =>
+      !props.cancelPadding
+        ? `
+          padding: ${Styles.defaultPadding};
+        `
+        : ''}
   }
 
   @media (max-width: 750px) {
@@ -58,6 +67,7 @@ const NavItem = styled.div<{ active?: boolean }>`
   display: flex;
   flex: 0 1 auto;
   cursor: pointer;
+  align-items: center;
   transition-duration: 0.3s;
   &:hover {
     font-weight: bold;
@@ -78,6 +88,11 @@ const NavItem = styled.div<{ active?: boolean }>`
       color: ${Styles.peach};
     }
   }
+  &:nth-of-type(5) {
+    i {
+      color: ${Styles.yellow};
+    }
+  }
 `;
 
 const MainContainer = styled.div`
@@ -89,12 +104,13 @@ const ViewWithLeftNav: React.FC<IViewWithLeftNav> = ({
   children,
   activeView,
   setView,
+  cancelPadding,
 }) => {
   const { width } = useWindowSize();
   const stackNav = width !== undefined && width < 750;
 
   return (
-    <Container stackNav={stackNav}>
+    <Container cancelPadding={cancelPadding} stackNav={stackNav}>
       {stackNav ? (
         <Select options={options} onChange={(e: any) => setView(e.value)} />
       ) : (

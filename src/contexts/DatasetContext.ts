@@ -1,7 +1,8 @@
-import { IBoardState, IBoardData } from 'app/dataset/types';
+import { IBoardState, IBoardData, IBoardMeta } from 'app/dataset/types';
 import { createContext } from 'react';
 
 interface IDatasetContext {
+  datasetMeta: IBoardMeta;
   boardData: IBoardData;
   setBoardData: null | ((data: IBoardData) => void);
   boardState: IBoardState;
