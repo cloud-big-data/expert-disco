@@ -4,6 +4,7 @@ import useFindVisibleRows from 'hooks/useFindVisibleRows';
 import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
+import Styles from 'styles/Styles';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';
 import HotkeysProvider from './HotkeysProvider';
@@ -26,7 +27,7 @@ const ColumnsContainer = styled.div`
   flex: 0 1 100%;
   display: flex;
   align-items: center;
-  background: white;
+  background: ${Styles.defaultBgColor};
   position: sticky;
   top: 0;
   &:before {

@@ -14,6 +14,7 @@ const AppContainer = styled.div`
   flex-direction: column;
   height: 100%;
   min-height: 100vh;
+  background: ${Styles.defaultBgColor};
 
   .app-body__container {
     max-width: ${Styles.defaultMaxWidth};

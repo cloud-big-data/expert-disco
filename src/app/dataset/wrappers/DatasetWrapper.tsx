@@ -63,7 +63,7 @@ const DatasetWrapper: React.FC = () => {
   const changeHistoryRef = useRef<IBoardData[]>([]);
   const { datasetId } = useParams<{ datasetId: string }>();
 
-  const { data } = useQuery(datasetId, () =>
+  const { data } = useQuery(user.accessToken, () =>
     user.accessToken
       ? skyvueFetch(user.accessToken).get(`/datasets/${datasetId}`)
       : () => undefined,

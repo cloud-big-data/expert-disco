@@ -18,6 +18,9 @@ const ExpandWrapper = styled.div<{ expanded: boolean }>`
     }
   }
 
+  padding-bottom: ${props => (props.expanded ? `3.5rem` : `1rem`)};
+  border-bottom: 2px solid #e1e1e1;
+
   .contracted_buttons {
     width: 100%;
     display: grid;
@@ -53,6 +56,8 @@ const SummaryCard = styled.div`
   box-shadow: ${Styles.boxShadow};
   padding: 1rem 1.5rem;
   border-radius: ${Styles.defaultBorderRadius};
+  background: white;
+  border: 2px solid ${Styles.faintBorderColor};
 `;
 
 const ChangeHistoryContainer = styled.div`
@@ -63,7 +68,7 @@ const ChangeHistoryContainer = styled.div`
 
 const VIEWS = [
   {
-    label: 'summarize this dataset',
+    label: 'Summarize this dataset',
     value: 'summary',
     icon: <i className="fad fa-scroll" />,
   },
@@ -88,7 +93,7 @@ const VIEWS = [
     icon: <i className="fad fa-share" />,
   },
   {
-    label: 'Export to csv',
+    label: 'Export to CSV',
     value: 'export',
     icon: <i className="fad fa-file-csv" />,
   },
@@ -118,7 +123,7 @@ const DatasetAggregates: React.FC = () => {
             options={VIEWS}
           >
             <SummaryCard>
-              <p>Hi</p>
+              <h6>{VIEWS.find(view => view.value === activeView)?.label ?? ''}</h6>
             </SummaryCard>
           </ViewWithLeftNav>
           <ChangeHistoryContainer>

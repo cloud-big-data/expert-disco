@@ -9,6 +9,7 @@ interface IButton {
   disabled?: boolean;
   style?: React.CSSProperties;
   className?: string;
+  icon?: boolean;
 }
 
 const Button = styled.button<{
@@ -17,6 +18,7 @@ const Button = styled.button<{
   tertiary?: boolean;
   disabled?: boolean;
   danger?: boolean;
+  icon?: boolean;
 }>`
   border-radius: 100px;
   font-size: 1rem;
@@ -103,6 +105,24 @@ const Button = styled.button<{
     }
   `
       : ''}
+
+  ${props =>
+    props.icon
+      ? `
+      display: flex;
+      align-items: center;
+      padding: .25rem;
+      height: 1rem;
+      border: none;
+      background: transparent;
+
+      &:hover {
+        i {
+          color: ${Styles.purple};
+        }
+      }
+    `
+      : ''}
 `;
 
 const ButtonPrimary: React.FC<IButton> = props => (
@@ -157,4 +177,17 @@ const ButtonDanger: React.FC<IButton> = props => (
   </Button>
 );
 
-export { ButtonPrimary, ButtonTertiary, ButtonSecondary, ButtonDanger };
+const IconButton: React.FC<IButton> = props => (
+  <Button
+    disabled={props.disabled}
+    onClick={props.onClick && props.onClick}
+    id={props.id}
+    icon
+    style={props.style}
+    className={props.className}
+  >
+    {props.children}
+  </Button>
+);
+
+export { ButtonPrimary, ButtonTertiary, ButtonSecondary, ButtonDanger, IconButton };

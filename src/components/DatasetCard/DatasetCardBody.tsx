@@ -16,6 +16,7 @@ const DatasetCardContainer = styled.div`
   padding: 0.5rem;
   transition-duration: 0.2s;
   min-height: 7rem;
+  background: white;
 
   &:hover {
     border-color: ${Styles.blue};
