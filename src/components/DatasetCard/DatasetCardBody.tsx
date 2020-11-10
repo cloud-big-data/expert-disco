@@ -19,7 +19,7 @@ const DatasetCardContainer = styled.div`
   background: white;
 
   &:hover {
-    border-color: ${Styles.blue};
+    border-color: ${Styles.purple};
   }
 
   .meta__bar {
@@ -28,6 +28,7 @@ const DatasetCardContainer = styled.div`
       margin-left: auto;
       i {
         font-size: 1rem;
+        cursor: pointer;
       }
       &:hover {
         * {

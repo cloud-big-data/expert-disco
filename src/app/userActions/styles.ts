@@ -12,6 +12,7 @@ export const UserContainer = styled.div`
   top: 20%;
   left: 25%;
   right: 25%;
+  border: 2px solid ${Styles.faintBorderColor};
 
   .input-group {
     width: 100%;

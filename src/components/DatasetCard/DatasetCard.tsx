@@ -41,16 +41,6 @@ const DatasetCard: React.FC<{
       onClick: () => undefined,
       icon: <i className="fad fa-external-link" />,
     },
-    // {
-    //   label: 'Sort',
-    //   onClick: () => undefined,
-    //   icon: <i style={{ color: Styles.orange }} className="fad fa-sort" />,
-    // },
-    // {
-    //   label: 'Format',
-    //   onClick: () => undefined,
-    //   icon: <i style={{ color: Styles.blue }} className="fad fa-remove-format" />,
-    // },
   ];
 
   return (

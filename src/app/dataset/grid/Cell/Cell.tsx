@@ -25,6 +25,7 @@ interface ICellProps extends ICell {
   colWidth?: number;
 }
 
+const CELL_BORDER_COLOR = Styles.faintBorderColor;
 const CellContainer = styled.div<{
   highlighted?: boolean;
   active?: boolean;
@@ -43,19 +44,19 @@ const CellContainer = styled.div<{
   padding: .5rem;
   cursor: pointer;
   flex: 1 0 auto;
-  border-top: 2px solid ${Styles.faintBorderColor};
-  border-left: 2px solid ${Styles.faintBorderColor};
+  border-top: 1px solid ${CELL_BORDER_COLOR};
+  border-left: 1px solid ${CELL_BORDER_COLOR};
   ${props =>
     props.position.lastRow
       ? `
-      border-bottom: 2px solid ${Styles.faintBorderColor};
+      border-bottom: 1px solid ${CELL_BORDER_COLOR};
     `
       : ''}
   ${props =>
     props.position.lastColumn
       ? `
-      border-left: 1px solid ${Styles.faintBorderColor};
-      border-right: 2px solid ${Styles.faintBorderColor};
+      border-left: 1px solid ${CELL_BORDER_COLOR};
+      border-right: 2px solid ${CELL_BORDER_COLOR};
     `
       : ''}
   ${props =>
@@ -65,6 +66,12 @@ const CellContainer = styled.div<{
     `
       : ''}
 
+  ${props =>
+    props.position.firstColumn
+      ? `
+      border-left: 2px solid ${CELL_BORDER_COLOR};
+    `
+      : ''}
   ${props =>
     props.position.lastRow && props.position.firstColumn
       ? `

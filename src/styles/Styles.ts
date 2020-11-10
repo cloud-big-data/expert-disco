@@ -1,7 +1,7 @@
 export default {
   fontColor: '#011549',
   purple: '#6E30F2',
-  purpleAccent: '#EEE7FF',
+  purpleAccent: '#F5F1FF',
   purpleGradient: 'linear-gradient(115.8deg, #6e30f2 0%, #86e2ff 100%)',
   blue: '#86E2FF',
   green: '#73FFCD',
@@ -22,3 +22,5 @@ export default {
   defaultBorderRadius: '.5rem',
   defaultBgColor: '#f7f7fc',
 };
+
+// other idea for defaultBgColor: #FDFDFF

@@ -12,7 +12,9 @@ const InputContainer = styled.div<{
   width: 100%;
   background: ${props => (props.disabled ? 'rgba(239, 239, 239, 0.3)' : 'white')};
   border: ${props =>
-    props.error ? `1px solid ${Styles.red}` : '1px solid rgba(0, 0, 0, 0.1)'};
+    props.error
+      ? `1px solid ${Styles.red}`
+      : `1px solid ${Styles.faintBorderColor}`};
   ${props =>
     props.active
       ? `
@@ -26,7 +28,7 @@ const InputContainer = styled.div<{
       props.active
         ? ``
         : `
-      border: 1px solid rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0,0,0,.2);
     `}
   }
   .icon__container {
