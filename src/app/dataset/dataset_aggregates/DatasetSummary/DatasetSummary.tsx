@@ -6,11 +6,14 @@ import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import humanFileSize from 'utils/humanFileSize';
+import { DataTypes } from 'app/dataset/types';
 
 const DatasetSummaryContainer = styled.div`
   display: grid;
   grid-template-columns: auto 2fr auto;
   grid-column-gap: 1rem;
+  overflow: hidden;
+
   .summary_metrics__container {
     padding-right: 1rem;
     display: flex;
@@ -19,6 +22,18 @@ const DatasetSummaryContainer = styled.div`
       margin-top: 1rem;
     }
     border-right: 2px solid ${Styles.faintBorderColor};
+  }
+
+  .fields__container {
+    display: flex;
+    flex-direction: column;
+    max-height: inherit;
+    overflow: auto;
+
+    .fields__table {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+    }
   }
 
   .fit__container {
@@ -112,7 +127,35 @@ const DatasetSummary: React.FC = () => {
           value={csvFileSize ? humanFileSize(csvFileSize) : undefined}
         />
       </div>
-      <div className="columns__container">hi</div>
+      <div className="fields__container">
+        <h6>Fields</h6>
+        <div className="fields__table">
+          {boardData.columns.map((col, index) => (
+            <React.Fragment key={col._id}>
+              {index === 0 && (
+                <>
+                  <div className="field__name">
+                    <Label>Field</Label>
+                  </div>
+                  <div className="field__name">
+                    <Label>Data type</Label>
+                  </div>
+                  <div className="field__name">
+                    <Label>Format</Label>
+                  </div>
+                </>
+              )}
+              <div className="field">
+                <Label unBold>{col.value}</Label>
+              </div>
+              <div className="field">
+                <Label unBold>{DataTypes[col.dataType]}</Label>
+              </div>
+              <div />
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
       <div className="fit__container">
         <h6>
           Compatible with

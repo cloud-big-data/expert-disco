@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import skyvueFetch from 'services/skyvueFetch';
 
 const useTokenRefresh = () => {
@@ -13,6 +13,8 @@ const useTokenRefresh = () => {
     error: false,
     disconnected: false,
   });
+
+  const refreshInterval = useRef<any>(undefined);
 
   useEffect(() => {
     const getTokens = async () => {
@@ -49,7 +51,13 @@ const useTokenRefresh = () => {
 
     if (tokens.refreshToken && !tokens.accessToken) {
       getTokens();
+      refreshInterval.current = setInterval(getTokens, 900000);
     }
+
+    return () => {
+      clearInterval(refreshInterval.current);
+      refreshInterval.current = undefined;
+    };
   }, [tokens]);
 
   return tokens;
