@@ -16,11 +16,13 @@ const useDatasetsSockets = (
     setBoardData: (boardData: IBoardData) => void;
     estCSVSize?: number;
     setEstCSVSize?: (head: number) => void;
+    boardHead: { rowCount?: number };
+    setBoardHead: (head: { rowCount?: number }) => void;
   },
   changeHistoryRef: React.MutableRefObject<Array<IBoardData>>,
 ) => {
   const { userId, datasetId } = query;
-  const { boardData, setBoardData, estCSVSize, setEstCSVSize } = board;
+  const { boardData, setBoardData, estCSVSize, setEstCSVSize, setBoardHead } = board;
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
     undefined,
   );
@@ -45,6 +47,14 @@ const useDatasetsSockets = (
       if (!estCSVSize) {
         socket.emit('csvEstimate');
       }
+
+      socket.emit('meta');
+    });
+
+    socket.on('meta', (meta: any) => {
+      setBoardHead({
+        rowCount: meta.rows,
+      });
     });
 
     socket.on('csvEstimate', (size: number) => {
@@ -69,10 +79,6 @@ const useDatasetsSockets = (
       }
     });
 
-    socket.on('returnDiff', (data: any) => {
-      console.log(data);
-    });
-
     window.addEventListener('unload', () => socket.emit('unload'));
 
     return () => {
@@ -88,6 +94,7 @@ const useDatasetsSockets = (
     changeHistoryRef,
     estCSVSize,
     setEstCSVSize,
+    setBoardHead,
   ]);
 
   useEffect(() => {

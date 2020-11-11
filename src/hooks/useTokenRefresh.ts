@@ -51,7 +51,7 @@ const useTokenRefresh = () => {
 
     if (tokens.refreshToken && !tokens.accessToken) {
       getTokens();
-      refreshInterval.current = setInterval(getTokens, 900000);
+      refreshInterval.current = setInterval(getTokens, 600000);
     }
 
     return () => {

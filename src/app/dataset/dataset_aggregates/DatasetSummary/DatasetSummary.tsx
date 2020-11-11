@@ -103,20 +103,20 @@ const validateSizeLimits = (
 
 const DatasetSummary: React.FC = () => {
   const { boardData, datasetHead } = useContext(DatasetContext)!;
-  const { skyvueFileSize, csvFileSize } = datasetHead;
-  const rowLength = boardData.rows.length;
+  const { skyvueFileSize, csvFileSize, rowCount } = datasetHead;
+
   const colLength = boardData.columns.length;
   const sizeLimits: ISizeLimits = {
-    rows: rowLength,
+    rows: rowCount,
     columns: colLength,
-    cells: rowLength * colLength,
+    cells: rowCount ?? 1 * colLength,
     size: csvFileSize,
   };
 
   return (
     <DatasetSummaryContainer>
       <div className="summary_metrics__container">
-        <Metric label="records" value={boardData.rows.length} commas />
+        <Metric label="records" value={rowCount} commas />
         <Metric label="columns" value={boardData.columns.length} />
         <Metric
           label="Skyvue file size"

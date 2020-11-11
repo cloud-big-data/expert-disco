@@ -60,6 +60,9 @@ const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
+  const [boardHead, setBoardHead] = useState<{
+    rowCount?: number;
+  }>({});
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [currentRevision, setCurrentRevision] = useState(0);
   const changeHistoryRef = useRef<IBoardData[]>([]);
@@ -85,6 +88,8 @@ const DatasetWrapper: React.FC = () => {
       setBoardData,
       estCSVSize,
       setEstCSVSize,
+      boardHead,
+      setBoardHead,
     },
     changeHistoryRef,
   );
@@ -143,6 +148,7 @@ const DatasetWrapper: React.FC = () => {
           updatedAt: data?.dataset?.updatedAt,
           skyvueFileSize: data?.head?.ContentLength,
           csvFileSize: estCSVSize,
+          rowCount: boardHead.rowCount,
         },
         boardData,
         boardState,

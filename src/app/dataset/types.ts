@@ -55,6 +55,7 @@ export interface IBoardHead {
   createdAt?: string;
   skyvueFileSize?: number;
   csvFileSize?: number;
+  rowCount?: number;
 }
 
 /**
