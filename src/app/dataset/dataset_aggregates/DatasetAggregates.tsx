@@ -15,7 +15,7 @@ const ExpandWrapper = styled.div<{ expanded: boolean }>`
     margin-bottom: 1rem;
     padding: 0;
     i {
-      margin-left: 1rem;
+      margin-left: 0.5rem;
     }
   }
 
@@ -99,8 +99,8 @@ const ViewLookup: {
 const DatasetAggregates: React.FC = () => {
   const [expanded, setExpanded] = useState(true);
   const [activeView, setActiveView] = useState('summary');
-  // const { boardData } = useContext(DatasetContext)!;
   const ViewComponent = ViewLookup[activeView];
+
   return (
     <ExpandWrapper expanded={expanded}>
       <ButtonTertiary onClick={() => setExpanded(!expanded)} id="expand_toggle">
@@ -119,10 +119,7 @@ const DatasetAggregates: React.FC = () => {
             setView={setActiveView}
             options={VIEWS}
           >
-            <Card>
-              {/* <h6>{VIEWS.find(view => view.value === activeView)?.label ?? ''}</h6> */}
-              {ViewComponent}
-            </Card>
+            <Card>{ViewComponent}</Card>
           </ViewWithLeftNav>
           <ChangeHistoryContainer>
             <Card>

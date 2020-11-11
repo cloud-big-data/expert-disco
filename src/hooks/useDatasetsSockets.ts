@@ -14,11 +14,13 @@ const useDatasetsSockets = (
   board: {
     boardData?: IBoardData;
     setBoardData: (boardData: IBoardData) => void;
+    estCSVSize?: number;
+    setEstCSVSize?: (head: number) => void;
   },
   changeHistoryRef: React.MutableRefObject<Array<IBoardData>>,
 ) => {
   const { userId, datasetId } = query;
-  const { boardData, setBoardData } = board;
+  const { boardData, setBoardData, estCSVSize, setEstCSVSize } = board;
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
     undefined,
   );
@@ -40,6 +42,13 @@ const useDatasetsSockets = (
       if (!boardData) {
         socket.emit('loadDataset');
       }
+      if (!estCSVSize) {
+        socket.emit('csvEstimate');
+      }
+    });
+
+    socket.on('csvEstimate', (size: number) => {
+      setEstCSVSize?.(size);
     });
 
     socket.on('initialDatasetReceived', (res: IBoardData) => {
@@ -71,7 +80,15 @@ const useDatasetsSockets = (
         socket.off(cnxn),
       );
     };
-  }, [userId, datasetId, boardData, setBoardData, changeHistoryRef]);
+  }, [
+    userId,
+    datasetId,
+    boardData,
+    setBoardData,
+    changeHistoryRef,
+    estCSVSize,
+    setEstCSVSize,
+  ]);
 
   useEffect(() => {
     window.addEventListener('unload', () => socketObj?.emit('unload'));

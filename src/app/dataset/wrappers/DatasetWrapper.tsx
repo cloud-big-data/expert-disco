@@ -20,8 +20,9 @@ enum DatasetUserTypes {
 
 const getUserType = (
   userId: string,
-  visibility: IBoardData['visibilitySettings'],
+  visibility?: IBoardData['visibilitySettings'],
 ): DatasetUserTypes => {
+  if (!visibility) return DatasetUserTypes.viewer;
   if (userId === visibility.owner) {
     return DatasetUserTypes.owner;
   }
@@ -59,6 +60,7 @@ const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
+  const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [currentRevision, setCurrentRevision] = useState(0);
   const changeHistoryRef = useRef<IBoardData[]>([]);
   const { datasetId } = useParams<{ datasetId: string }>();
@@ -81,6 +83,8 @@ const DatasetWrapper: React.FC = () => {
     {
       boardData,
       setBoardData,
+      estCSVSize,
+      setEstCSVSize,
     },
     changeHistoryRef,
   );
@@ -104,7 +108,8 @@ const DatasetWrapper: React.FC = () => {
     );
   }
 
-  const userType = getUserType(user.userId, boardData?.visibilitySettings);
+  const userType = getUserType(user.userId, boardData.visibilitySettings);
+
   const saveToChangeHistory = () => {
     changeHistoryRef.current = [
       ...R.uniqBy(R.prop('rows'), changeHistoryRef.current),
@@ -132,10 +137,12 @@ const DatasetWrapper: React.FC = () => {
   return (
     <DatasetContext.Provider
       value={{
-        datasetMeta: {
-          title: data?.title,
-          createdAt: data?.createdAt,
-          updatedAt: data?.updatedAt,
+        datasetHead: {
+          title: data?.dataset?.title,
+          createdAt: data?.dataset?.createdAt,
+          updatedAt: data?.dataset?.updatedAt,
+          skyvueFileSize: data?.head?.ContentLength,
+          csvFileSize: estCSVSize,
         },
         boardData,
         boardState,

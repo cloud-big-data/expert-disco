@@ -75,6 +75,7 @@ const LabelContainer = styled.span<{
 }>`
   display: flex;
   font-weight: ${props => (props.unBold ? 500 : 600)};
+  color: ${Styles.fontColor};
   ${props =>
     props.hoverBold
       ? `

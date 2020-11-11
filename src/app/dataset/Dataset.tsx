@@ -83,7 +83,7 @@ const Dataset: React.FC<{
     setBoardData,
     boardState,
     setBoardState,
-    datasetMeta,
+    datasetHead,
   } = useContext(DatasetContext)!;
 
   const { selectedCell } = boardState.cellsState;
@@ -103,7 +103,7 @@ const Dataset: React.FC<{
 
       <MetaContainer fullScreen={fullScreen}>
         <div className="title__row">
-          <h5>{datasetMeta.title}</h5>
+          <h5>{datasetHead.title}</h5>
           <IconButton onClick={() => setFullScreen(!fullScreen)}>
             {fullScreen ? (
               <i className="fas fa-compress-wide" />
@@ -112,8 +112,8 @@ const Dataset: React.FC<{
             )}
           </IconButton>
         </div>
-        {datasetMeta.createdAt && (
-          <Helper>Created {humanizeTimeAgo(datasetMeta.createdAt)}</Helper>
+        {datasetHead.createdAt && (
+          <Helper>Created {humanizeTimeAgo(datasetHead.createdAt)}</Helper>
         )}
       </MetaContainer>
 

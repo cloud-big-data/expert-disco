@@ -49,10 +49,12 @@ export interface IBoardData {
   rows: IRow[];
 }
 
-export interface IBoardMeta {
-  title: string;
-  updatedAt: string;
-  createdAt: string;
+export interface IBoardHead {
+  title?: string;
+  updatedAt?: string;
+  createdAt?: string;
+  skyvueFileSize?: number;
+  csvFileSize?: number;
 }
 
 /**
