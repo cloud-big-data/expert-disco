@@ -4,6 +4,7 @@ import ViewWithLeftNav from 'components/ViewWithLeftNav';
 // import DatasetContext from 'contexts/DatasetContext';
 import React, { useState } from 'react';
 import styled from 'styled-components/macro';
+import DatasetSummary from './DatasetSummary';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
   display: flex;
@@ -58,7 +59,7 @@ const ChangeHistoryContainer = styled.div`
 
 const VIEWS = [
   {
-    label: 'Summarize this dataset',
+    label: 'Dataset summary',
     value: 'summary',
     icon: <i className="fad fa-scroll" />,
   },
@@ -67,18 +68,18 @@ const VIEWS = [
     value: 'group',
     icon: <i className="fad fa-layer-group" />,
   },
+  // {
+  //   label: 'Make pivot-able',
+  //   value: 'pivotable',
+  //   icon: <i className="fad fa-table" />,
+  // },
   {
-    label: 'Make pivot-able',
-    value: 'pivotable',
-    icon: <i className="fad fa-table" />,
-  },
-  {
-    label: 'Join w/ other datasets',
+    label: 'Join with other datasets',
     value: 'join',
     icon: <i className="fad fa-code-merge" />,
   },
   {
-    label: 'Share',
+    label: 'Share this dataset',
     value: 'share',
     icon: <i className="fad fa-share" />,
   },
@@ -89,11 +90,17 @@ const VIEWS = [
   },
 ];
 
+const ViewLookup: {
+  [key: string]: React.ReactNode;
+} = {
+  summary: <DatasetSummary />,
+};
+
 const DatasetAggregates: React.FC = () => {
   const [expanded, setExpanded] = useState(true);
   const [activeView, setActiveView] = useState('summary');
   // const { boardData } = useContext(DatasetContext)!;
-
+  const ViewComponent = ViewLookup[activeView];
   return (
     <ExpandWrapper expanded={expanded}>
       <ButtonTertiary onClick={() => setExpanded(!expanded)} id="expand_toggle">
@@ -113,7 +120,8 @@ const DatasetAggregates: React.FC = () => {
             options={VIEWS}
           >
             <Card>
-              <h6>{VIEWS.find(view => view.value === activeView)?.label ?? ''}</h6>
+              {/* <h6>{VIEWS.find(view => view.value === activeView)?.label ?? ''}</h6> */}
+              {ViewComponent}
             </Card>
           </ViewWithLeftNav>
           <ChangeHistoryContainer>

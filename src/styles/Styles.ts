@@ -21,6 +21,7 @@ export default {
   faintBorderColor: '#EAF5F7',
   defaultBorderRadius: '.5rem',
   defaultBgColor: '#f7f7fc',
+  softGray: '#b8b8d9',
 };
 
 // other idea for defaultBgColor: #FDFDFF
