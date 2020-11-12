@@ -17,7 +17,7 @@ const makeHandleKeyPress = ({
     ? findCellCoordinates(boardData.rows, selectedCell)
     : [-1, -1];
 
-  const cellLength = boardData.rows[0].cells.length;
+  const cellLength = boardData.rows[0]?.cells.length ?? 0;
   const rowLength = boardData.rows.length;
 
   const getCellId = (rowIndex: number, cellIndex: number) =>
