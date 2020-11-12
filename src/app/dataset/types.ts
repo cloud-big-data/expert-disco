@@ -35,6 +35,22 @@ export interface IRow {
 
 type UserId = string;
 
+export type FilterTypes =
+  | 'equals'
+  | 'notEquals'
+  | 'contains'
+  | 'lessThan'
+  | 'lessThanEqualTo'
+  | 'greaterThan'
+  | 'greaterThanEqualTo'
+  | 'dateBetween';
+
+export type FilterLayer = {
+  colId: string;
+  predicateType: FilterTypes;
+  value: string | string[] | number | number[];
+};
+
 /**
  * The data stored in the grid itself. This information should persist from session to session.
  * For the viewable, non-persistent state of the board, use IBoardState
@@ -47,6 +63,13 @@ export interface IBoardData {
   };
   columns: IColumn[];
   rows: IRow[];
+  layers?: {
+    joins: any[];
+    filters: Array<FilterLayer>;
+    groupings: any[];
+    sortings: any[];
+    formatting: any[];
+  };
 }
 
 export interface IBoardHead {

@@ -2,6 +2,7 @@ import { IBoardState, IBoardData, IBoardHead } from 'app/dataset/types';
 import { createContext } from 'react';
 
 interface IDatasetContext {
+  socket?: SocketIOClient.Socket;
   datasetHead: IBoardHead;
   boardData: IBoardData;
   setBoardData: null | ((data: IBoardData) => void);

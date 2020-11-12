@@ -19,7 +19,7 @@ const useTokenRefresh = () => {
   useEffect(() => {
     const getTokens = async () => {
       const res = await skyvueFetch().post('/auth/user/refresh', {
-        refreshToken: localStorage.getItem('refreshToken'),
+        refreshToken: tokens.refreshToken ?? localStorage.getItem('refreshToken'),
       });
 
       if (res.error === 'Failed to fetch') {

@@ -142,6 +142,7 @@ const DatasetWrapper: React.FC = () => {
   return (
     <DatasetContext.Provider
       value={{
+        socket,
         datasetHead: {
           title: data?.dataset?.title,
           createdAt: data?.dataset?.createdAt,

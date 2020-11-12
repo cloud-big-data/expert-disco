@@ -37,6 +37,7 @@ const useDatasetsSockets = (
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
+      reconnectionAttempts: Infinity,
     });
 
     socket.on('connect', () => {
@@ -66,6 +67,11 @@ const useDatasetsSockets = (
         setBoardData(res);
         changeHistoryRef.current = [res];
       }
+    });
+
+    socket.on('refreshInView', (boardData: IBoardData) => {
+      console.log(boardData);
+      setBoardData(boardData);
     });
 
     socket.on('slice', (res: IBoardData) => {

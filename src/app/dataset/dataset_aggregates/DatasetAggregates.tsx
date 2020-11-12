@@ -1,9 +1,11 @@
 import { ButtonTertiary } from 'components/ui/Buttons';
 import Card from 'components/ui/Card';
 import ViewWithLeftNav from 'components/ViewWithLeftNav';
-// import DatasetContext from 'contexts/DatasetContext';
 import React, { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 import styled from 'styled-components/macro';
+import DatasetFilters from './DatasetFilters';
 import DatasetSummary from './DatasetSummary';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
@@ -68,6 +70,11 @@ const VIEWS = [
     value: 'group',
     icon: <i className="fad fa-layer-group" />,
   },
+  {
+    label: 'Filter this dataset',
+    value: 'filter',
+    icon: <i className="far fa-filter" />,
+  },
   // {
   //   label: 'Make pivot-able',
   //   value: 'pivotable',
@@ -94,11 +101,17 @@ const ViewLookup: {
   [key: string]: React.ReactNode;
 } = {
   summary: <DatasetSummary />,
+  filter: <DatasetFilters />,
 };
 
 const DatasetAggregates: React.FC = () => {
+  const history = useHistory();
+  const location = useLocation();
+  const querystring = queryString.parse(location.search);
   const [expanded, setExpanded] = useState(true);
-  const [activeView, setActiveView] = useState('summary');
+  const [activeView, setActiveView] = useState(
+    (querystring.view as string) ?? 'summary',
+  );
   const ViewComponent = ViewLookup[activeView];
 
   return (
@@ -116,7 +129,10 @@ const DatasetAggregates: React.FC = () => {
           <ViewWithLeftNav
             cancelPadding
             activeView={activeView}
-            setView={setActiveView}
+            setView={(view: string) => {
+              history.replace(`${location.pathname}?view=${view}`);
+              setActiveView(view);
+            }}
             options={VIEWS}
           >
             <Card>{ViewComponent}</Card>
