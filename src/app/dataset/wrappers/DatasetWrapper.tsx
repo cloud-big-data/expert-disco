@@ -2,13 +2,13 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import * as R from 'ramda';
 import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
 import { useQuery } from 'react-query';
 import skyvueFetch from 'services/skyvueFetch';
-import { IBoardState, IBoardData } from '../types';
+import { IBoardState, IBoardData, IBoardHead } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 
 enum DatasetUserTypes {
@@ -74,6 +74,18 @@ const DatasetWrapper: React.FC = () => {
       : () => undefined,
   );
 
+  const datasetHead = useMemo<IBoardHead>(
+    () => ({
+      title: data?.dataset?.title,
+      createdAt: data?.dataset?.createdAt,
+      updatedAt: data?.dataset?.updatedAt,
+      skyvueFileSize: data?.head?.ContentLength,
+      csvFileSize: estCSVSize,
+      rowCount: boardHead.rowCount,
+    }),
+    [boardHead, data, estCSVSize],
+  );
+
   const params = useParams<{
     datasetId: string;
   }>();
@@ -90,6 +102,7 @@ const DatasetWrapper: React.FC = () => {
       setEstCSVSize,
       boardHead,
       setBoardHead,
+      datasetHead,
     },
     changeHistoryRef,
   );
@@ -140,14 +153,7 @@ const DatasetWrapper: React.FC = () => {
       value={{
         readOnly: !boardData || !R.whereEq(boardData.layers)(initial_layers),
         socket,
-        datasetHead: {
-          title: data?.dataset?.title,
-          createdAt: data?.dataset?.createdAt,
-          updatedAt: data?.dataset?.updatedAt,
-          skyvueFileSize: data?.head?.ContentLength,
-          csvFileSize: estCSVSize,
-          rowCount: boardHead.rowCount,
-        },
+        datasetHead,
         boardData,
         boardState,
         changeHistoryRef,

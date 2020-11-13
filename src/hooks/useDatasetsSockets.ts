@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { IBoardData } from 'app/dataset/types';
+import { IBoardData, IBoardHead } from 'app/dataset/types';
 
-const getDatasetsWSUrl = () => {
+const getDatasetsWSUrl = (skyvueFileSize: number) => {
+  const prefix = skyvueFileSize ? 'xs' : 'xs';
   if (process.env.NODE_ENV === 'production')
-    return 'https://xs.datasets.skyvueservices.com';
+    return `https://${prefix}.datasets.skyvueservices.com`;
   return 'ws://localhost:3030';
 };
 
@@ -17,18 +18,29 @@ const useDatasetsSockets = (
     setEstCSVSize?: (head: number) => void;
     boardHead: { rowCount?: number };
     setBoardHead: (head: { rowCount?: number }) => void;
+    datasetHead: IBoardHead;
   },
   changeHistoryRef: React.MutableRefObject<Array<IBoardData>>,
 ) => {
   const { userId, datasetId } = query;
-  const { boardData, setBoardData, estCSVSize, setEstCSVSize, setBoardHead } = board;
+  const {
+    boardData,
+    datasetHead,
+    setBoardData,
+    estCSVSize,
+    setEstCSVSize,
+    setBoardHead,
+  } = board;
+
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
     undefined,
   );
 
+  const { skyvueFileSize } = datasetHead;
+
   useEffect(() => {
-    if (!userId || !datasetId) return;
-    const socket = io(getDatasetsWSUrl(), {
+    if (!userId || !datasetId || !skyvueFileSize || socketObj) return;
+    const socket = io(getDatasetsWSUrl(skyvueFileSize), {
       query: {
         datasetId,
         userId,
@@ -73,12 +85,7 @@ const useDatasetsSockets = (
     });
 
     window.addEventListener('unload', () => socket.emit('unload'));
-
-    return () => {
-      ['connect', 'initialDatasetReceived', 'slice', 'returnDiff'].forEach(cnxn =>
-        socket.off(cnxn),
-      );
-    };
+    return () => window.removeEventListener('unload', () => socket.emit('unload'));
   }, [
     userId,
     datasetId,
@@ -88,6 +95,9 @@ const useDatasetsSockets = (
     estCSVSize,
     setEstCSVSize,
     setBoardHead,
+    datasetHead,
+    skyvueFileSize,
+    socketObj,
   ]);
 
   useEffect(() => {
