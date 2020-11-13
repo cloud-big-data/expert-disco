@@ -7,6 +7,7 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import humanFileSize from 'utils/humanFileSize';
 import { DataTypes } from 'app/dataset/types';
+import { ButtonSecondary } from 'components/ui/Buttons';
 
 const DatasetSummaryContainer = styled.div`
   display: grid;
@@ -102,7 +103,7 @@ const validateSizeLimits = (
 };
 
 const DatasetSummary: React.FC = () => {
-  const { boardData, datasetHead } = useContext(DatasetContext)!;
+  const { boardData, datasetHead, socket } = useContext(DatasetContext)!;
   const { skyvueFileSize, csvFileSize, rowCount } = datasetHead;
 
   const colLength = boardData.columns.length;
@@ -128,6 +129,9 @@ const DatasetSummary: React.FC = () => {
         />
       </div>
       <div className="fields__container">
+        <ButtonSecondary onClick={() => socket?.emit('clearLayers')}>
+          Clear layers
+        </ButtonSecondary>
         <h6>Fields</h6>
         <div className="fields__table">
           {boardData.columns.map((col, index) => (

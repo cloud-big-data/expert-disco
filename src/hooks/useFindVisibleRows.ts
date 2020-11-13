@@ -10,8 +10,10 @@ const useFindVisibleRows = (
     first: number;
     last: number;
   },
-): [number, number] => {
+  getRowSlice: (firstVisibleRow: number, lastVisibleRow: number) => void,
+): [number, number, boolean] => {
   const [visibleRows, setVisibleRows] = useState<[number, number]>([first, last]);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -30,14 +32,18 @@ const useFindVisibleRows = (
       );
 
       const rowNodeList = [...grid.querySelectorAll('div.row__index')];
+      setIsScrolling(true);
       setVisibleRows(getVisibleIndeces(rowNodeList));
+      setTimeout(() => {
+        setIsScrolling(false);
+      });
     };
 
     grid.addEventListener('scroll', handleScroll);
     return () => grid.removeEventListener('scroll', handleScroll);
   }, [gridRef]);
 
-  return visibleRows;
+  return [...visibleRows, isScrolling];
 };
 
 export default useFindVisibleRows;

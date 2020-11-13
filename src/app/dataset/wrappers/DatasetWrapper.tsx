@@ -115,17 +115,9 @@ const DatasetWrapper: React.FC = () => {
 
   const userType = getUserType(user.userId, boardData.visibilitySettings);
 
-  const saveToChangeHistory = () => {
-    changeHistoryRef.current = [
-      ...R.uniqBy(R.prop('rows'), changeHistoryRef.current),
-      boardData,
-    ];
-  };
-
   const _setBoardData = (newBoardData: IBoardData) => {
     setBoardData(prevBoardData => {
       if (!prevBoardData) return newBoardData;
-
       socket?.emit('diff', {
         colDiff: R.difference(newBoardData.columns, prevBoardData.columns),
         rowDiff: R.difference(newBoardData.rows, prevBoardData.rows),
@@ -135,13 +127,18 @@ const DatasetWrapper: React.FC = () => {
     });
   };
 
-  const getRowSlice = (first: number, last: number) => {
-    socket?.emit('getSlice', { first, last });
+  const initial_layers = {
+    joins: [],
+    filters: [],
+    groupings: [],
+    sortings: [],
+    formatting: [],
   };
 
   return (
     <DatasetContext.Provider
       value={{
+        readOnly: !boardData || !R.whereEq(boardData.layers)(initial_layers),
         socket,
         datasetHead: {
           title: data?.dataset?.title,
@@ -155,7 +152,9 @@ const DatasetWrapper: React.FC = () => {
         boardState,
         changeHistoryRef,
         currentRevision,
-        getRowSlice,
+        getRowSlice: (first: number, last: number) => {
+          socket?.emit('getSlice', { first, last });
+        },
         redo: () => {
           if (currentRevision === changeHistoryRef.current.length - 1) return;
           const newRevision = currentRevision + 1;
@@ -167,20 +166,7 @@ const DatasetWrapper: React.FC = () => {
         )
           ? _setBoardData
           : null,
-        setBoardState: (boardState: IBoardState) =>
-          setBoardState(prevBoardState => {
-            if (
-              prevBoardState.cellsState.activeCell !== '' &&
-              boardState.cellsState.activeCell === '' &&
-              prevBoardState.cellsState.selectedCell !== '' &&
-              boardState.cellsState.selectedCell !== ''
-            ) {
-              saveToChangeHistory();
-              setCurrentRevision(currentRevision + 1);
-            }
-
-            return boardState;
-          }),
+        setBoardState,
         setCurrentRevision,
         undo: () => {
           if (currentRevision === 0) return;

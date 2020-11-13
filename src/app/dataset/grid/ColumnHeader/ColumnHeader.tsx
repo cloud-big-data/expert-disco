@@ -84,9 +84,13 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   dataType,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
-  const { boardState, setBoardState, boardData, setBoardData } = useContext(
-    DatasetContext,
-  )!;
+  const {
+    readOnly,
+    boardState,
+    setBoardState,
+    boardData,
+    setBoardData,
+  } = useContext(DatasetContext)!;
   const boardActions = makeBoardActions(boardData);
   const inputRef = useRef<HTMLInputElement>(null);
   const active = boardState.columnsState.activeColumn === columnIndex;
@@ -145,7 +149,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           options={MENU_OPTIONS}
         />
       )}
-      {active ? (
+      {!readOnly && active ? (
         <ActiveInput
           ref={inputRef}
           value={value ?? ''}

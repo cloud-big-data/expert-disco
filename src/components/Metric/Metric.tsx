@@ -1,4 +1,5 @@
 import InlineLoading from 'components/ui/InlineLoading';
+import { Helper } from 'components/ui/Typography';
 import React from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
@@ -16,11 +17,11 @@ const MetricContainer = styled.div`
 `;
 
 const LabelContainer = styled.div``;
-const SecondaryLabel = styled.span`
-  color: ${Styles.softGray};
-  font-weight: 600;
-  font-size: 1rem;
-`;
+// const SecondaryLabel = styled.span`
+//   color: ${Styles.softGray};
+//   font-weight: 600;
+//   font-size: 1rem;
+// `;
 
 const Metric: React.FC<{
   value?: string | number;
@@ -34,7 +35,7 @@ const Metric: React.FC<{
       <InlineLoading />
     )}
     <LabelContainer>
-      <SecondaryLabel>{label}</SecondaryLabel>
+      <Helper style={{ margin: 0 }}>{label}</Helper>
     </LabelContainer>
   </MetricContainer>
 );

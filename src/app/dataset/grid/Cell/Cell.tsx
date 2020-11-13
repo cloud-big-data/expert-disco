@@ -123,9 +123,13 @@ const Cell: React.FC<ICellProps> = ({
   colWidth,
 }) => {
   const [, setClipboard] = useClippy();
-  const { boardState, setBoardState, boardData, setBoardData } = useContext(
-    DatasetContext,
-  )!;
+  const {
+    readOnly,
+    boardState,
+    setBoardState,
+    boardData,
+    setBoardData,
+  } = useContext(DatasetContext)!;
   const inputRef = useRef<HTMLInputElement>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [localValue, setLocalValue] = useState(value);
@@ -182,7 +186,7 @@ const Cell: React.FC<ICellProps> = ({
         setBoardState(R.assocPath(['cellsState', 'activeCell'], _id, boardState))
       }
     >
-      {active ? (
+      {!readOnly && active ? (
         <ActiveInput
           ref={inputRef}
           value={localValue ?? ''}

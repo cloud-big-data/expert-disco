@@ -49,14 +49,20 @@ const Grid: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const { boardData, getRowSlice } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
-  const [firstVisibleRow, lastVisibleRow] = useFindVisibleRows(gridRef, {
-    first: boardData.rows[0]?.index ?? 0,
-    last: R.last(boardData.rows)?.index ?? 30,
-  });
+  const [firstVisibleRow, lastVisibleRow, isScrolling] = useFindVisibleRows(
+    gridRef,
+    {
+      first: boardData.rows[0]?.index ?? 0,
+      last: R.last(boardData.rows)?.index ?? 100,
+    },
+    getRowSlice,
+  );
 
   useEffect(() => {
-    getRowSlice(firstVisibleRow, lastVisibleRow);
-  }, [firstVisibleRow, getRowSlice, lastVisibleRow]);
+    if (isScrolling) {
+      getRowSlice(firstVisibleRow, lastVisibleRow);
+    }
+  }, [firstVisibleRow, getRowSlice, isScrolling, lastVisibleRow]);
 
   return (
     <GridContext.Provider
