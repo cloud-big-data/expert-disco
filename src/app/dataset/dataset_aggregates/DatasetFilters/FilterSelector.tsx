@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { DataTypes, FilterLayer, FilterTypes } from 'app/dataset/types';
+import { DataTypes, IFilterLayer, FilterTypes } from 'app/dataset/types';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import DatasetContext from 'contexts/DatasetContext';
@@ -36,7 +36,7 @@ const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
 };
 
 const FilterSelector: React.FC<{
-  onAddFilter: (filter: FilterLayer) => void;
+  onAddFilter: (filter: IFilterLayer) => void;
 }> = ({ onAddFilter }) => {
   const { boardData } = useContext(DatasetContext)!;
   const [columnSelection, setColumnSelection] = useState<{
@@ -56,7 +56,7 @@ const FilterSelector: React.FC<{
 
   return (
     <>
-      <Select
+      {/* <Select
         options={boardData.columns.map(col => ({
           label: col.value,
           value: col._id,
@@ -98,7 +98,7 @@ const FilterSelector: React.FC<{
         <ButtonPrimary
           onClick={() => {
             onAddFilter({
-              colId: columnSelection?.value,
+              key: columnSelection.value,
               predicateType: predicateOption?.value,
               value: safeParseNumber(comparison),
             });
@@ -106,7 +106,7 @@ const FilterSelector: React.FC<{
         >
           Add filter
         </ButtonPrimary>
-      )}
+      )} */}
     </>
   );
 };

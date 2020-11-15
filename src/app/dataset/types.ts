@@ -45,11 +45,32 @@ export type FilterTypes =
   | 'greaterThanEqualTo'
   | 'dateBetween';
 
-export type FilterLayer = {
-  colId: string;
-  predicateType: FilterTypes;
+type LogicalOperators = 'AND' | 'OR';
+type FilterCondition = {
+  key: string;
   value: string | string[] | number | number[];
+  predicateType: FilterTypes;
 };
+export type IFilterLayer = Array<
+  LogicalOperators | FilterCondition | Array<LogicalOperators | FilterCondition>
+>;
+
+type AggregateFunctions =
+  | 'sum'
+  | 'mean'
+  | 'median'
+  | 'countDistinct'
+  | 'count'
+  | 'max'
+  | 'min'
+  | 'stdev';
+
+export interface IGroupLayer {
+  groupedBy: string[];
+  columnAggregates: {
+    [key: string]: AggregateFunctions;
+  };
+}
 
 /**
  * The data stored in the grid itself. This information should persist from session to session.
@@ -65,7 +86,7 @@ export interface IBoardData {
   rows: IRow[];
   layers?: {
     joins: any[];
-    filters: Array<FilterLayer>;
+    filters: IFilterLayer;
     groupings: any[];
     sortings: any[];
     formatting: any[];

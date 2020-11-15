@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import { FilterLayer } from 'app/dataset/types';
+import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
 import FilterSelector from './FilterSelector';
 
@@ -15,7 +15,7 @@ const FiltersContainer = styled.div`
 
 const DatasetFilters: React.FC = () => {
   const { socket } = useContext(DatasetContext)!;
-  const onAddFilter = (filter: FilterLayer) => {
+  const onAddFilter = (filter: IFilterLayer) => {
     socket?.emit('layer', {
       layerKey: 'filters',
       ...filter,
