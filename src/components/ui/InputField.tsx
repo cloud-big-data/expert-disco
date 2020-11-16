@@ -81,6 +81,7 @@ const InputField: React.FC<{
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputRef?: React.RefObject<HTMLInputElement>;
   disabled?: boolean;
+  role?: string;
 }> = props => {
   const [active, setActive] = useState(false);
 
@@ -106,6 +107,7 @@ const InputField: React.FC<{
           props.onFocus?.(e);
         }}
         onBlur={() => setActive(false)}
+        role={props.role}
       />
     </InputContainer>
   );

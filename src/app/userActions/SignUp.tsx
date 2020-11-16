@@ -283,6 +283,7 @@ const SignUp: React.FC = () => {
               },
             })
           }
+          type="email"
           value={formState.email.value}
           error={formState.email.error}
           onKeyDown={onKeyDown}

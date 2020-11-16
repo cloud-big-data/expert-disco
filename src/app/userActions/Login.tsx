@@ -141,6 +141,7 @@ const Login: React.FC = () => {
           error={formState.email.error}
           value={formState.email.value}
           onKeyDown={onKeyDown}
+          type="email"
           icon={<i className="fad fa-envelope" />}
         />
       </div>

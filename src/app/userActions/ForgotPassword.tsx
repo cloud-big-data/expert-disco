@@ -43,6 +43,7 @@ const ForgotPassword: React.FC = () => {
           onChange={e => setEmail(e.target.value)}
           error={error}
           value={email}
+          type="email"
           placeholder="email@email.com"
           onKeyDown={e => {
             if (e.key === 'Enter') onSubmit();
