@@ -3,7 +3,7 @@ import SelectSearch, { SelectSearchProps } from 'react-select-search';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
-const SelectContainer = styled.div`
+const SelectContainer = styled.div<{ fill?: string }>`
   *,
   *::after,
   *::before {
@@ -36,17 +36,17 @@ const SelectContainer = styled.div`
 
   .select-search__input {
     display: block;
-    height: 2.8125rem;
+    height: 2rem;
     width: 100%;
     padding: 1rem;
-    background: #fff;
+    background: ${props => props.fill ?? '#fff'};
     border: 2px solid ${Styles.faintBorderColor};
     border-radius: ${Styles.defaultBorderRadius};
     outline: none;
     font-size: 14px;
     text-align: left;
     text-overflow: ellipsis;
-    line-height: 2.8125rem;
+    line-height: 2rem;
     -webkit-appearance: none;
   }
 
@@ -184,6 +184,7 @@ const SelectContainer = styled.div`
 
 interface ISelect extends SelectSearchProps {
   onChange: (param: any) => void;
+  fill?: string;
 }
 
 const Select: React.FC<ISelect> = ({
@@ -192,8 +193,9 @@ const Select: React.FC<ISelect> = ({
   search,
   placeholder,
   value,
+  fill,
 }) => (
-  <SelectContainer>
+  <SelectContainer fill={fill}>
     <SelectSearch
       onChange={onChange}
       options={options}

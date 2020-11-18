@@ -128,4 +128,12 @@ const Helper: React.FC<{
   <HelperContainer style={style}>{children}</HelperContainer>
 );
 
-export { Text, Helper, DangerText, Label };
+const Pill = styled.p<{ color: 'green' | 'red' }>`
+  display: block;
+  width: auto;
+  border-radius: ${Styles.defaultBorderRadius};
+  padding: 0.5rem;
+  background: ${props => (props.color === 'green' ? Styles.green : Styles.red)};
+`;
+
+export { Text, Helper, DangerText, Label, Pill };

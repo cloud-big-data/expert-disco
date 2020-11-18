@@ -47,12 +47,17 @@ export type FilterTypes =
 
 type LogicalOperators = 'AND' | 'OR';
 type FilterCondition = {
+  filterId: string;
   key: string;
   value: string | string[] | number | number[];
   predicateType: FilterTypes;
 };
 export type IFilterLayer = Array<
-  LogicalOperators | FilterCondition | Array<LogicalOperators | FilterCondition>
+  | LogicalOperators
+  | FilterCondition
+  | Array<
+      LogicalOperators | FilterCondition | Array<LogicalOperators | FilterCondition>
+    >
 >;
 
 type AggregateFunctions =

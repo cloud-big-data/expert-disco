@@ -13,8 +13,8 @@ const InputContainer = styled.div<{
   background: ${props => (props.disabled ? 'rgba(239, 239, 239, 0.3)' : 'white')};
   border: ${props =>
     props.error
-      ? `1px solid ${Styles.red}`
-      : `1px solid ${Styles.faintBorderColor}`};
+      ? `2px solid ${Styles.red}`
+      : `2px solid ${Styles.faintBorderColor}`};
   ${props =>
     props.active
       ? `
@@ -51,10 +51,17 @@ const InputContainer = styled.div<{
 const Input = styled.input<{
   error?: boolean;
   icon?: boolean;
+  unsetHeight?: boolean;
 }>`
   width: 100%;
   border-radius: 0.625rem;
-  height: 3rem;
+  height: ${props => (props.unsetHeight ? 'unset' : '3rem')};
+  ${props =>
+    props.unsetHeight
+      ? `
+    font-size: 14px;
+  `
+      : ''}
   border: none;
   color: ${Styles.fontColor};
   padding: ${props => (props.icon ? '0.5rem .75rem .5rem 0' : '.5rem .75rem')};
@@ -82,6 +89,7 @@ const InputField: React.FC<{
   inputRef?: React.RefObject<HTMLInputElement>;
   disabled?: boolean;
   role?: string;
+  unsetHeight?: boolean;
 }> = props => {
   const [active, setActive] = useState(false);
 
@@ -89,6 +97,7 @@ const InputField: React.FC<{
     <InputContainer disabled={props.disabled} active={active} error={!!props.error}>
       {props.icon && <div className="icon__container">{props.icon}</div>}
       <Input
+        unsetHeight={props.unsetHeight}
         ref={props.inputRef}
         placeholder={props.placeholder}
         disabled={props.disabled}
