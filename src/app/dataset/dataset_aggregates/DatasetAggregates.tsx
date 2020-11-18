@@ -51,27 +51,35 @@ const AggregatesContainer = styled.div`
   h6 {
     margin: 0 0 1rem;
   }
+
+  @media (max-width: 1200px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const ChangeHistoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
+  @media (max-width: 1200px) {
+    margin-top: 1rem;
+  }
 `;
 
 const VIEWS = [
   {
-    label: 'Dataset summary',
+    name: 'Dataset summary',
     value: 'summary',
     icon: <i className="fad fa-scroll" />,
   },
   {
-    label: 'Group this dataset',
+    name: 'Group this dataset',
     value: 'group',
     icon: <i className="fad fa-layer-group" />,
   },
   {
-    label: 'Filter this dataset',
+    name: 'Filter this dataset',
     value: 'filter',
     icon: <i className="far fa-filter" />,
   },
@@ -81,17 +89,17 @@ const VIEWS = [
   //   icon: <i className="fad fa-table" />,
   // },
   {
-    label: 'Join with other datasets',
+    name: 'Join with other datasets',
     value: 'join',
     icon: <i className="fad fa-code-merge" />,
   },
   {
-    label: 'Share this dataset',
+    name: 'Share this dataset',
     value: 'share',
     icon: <i className="fad fa-share" />,
   },
   {
-    label: 'Export to CSV',
+    name: 'Export to CSV',
     value: 'export',
     icon: <i className="fad fa-file-csv" />,
   },
@@ -154,7 +162,7 @@ const DatasetAggregates: React.FC = () => {
               key={view.value}
             >
               {view.icon}
-              {view.label}
+              {view.name}
             </ButtonTertiary>
           ))}
         </div>

@@ -48,6 +48,25 @@ const DatasetSummaryContainer = styled.div`
       }
     }
   }
+
+  @media (max-width: 700px) {
+    display: flex;
+    flex-direction: column;
+    .summary_metrics__container {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0.25rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      border-right: none;
+      border-bottom: 2px solid ${Styles.faintBorderColor};
+      div:not(:nth-of-type(1)) {
+        margin-top: 0;
+        margin-left: 1rem;
+      }
+    }
+  }
 `;
 
 interface ISizeLimits {
@@ -103,7 +122,7 @@ const validateSizeLimits = (
 };
 
 const DatasetSummary: React.FC = () => {
-  const { boardData, datasetHead, socket } = useContext(DatasetContext)!;
+  const { boardData, datasetHead } = useContext(DatasetContext)!;
   const { skyvueFileSize, csvFileSize, rowCount } = datasetHead;
 
   const colLength = boardData.columns.length;
@@ -129,9 +148,6 @@ const DatasetSummary: React.FC = () => {
         />
       </div>
       <div className="fields__container">
-        <ButtonSecondary onClick={() => socket?.emit('clearLayers')}>
-          Clear layers
-        </ButtonSecondary>
         <h6>Fields</h6>
         <div className="fields__table">
           {boardData.columns.map((col, index) => (

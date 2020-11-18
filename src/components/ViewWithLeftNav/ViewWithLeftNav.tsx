@@ -1,13 +1,13 @@
+import Select from 'components/ui/Select';
 import useWindowSize from 'hooks/useWindowSize';
 import React from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import Select from 'react-select';
 
 interface IViewWithLeftNav {
   options: Array<{
-    label: string;
     value: string;
+    name: string;
     icon: React.ReactNode;
   }>;
   activeView: string;
@@ -34,7 +34,7 @@ const Container = styled.div<{
         : ''}
   }
 
-  @media (max-width: 750px) {
+  @media (max-width: 900px) {
     grid-template-columns: 4fr;
   }
 `;
@@ -112,12 +112,12 @@ const ViewWithLeftNav: React.FC<IViewWithLeftNav> = ({
   cancelPadding,
 }) => {
   const { width } = useWindowSize();
-  const stackNav = width !== undefined && width < 750;
+  const stackNav = width !== undefined && width < 900;
 
   return (
     <Container cancelPadding={cancelPadding} stackNav={stackNav}>
       {stackNav ? (
-        <Select options={options} onChange={(e: any) => setView(e.value)} />
+        <Select options={options} onChange={setView} />
       ) : (
         <LeftNav>
           {options.map(option => (
@@ -127,7 +127,7 @@ const ViewWithLeftNav: React.FC<IViewWithLeftNav> = ({
               key={option.value}
             >
               <div className="icon__container">{option.icon}</div>
-              <div className="label__container">{option.label}</div>
+              <div className="label__container">{option.name}</div>
             </NavItem>
           ))}
         </LeftNav>

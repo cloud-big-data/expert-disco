@@ -21,17 +21,17 @@ const AccountManagement: React.FC = () => {
       activeView={view}
       options={[
         {
-          label: 'Profile',
+          name: 'Profile',
           value: 'profile',
           icon: <i className="fad fa-user" />,
         },
         {
-          label: 'Billing',
+          name: 'Billing',
           value: 'billing',
           icon: <i className="fad fa-credit-card" />,
         },
         {
-          label: 'Security log',
+          name: 'Security log',
           value: 'security',
           icon: <i className="fad fa-shield-alt" />,
         },

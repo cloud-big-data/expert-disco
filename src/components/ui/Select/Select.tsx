@@ -2,7 +2,6 @@ import React from 'react';
 import SelectSearch, { SelectSearchProps } from 'react-select-search';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-// import './index.css';
 
 const SelectContainer = styled.div`
   *,
@@ -12,12 +11,15 @@ const SelectContainer = styled.div`
   }
 
   .select-search {
-    width: 300px;
+    display: flex;
+    width: 100%;
     position: relative;
     box-sizing: border-box;
   }
 
   .select-search__value {
+    display: flex;
+    flex: 1;
     position: relative;
     z-index: 1;
   }
@@ -34,18 +36,17 @@ const SelectContainer = styled.div`
 
   .select-search__input {
     display: block;
-    height: 36px;
+    height: 2.8125rem;
     width: 100%;
-    padding: 0 16px;
+    padding: 1rem;
     background: #fff;
     border: 2px solid ${Styles.faintBorderColor};
     border-radius: ${Styles.defaultBorderRadius};
     outline: none;
-    font-family: 'Noto Sans', sans-serif;
     font-size: 14px;
     text-align: left;
     text-overflow: ellipsis;
-    line-height: 36px;
+    line-height: 2.8125rem;
     -webkit-appearance: none;
   }
 
@@ -71,21 +72,17 @@ const SelectContainer = styled.div`
     padding: 0.25rem 0.5rem;
   }
 
-  .select-search__row:not(:first-child) {
-    border-top: 1px solid #eee;
-  }
-
   .select-search__option,
   .select-search__not-found {
     display: block;
-    height: 36px;
+    height: 2.25rem;
+    margin-top: 0.25rem;
     width: 100%;
-    padding: 0 16px;
+    padding: 0 1rem;
     background: #fff;
     border: none;
     outline: none;
-    font-family: 'Noto Sans', sans-serif;
-    font-size: 14px;
+    font-size: 0.875rem;
     text-align: left;
     cursor: pointer;
   }
@@ -95,25 +92,25 @@ const SelectContainer = styled.div`
   }
 
   .select-search__option.is-selected {
-    background: ${Styles.blue};
-    color: #fff;
+    background-color: hsla(0, 0%, 0%, 0.05);
+    border-radius: ${Styles.defaultBorderRadius};
+    font-weight: bold;
   }
 
   .select-search__option.is-highlighted,
   .select-search__option:not(.is-selected):hover {
-    background: rgba(47, 204, 139, 0.1);
+    background-color: hsla(0, 0%, 0%, 0.05);
+    border-radius: ${Styles.defaultBorderRadius};
   }
 
   .select-search__option.is-highlighted.is-selected,
   .select-search__option.is-selected:hover {
-    background: ${Styles.green};
-    color: #fff;
+    opacity: 0.7;
   }
 
   .select-search__group-header {
     font-size: 10px;
     text-transform: uppercase;
-    background: #eee;
     padding: 8px 16px;
   }
 
@@ -138,8 +135,8 @@ const SelectContainer = styled.div`
   .select-search:not(.is-loading):not(.select-search--multiple)
     .select-search__value::after {
     transform: rotate(45deg);
-    border-right: 1px solid #000;
-    border-bottom: 1px solid #000;
+    border-right: 2px solid ${Styles.fontColor};
+    border-bottom: 2px solid ${Styles.fontColor};
     pointer-events: none;
   }
 
@@ -174,7 +171,6 @@ const SelectContainer = styled.div`
     position: relative;
     overflow: auto;
     max-height: 260px;
-    border-top: 1px solid #eee;
     border-radius: 0 0 3px 3px;
   }
 
@@ -186,7 +182,11 @@ const SelectContainer = styled.div`
   }
 `;
 
-const Select: React.FC<SelectSearchProps> = ({
+interface ISelect extends SelectSearchProps {
+  onChange: (param: any) => void;
+}
+
+const Select: React.FC<ISelect> = ({
   onChange,
   options,
   search,

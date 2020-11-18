@@ -33,7 +33,10 @@ const DatasetFilters: React.FC = () => {
           }}
           value="test"
           search
-          options={[{ name: 'test', value: 'test' }]}
+          options={[
+            { name: 'test', value: 'test' },
+            { name: 'testing', value: 'testing' },
+          ]}
           placeholder="testing"
         />
         {/* <FilterSelector onAddFilter={onAddFilter} /> */}

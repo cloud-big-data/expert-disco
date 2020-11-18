@@ -21,22 +21,22 @@ const AppHome: React.FC = () => {
       activeView={view}
       options={[
         {
-          label: 'My datasets',
+          name: 'My datasets',
           value: 'datasets',
           icon: <i className="fal fa-database" />,
         },
         {
-          label: 'Queries',
+          name: 'Queries',
           value: 'queries',
           icon: <i className="fas fa-question-circle" />,
         },
         {
-          label: 'Shared with me',
+          name: 'Shared with me',
           value: 'shared',
           icon: <i className="fad fa-share-alt" />,
         },
         {
-          label: 'Workspaces',
+          name: 'Workspaces',
           value: 'workspaces',
           icon: <i className="fad fa-layer-group" />,
         },
