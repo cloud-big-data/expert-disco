@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
+import Select from 'components/ui/Select';
 import FilterSelector from './FilterSelector';
 
 const FiltersContainer = styled.div`
@@ -26,7 +27,16 @@ const DatasetFilters: React.FC = () => {
     <FiltersContainer>
       <h6>Where</h6>
       <div className="options__container">
-        <FilterSelector onAddFilter={onAddFilter} />
+        <Select
+          onChange={selectedValue => {
+            console.log(selectedValue);
+          }}
+          value="test"
+          search
+          options={[{ name: 'test', value: 'test' }]}
+          placeholder="testing"
+        />
+        {/* <FilterSelector onAddFilter={onAddFilter} /> */}
       </div>
     </FiltersContainer>
   );
