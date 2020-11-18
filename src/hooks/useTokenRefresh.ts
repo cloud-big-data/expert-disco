@@ -1,15 +1,14 @@
+import parseJWT from 'lib/parseJWT';
 import { useEffect, useRef, useState } from 'react';
 import skyvueFetch from 'services/skyvueFetch';
 
 const useTokenRefresh = () => {
   const [tokens, setTokens] = useState<{
     accessToken: string | null;
-    refreshToken: string | null;
     error: boolean;
     disconnected: boolean;
   }>({
     accessToken: null,
-    refreshToken: localStorage.getItem('refreshToken'),
     error: false,
     disconnected: false,
   });
@@ -17,9 +16,10 @@ const useTokenRefresh = () => {
   const refreshInterval = useRef<any>(undefined);
 
   useEffect(() => {
+    const refreshToken = localStorage.getItem('refreshToken');
     const getTokens = async () => {
       const res = await skyvueFetch().post('/auth/user/refresh', {
-        refreshToken: tokens.refreshToken ?? localStorage.getItem('refreshToken'),
+        refreshToken,
       });
 
       if (res.error === 'Failed to fetch') {
@@ -42,6 +42,7 @@ const useTokenRefresh = () => {
       }
 
       if (res.refreshToken && res.accessToken) {
+        console.log(parseJWT(res.refreshToken));
         localStorage.setItem('refreshToken', res.refreshToken);
         setTokens({
           ...res,
@@ -49,11 +50,11 @@ const useTokenRefresh = () => {
       }
     };
 
-    if (tokens.refreshToken && !tokens.accessToken) {
+    if (refreshToken && !tokens.accessToken) {
       getTokens();
-      refreshInterval.current = setInterval(getTokens, 600000);
     }
 
+    refreshInterval.current = setInterval(getTokens, 600000);
     return () => {
       clearInterval(refreshInterval.current);
       refreshInterval.current = undefined;

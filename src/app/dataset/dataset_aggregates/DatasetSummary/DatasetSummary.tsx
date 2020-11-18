@@ -7,7 +7,6 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import humanFileSize from 'utils/humanFileSize';
 import { DataTypes } from 'app/dataset/types';
-import { ButtonSecondary } from 'components/ui/Buttons';
 
 const DatasetSummaryContainer = styled.div`
   display: grid;

@@ -52,7 +52,7 @@ const AuthenticatedRoute: React.FC<{
   return (
     <UserContext.Provider
       value={{
-        accessToken: userContext.accessToken,
+        accessToken,
         userId: userContext.userId,
         email: userContext.email,
         setUserContextValue,
