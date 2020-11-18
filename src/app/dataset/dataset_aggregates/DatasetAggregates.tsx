@@ -88,11 +88,11 @@ const VIEWS = [
   //   value: 'pivotable',
   //   icon: <i className="fad fa-table" />,
   // },
-  {
-    name: 'Join with other datasets',
-    value: 'join',
-    icon: <i className="fad fa-code-merge" />,
-  },
+  // {
+  //   name: 'Join with other datasets',
+  //   value: 'join',
+  //   icon: <i className="fad fa-code-merge" />,
+  // },
   {
     name: 'Share this dataset',
     value: 'share',

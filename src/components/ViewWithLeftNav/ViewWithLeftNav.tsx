@@ -45,6 +45,7 @@ const LeftNav = styled.div`
   flex-direction: column;
   .icon__container {
     margin-right: 1rem;
+    width: 1rem;
   }
 `;
 
