@@ -56,11 +56,6 @@ const useDatasetsSockets = (
       if (!boardData) {
         socket.emit('loadDataset');
       }
-      if (!estCSVSize) {
-        socket.emit('csvEstimate');
-      }
-
-      socket.emit('meta');
     });
 
     socket.on('meta', (meta: any) => {

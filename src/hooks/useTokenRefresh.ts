@@ -42,7 +42,6 @@ const useTokenRefresh = () => {
       }
 
       if (res.refreshToken && res.accessToken) {
-        console.log(parseJWT(res.refreshToken));
         localStorage.setItem('refreshToken', res.refreshToken);
         setTokens({
           ...res,

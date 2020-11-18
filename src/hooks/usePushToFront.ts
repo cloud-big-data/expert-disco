@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 const usePushToFront = (ref?: React.RefObject<HTMLDivElement>) => {
-  // console.log(ref?.current);
   useEffect(() => {
     document.querySelectorAll('div')?.forEach(div => {
       const style = window.getComputedStyle(div);

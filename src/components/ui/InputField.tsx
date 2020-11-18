@@ -18,7 +18,7 @@ const InputContainer = styled.div<{
   ${props =>
     props.active
       ? `
-    border: 1px solid ${Styles.purple};
+    border: 2px solid ${Styles.purple};
   `
       : ''}
   border-radius: .625rem;
@@ -28,7 +28,7 @@ const InputContainer = styled.div<{
       props.active
         ? ``
         : `
-      border: 1px solid rgba(0,0,0,.2);
+      border: 2px solid rgba(0,0,0,.1);
     `}
   }
   .icon__container {
