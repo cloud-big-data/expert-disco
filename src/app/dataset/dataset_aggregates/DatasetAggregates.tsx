@@ -52,7 +52,7 @@ const AggregatesContainer = styled.div`
     margin: 0 0 1rem;
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1400px) {
     display: flex;
     flex-direction: column;
   }
@@ -62,7 +62,7 @@ const ChangeHistoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  @media (max-width: 1200px) {
+  @media (max-width: 1400px) {
     margin-top: 1rem;
   }
 `;

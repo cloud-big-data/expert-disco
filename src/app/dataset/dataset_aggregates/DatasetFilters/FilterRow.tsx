@@ -1,4 +1,10 @@
-import { IFilterLayer, FilterTypes, DataTypes } from 'app/dataset/types';
+import {
+  IFilterLayer,
+  FilterTypes,
+  DataTypes,
+  LogicalOperators,
+  FilterCondition,
+} from 'app/dataset/types';
 import { IconButton } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import Select from 'components/ui/Select';
@@ -7,6 +13,7 @@ import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
+import { FilterContext } from './DatasetFilters';
 
 const FilterRowContainer = styled.div<{ parent: boolean; indentation: number }>`
   display: flex;
@@ -66,16 +73,30 @@ const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
   [DataTypes.string]: [...BASE_OPTIONS, { name: 'contains', value: 'contains' }],
 };
 
+// const lensMatching = (pred: any) => (toF: any) => (entities: any) => {
+//   const index = R.findIndex(pred, entities);
+//   return R.map(entity => R.update(index, entity, entities), toF(entities[index]));
+// };
+
 const FilterRow: React.FC<{
   filtersState: IFilterLayer;
   setFiltersState: (state: IFilterLayer) => void;
   path?: number[];
 }> = ({ filtersState, setFiltersState, path }) => {
+  const { parentFilterState } = useContext(FilterContext);
   const { boardData } = useContext(DatasetContext)!;
   const currentIndentation = useRef(-1);
   const incrementIndentation = (index: number) => {
     currentIndentation.current = index + 1;
   };
+
+  const updateNestedObject = R.curry((key, index, value) =>
+    R.assocPath(
+      path ? [...path, index, key] : [index, key],
+      value,
+      parentFilterState,
+    ),
+  );
 
   return (
     <>
@@ -85,7 +106,7 @@ const FilterRow: React.FC<{
           key={
             typeof state !== 'string' && !Array.isArray(state)
               ? state.filterId
-              : index
+              : state.toString()
           }
           indentation={index === 0 ? 0 : currentIndentation.current}
         >
@@ -100,11 +121,17 @@ const FilterRow: React.FC<{
               </IconButton>
               <Select
                 fill={Styles.blue}
-                onChange={value => {
-                  const lens = path ? R.lensPath(path) : R.lensPath([index]);
-
-                  console.log(path, R.view(lens, filtersState));
-                }}
+                onChange={value =>
+                  setFiltersState(
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    R.assocPath(
+                      path ? [...path, 0] : [index],
+                      value,
+                      parentFilterState,
+                    ),
+                  )
+                }
                 options={[
                   { name: 'and', value: 'AND' },
                   { name: 'or', value: 'OR' },
@@ -140,8 +167,7 @@ const FilterRow: React.FC<{
                 }))}
                 value={state.key}
                 onChange={value => {
-                  const lens = R.lensPath([index]);
-                  // console.log(parentIndex, R.view(lens, filtersState));
+                  setFiltersState(updateNestedObject('key', index, value));
                 }}
               />
               <div className="select__container">
@@ -153,10 +179,11 @@ const FilterRow: React.FC<{
                         ?.dataType ?? DataTypes.string
                     ]
                   }
-                  onChange={value => {
-                    const lens = R.lensPath([index]);
-                    // console.log(parentIndex, R.view(lens, filtersState));
-                  }}
+                  onChange={value =>
+                    setFiltersState(
+                      updateNestedObject('predicateType', index, value),
+                    )
+                  }
                 />
               </div>
               <div className="input__container">
@@ -164,7 +191,11 @@ const FilterRow: React.FC<{
                   unsetHeight
                   type="text"
                   value={state.value as string}
-                  onChange={e => console.log(e)}
+                  onChange={e =>
+                    setFiltersState(
+                      updateNestedObject('value', index, e.target.value),
+                    )
+                  }
                 />
               </div>
 

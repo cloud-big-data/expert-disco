@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
@@ -13,6 +13,8 @@ const FiltersContainer = styled.div`
   .top {
     width: 100%;
     display: flex;
+    margin-bottom: -2rem;
+    z-index: 1;
     button {
       margin-left: auto;
       padding: 0;
@@ -65,24 +67,26 @@ const sampleState: IFilterLayer = [
   ],
 ];
 
+export const FilterContext = createContext<{
+  parentFilterState?: IFilterLayer;
+}>({ parentFilterState: undefined });
+
 const DatasetFilters: React.FC = () => {
   const [filtersState, setFiltersState] = useState<IFilterLayer>(sampleState);
   const { datasetHead } = useContext(DatasetContext)!;
-  // const onAddFilter = (filter: IFilterLayer) => {
-  //   socket?.emit('layer', {
-  //     layerKey: 'filters',
-  //     ...filter,
-  //   });
-  // };
 
   return (
     <FiltersContainer>
       <div className="top">
         <h6>Filter {datasetHead.title}</h6>
-        <ButtonTertiary>Clear all filters</ButtonTertiary>
+        <ButtonTertiary onClick={() => setFiltersState([])}>
+          Clear all filters
+        </ButtonTertiary>
       </div>
       <div className="options__container">
-        <FilterRow setFiltersState={setFiltersState} filtersState={filtersState} />
+        <FilterContext.Provider value={{ parentFilterState: filtersState }}>
+          <FilterRow setFiltersState={setFiltersState} filtersState={filtersState} />
+        </FilterContext.Provider>
       </div>
     </FiltersContainer>
   );

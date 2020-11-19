@@ -45,8 +45,8 @@ export type FilterTypes =
   | 'greaterThanEqualTo'
   | 'dateBetween';
 
-type LogicalOperators = 'AND' | 'OR';
-type FilterCondition = {
+export type LogicalOperators = 'AND' | 'OR';
+export type FilterCondition = {
   filterId: string;
   key: string;
   value: string | string[] | number | number[];
