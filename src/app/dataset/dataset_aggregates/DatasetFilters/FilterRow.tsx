@@ -1,10 +1,4 @@
-import {
-  IFilterLayer,
-  FilterTypes,
-  DataTypes,
-  LogicalOperators,
-  FilterCondition,
-} from 'app/dataset/types';
+import { IFilterLayer, FilterTypes, DataTypes } from 'app/dataset/types';
 import { IconButton } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import Select from 'components/ui/Select';
