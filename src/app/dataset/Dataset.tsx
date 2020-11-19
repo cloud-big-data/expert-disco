@@ -1,15 +1,12 @@
-import InputField from 'components/ui/InputField';
 import DatasetContext from 'contexts/DatasetContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Helper } from 'components/ui/Typography';
 import humanizeTimeAgo from 'utils/humanizeTimeAgo';
 import Styles from 'styles/Styles';
 import { IconButton } from 'components/ui/Buttons';
 import Grid from './grid';
-import getCellValueById from './lib/getCellValueById';
-import editCellsAndReturnBoard from './lib/editCellsAndReturnBoard';
 import DatasestToolbar from './toolbar';
 import { initialBoardState } from './wrappers/DatasetWrapper';
 import DatasetAggregates from './dataset_aggregates';
@@ -18,9 +15,8 @@ const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   display: flex;
   flex-direction: column;
   position: sticky;
-  overflow: hidden;
+  /* overflow: hidden; */
   padding: 1rem;
-  max-height: calc(100% - 4rem);
   ${props => (props.fullScreen ? 'height: calc(100% - 4rem);' : '')};
   background: ${Styles.defaultBgColor};
 `;
@@ -66,32 +62,30 @@ const ToolbarContainer = styled.div`
   position: sticky;
   top: 0;
 `;
-const FormulaBarContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 2.25rem;
-`;
+// const FormulaBarContainer = styled.div`
+//   display: flex;
+//   align-items: center;
+//   width: 100%;
+//   padding: 0 2.25rem;
+// `;
 
 const Dataset: React.FC<{
   readOnly?: boolean;
 }> = () => {
   const [fullScreen, setFullScreen] = useState(false);
   const datasetRef = useRef<HTMLDivElement>(null);
-  const {
-    boardData,
-    setBoardData,
-    boardState,
-    setBoardState,
-    datasetHead,
-  } = useContext(DatasetContext)!;
+  const { setBoardState, datasetHead } = useContext(DatasetContext)!;
 
-  const { selectedCell } = boardState.cellsState;
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const { selectedCell } = boardState.cellsState;
+  // const inputRef = useRef<HTMLInputElement>(null);
 
   useHandleClickOutside(datasetRef, () => {
     setBoardState(initialBoardState);
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <DatasetContainer fullScreen={fullScreen} ref={datasetRef}>
@@ -122,7 +116,7 @@ const Dataset: React.FC<{
           <DatasestToolbar />
         </ToolbarContainer>
       )}
-      <FormulaBarContainer>
+      {/* <FormulaBarContainer>
         <InputField
           inputRef={inputRef}
           disabled={selectedCell === ''}
@@ -148,7 +142,7 @@ const Dataset: React.FC<{
           }
           icon={<i className="fad fa-function" />}
         />
-      </FormulaBarContainer>
+      </FormulaBarContainer> */}
       <ParentGridContainer>
         <Grid />
       </ParentGridContainer>

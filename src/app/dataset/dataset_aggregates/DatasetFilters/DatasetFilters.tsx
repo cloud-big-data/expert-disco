@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
-import { ButtonTertiary } from 'components/ui/Buttons';
+import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
 import { v4 as uuidv4 } from 'uuid';
 import FilterRow from './FilterRow';
 
@@ -13,11 +13,12 @@ const FiltersContainer = styled.div`
   .top {
     width: 100%;
     display: flex;
-    margin-bottom: -2rem;
     z-index: 1;
+    align-items: center;
     button {
       margin-left: auto;
       padding: 0;
+      margin-bottom: 1.375rem;
     }
   }
   .options__container {
@@ -25,16 +26,16 @@ const FiltersContainer = styled.div`
     display: flex;
     flex-direction: column;
   }
+  .actions__container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 2rem;
+  }
 `;
 
 const sampleState: IFilterLayer = [
   'AND',
-  {
-    filterId: uuidv4(),
-    key: '2d9dc775-d7f2-4acc-ba07-6f20493abac8',
-    value: '1',
-    predicateType: 'equals',
-  },
   [
     'OR',
     {
@@ -65,6 +66,12 @@ const sampleState: IFilterLayer = [
       },
     ],
   ],
+  {
+    filterId: uuidv4(),
+    key: '2d9dc775-d7f2-4acc-ba07-6f20493abac8',
+    value: '1',
+    predicateType: 'equals',
+  },
 ];
 
 export const FilterContext = createContext<{
@@ -72,7 +79,9 @@ export const FilterContext = createContext<{
 }>({ parentFilterState: undefined });
 
 const DatasetFilters: React.FC = () => {
+  const initialFiltersState = useRef<IFilterLayer>(sampleState);
   const [filtersState, setFiltersState] = useState<IFilterLayer>(sampleState);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { datasetHead } = useContext(DatasetContext)!;
 
   return (
@@ -85,9 +94,37 @@ const DatasetFilters: React.FC = () => {
       </div>
       <div className="options__container">
         <FilterContext.Provider value={{ parentFilterState: filtersState }}>
-          <FilterRow setFiltersState={setFiltersState} filtersState={filtersState} />
+          <FilterRow
+            parent
+            setFiltersState={filterState => {
+              setUnsavedChanges(true);
+              setFiltersState(filterState);
+            }}
+            filtersState={filtersState}
+          />
         </FilterContext.Provider>
       </div>
+
+      {unsavedChanges && (
+        <div className="actions__container">
+          <ButtonTertiary
+            onClick={() => {
+              setUnsavedChanges(false);
+              setFiltersState(initialFiltersState.current);
+            }}
+          >
+            Cancel
+          </ButtonTertiary>
+          <ButtonPrimary
+            onClick={() => {
+              setUnsavedChanges(false);
+              initialFiltersState.current = filtersState;
+            }}
+          >
+            Update
+          </ButtonPrimary>
+        </div>
+      )}
     </FiltersContainer>
   );
 };
