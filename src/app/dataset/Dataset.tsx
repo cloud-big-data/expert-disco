@@ -74,18 +74,7 @@ const Dataset: React.FC<{
 }> = () => {
   const [fullScreen, setFullScreen] = useState(false);
   const datasetRef = useRef<HTMLDivElement>(null);
-  const { setBoardState, datasetHead } = useContext(DatasetContext)!;
-
-  // const { selectedCell } = boardState.cellsState;
-  // const inputRef = useRef<HTMLInputElement>(null);
-
-  useHandleClickOutside(datasetRef, () => {
-    setBoardState(initialBoardState);
-  });
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const { datasetHead } = useContext(DatasetContext)!;
 
   return (
     <DatasetContainer fullScreen={fullScreen} ref={datasetRef}>

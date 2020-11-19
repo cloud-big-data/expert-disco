@@ -68,13 +68,18 @@ const FilterRow: React.FC<{
           indentation={index === 0 ? 0 : currentIndentation.current}
         >
           {typeof state === 'string' ? (
-            <Operator
-              index={index}
-              incrementIndentation={incrementIndentation}
-              parent={parent}
-              state={state}
-              setFiltersState={setFiltersState}
-            />
+            <>
+              {incrementIndentation(index)}
+              <Operator
+                index={index}
+                incrementIndentation={incrementIndentation}
+                parent={parent}
+                state={state}
+                parentFilterState={sortState(parentFilterState!)}
+                setFiltersState={setFiltersState}
+                path={path ? [...path, index] : [index]}
+              />
+            </>
           ) : Array.isArray(state) ? (
             <FilterRow
               setFiltersState={setFiltersState}
