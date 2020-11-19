@@ -66,7 +66,7 @@ const sampleState: IFilterLayer = [
 ];
 
 const DatasetFilters: React.FC = () => {
-  const [filtersState] = useState<IFilterLayer>(sampleState);
+  const [filtersState, setFiltersState] = useState<IFilterLayer>(sampleState);
   const { datasetHead } = useContext(DatasetContext)!;
   // const onAddFilter = (filter: IFilterLayer) => {
   //   socket?.emit('layer', {
@@ -82,7 +82,7 @@ const DatasetFilters: React.FC = () => {
         <ButtonTertiary>Clear all filters</ButtonTertiary>
       </div>
       <div className="options__container">
-        <FilterRow filtersState={filtersState} />
+        <FilterRow setFiltersState={setFiltersState} filtersState={filtersState} />
       </div>
     </FiltersContainer>
   );

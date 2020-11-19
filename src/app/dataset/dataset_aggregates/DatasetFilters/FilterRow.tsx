@@ -6,6 +6,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import * as R from 'ramda';
 
 const FilterRowContainer = styled.div<{ parent: boolean; indentation: number }>`
   display: flex;
@@ -67,7 +68,9 @@ const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
 
 const FilterRow: React.FC<{
   filtersState: IFilterLayer;
-}> = ({ filtersState }) => {
+  setFiltersState: (state: IFilterLayer) => void;
+  path?: number[];
+}> = ({ filtersState, setFiltersState, path }) => {
   const { boardData } = useContext(DatasetContext)!;
   const currentIndentation = useRef(-1);
   const incrementIndentation = (index: number) => {
@@ -97,7 +100,11 @@ const FilterRow: React.FC<{
               </IconButton>
               <Select
                 fill={Styles.blue}
-                onChange={value => console.log(value)}
+                onChange={value => {
+                  const lens = path ? R.lensPath(path) : R.lensPath([index]);
+
+                  console.log(path, R.view(lens, filtersState));
+                }}
                 options={[
                   { name: 'and', value: 'AND' },
                   { name: 'or', value: 'OR' },
@@ -113,7 +120,11 @@ const FilterRow: React.FC<{
               </IconButton>
             </div>
           ) : Array.isArray(state) ? (
-            <FilterRow filtersState={state} />
+            <FilterRow
+              setFiltersState={setFiltersState}
+              filtersState={state}
+              path={path ? [...path, index] : [index]}
+            />
           ) : (
             <ConditionContainer>
               <IconButton>
@@ -128,7 +139,10 @@ const FilterRow: React.FC<{
                   value: col._id,
                 }))}
                 value={state.key}
-                onChange={e => console.log(e)}
+                onChange={value => {
+                  const lens = R.lensPath([index]);
+                  // console.log(parentIndex, R.view(lens, filtersState));
+                }}
               />
               <div className="select__container">
                 <Select
@@ -139,7 +153,10 @@ const FilterRow: React.FC<{
                         ?.dataType ?? DataTypes.string
                     ]
                   }
-                  onChange={e => console.log(e)}
+                  onChange={value => {
+                    const lens = R.lensPath([index]);
+                    // console.log(parentIndex, R.view(lens, filtersState));
+                  }}
                 />
               </div>
               <div className="input__container">
