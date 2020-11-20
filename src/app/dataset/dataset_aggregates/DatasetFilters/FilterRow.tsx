@@ -113,6 +113,7 @@ const FilterRow: React.FC<{
                 setFiltersState={setFiltersState}
                 updateNestedObject={updateNestedObject(index)}
                 boardData={boardData}
+                path={path ? [...path, index] : [index]}
               />
               {(Array.isArray(sortedFiltersState[index + 1]) ||
                 index === sortedFiltersState.length - 1) && (
