@@ -1,4 +1,3 @@
-import parseJWT from 'lib/parseJWT';
 import { useEffect, useRef, useState } from 'react';
 import skyvueFetch from 'services/skyvueFetch';
 
