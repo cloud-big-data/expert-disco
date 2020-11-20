@@ -1,21 +1,19 @@
 import DatasetContext from 'contexts/DatasetContext';
-import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Helper } from 'components/ui/Typography';
 import humanizeTimeAgo from 'utils/humanizeTimeAgo';
 import Styles from 'styles/Styles';
 import { IconButton } from 'components/ui/Buttons';
 import Grid from './grid';
-import DatasestToolbar from './toolbar';
-import { initialBoardState } from './wrappers/DatasetWrapper';
+import DatasetToolbar from './toolbar';
 import DatasetAggregates from './dataset_aggregates';
 
 const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   display: flex;
   flex-direction: column;
-  position: sticky;
-  /* overflow: hidden; */
+  overflow: hidden;
+  max-height: calc(100% - 4rem);
   padding: 1rem;
   ${props => (props.fullScreen ? 'height: calc(100% - 4rem);' : '')};
   background: ${Styles.defaultBgColor};
@@ -59,8 +57,6 @@ const ParentGridContainer = styled.div`
 const ToolbarContainer = styled.div`
   display: flex;
   padding: 1rem 2.25rem;
-  position: sticky;
-  top: 0;
 `;
 // const FormulaBarContainer = styled.div`
 //   display: flex;
@@ -102,7 +98,7 @@ const Dataset: React.FC<{
 
       {!fullScreen && (
         <ToolbarContainer>
-          <DatasestToolbar />
+          <DatasetToolbar />
         </ToolbarContainer>
       )}
       {/* <FormulaBarContainer>

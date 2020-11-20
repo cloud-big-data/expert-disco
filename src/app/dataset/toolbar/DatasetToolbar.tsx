@@ -46,7 +46,7 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
   `}
 `;
 
-const DatasestToolbar: React.FC = () => {
+const DatasetToolbar: React.FC = () => {
   const {
     boardData,
     setBoardData,
@@ -93,4 +93,4 @@ const DatasestToolbar: React.FC = () => {
   );
 };
 
-export default DatasestToolbar;
+export default DatasetToolbar;
