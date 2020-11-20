@@ -1,9 +1,10 @@
 import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
+import { v4 as uuidv4 } from 'uuid';
 import { FilterContext } from './DatasetFilters';
 import Condition from './Condition';
 import Operator from './Operator';
@@ -37,9 +38,9 @@ const FilterRow: React.FC<{
   setFiltersState: (state: IFilterLayer) => void;
   path?: number[];
 }> = ({ parent, filtersState, setFiltersState, path }) => {
-  const { parentFilterState } = useContext(FilterContext);
+  const { parentFilterState } = useContext(FilterContext)!;
   const { boardData } = useContext(DatasetContext)!;
-  const currentIndentation = useRef(-1);
+  const currentIndentation = { current: -1 };
   const incrementIndentation = (index: number) => {
     currentIndentation.current = index + 1;
   };
@@ -53,17 +54,36 @@ const FilterRow: React.FC<{
     ),
   );
 
-  const sortedFilterState = sortState(filtersState);
+  const sortedFiltersState = sortState(filtersState);
+
+  const addOperator = (index: number) => {
+    const path_ = path ? [...path, index] : [index];
+    setFiltersState(
+      R.over(
+        R.lensPath(path_.slice(0, path_.length - 1)),
+        R.append([
+          'AND',
+          {
+            filterId: uuidv4(),
+            key: boardData.columns[0]._id,
+            predicateType: 'equals',
+            value: '',
+          },
+        ]),
+        parentFilterState!,
+      ),
+    );
+  };
 
   return (
     <>
-      {sortedFilterState.map((state, index) => (
+      {sortedFiltersState.map((state, index) => (
         <FilterRowContainer
           parent
           key={
             typeof state !== 'string' && !Array.isArray(state)
               ? state.filterId
-              : state.toString()
+              : state.toString() + index
           }
           indentation={index === 0 ? 0 : currentIndentation.current}
         >
@@ -75,7 +95,7 @@ const FilterRow: React.FC<{
                 incrementIndentation={incrementIndentation}
                 parent={parent}
                 state={state}
-                parentFilterState={sortState(parentFilterState!)}
+                parentFilterState={parentFilterState!}
                 setFiltersState={setFiltersState}
                 path={path ? [...path, index] : [index]}
               />
@@ -94,9 +114,11 @@ const FilterRow: React.FC<{
                 updateNestedObject={updateNestedObject(index)}
                 boardData={boardData}
               />
-              {(Array.isArray(sortedFilterState[index + 1]) ||
-                index === sortedFilterState.length - 1) && (
-                <OperatorBreak onClick={() => alert('hi')}>+ and/or</OperatorBreak>
+              {(Array.isArray(sortedFiltersState[index + 1]) ||
+                index === sortedFiltersState.length - 1) && (
+                <OperatorBreak onClick={() => addOperator(index)}>
+                  + and/or
+                </OperatorBreak>
               )}
             </>
           )}

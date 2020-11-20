@@ -98,8 +98,8 @@ const Button = styled.button<{
   ${props =>
     props.danger
       ? `
-    border: none;
-    background-color: ${Styles.red};
+    border-color: ${Styles.red};
+    background: transparent;
     &:hover {
       background-color: #fa9596;
     }

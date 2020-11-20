@@ -12,8 +12,6 @@ import DatasetAggregates from './dataset_aggregates';
 const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  max-height: calc(100% - 4rem);
   padding: 1rem;
   ${props => (props.fullScreen ? 'height: calc(100% - 4rem);' : '')};
   background: ${Styles.defaultBgColor};
