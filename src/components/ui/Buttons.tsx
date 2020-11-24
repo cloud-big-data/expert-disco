@@ -30,6 +30,7 @@ const Button = styled.button<{
   text-decoration: none;
   margin: 0.25em 0;
   cursor: pointer;
+  border: 2px solid transparent;
 
   &:disabled {
     pointer-events: none;

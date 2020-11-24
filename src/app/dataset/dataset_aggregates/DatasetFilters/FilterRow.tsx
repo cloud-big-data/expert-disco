@@ -57,74 +57,81 @@ const FilterRow: React.FC<{
   const sortedFiltersState = sortState(filtersState);
 
   const addOperator = (index: number) => {
+    const defaultCondition: IFilterLayer = [
+      'AND',
+      {
+        filterId: uuidv4(),
+        key: boardData.columns[0]._id,
+        predicateType: 'equals',
+        value: '',
+      },
+    ];
     const path_ = path ? [...path, index] : [index];
     setFiltersState(
-      R.over(
-        R.lensPath(path_.slice(0, path_.length - 1)),
-        R.append([
-          'AND',
-          {
-            filterId: uuidv4(),
-            key: boardData.columns[0]._id,
-            predicateType: 'equals',
-            value: '',
-          },
-        ]),
-        parentFilterState!,
-      ),
+      index === 0
+        ? defaultCondition
+        : R.over(
+            R.lensPath(path_.slice(0, path_.length - 1)),
+            R.append(defaultCondition),
+            parentFilterState!,
+          ),
     );
   };
 
   return (
     <>
-      {sortedFiltersState.map((state, index) => (
-        <FilterRowContainer
-          parent
-          key={
-            typeof state !== 'string' && !Array.isArray(state)
-              ? state.filterId
-              : state.toString() + index
-          }
-          indentation={index === 0 ? 0 : currentIndentation.current}
-        >
-          {typeof state === 'string' ? (
-            <>
-              {incrementIndentation(index)}
-              <Operator
-                index={index}
-                incrementIndentation={incrementIndentation}
-                parent={parent}
-                state={state}
-                parentFilterState={parentFilterState!}
+      {sortedFiltersState.length > 0 ? (
+        sortedFiltersState.map((state, index) => (
+          <FilterRowContainer
+            parent
+            key={
+              typeof state !== 'string' && !Array.isArray(state)
+                ? state.filterId
+                : state.toString() + index
+            }
+            indentation={index === 0 ? 0 : currentIndentation.current}
+          >
+            {typeof state === 'string' ? (
+              <>
+                {incrementIndentation(index)}
+                <Operator
+                  index={index}
+                  incrementIndentation={incrementIndentation}
+                  parent={parent}
+                  state={state}
+                  parentFilterState={parentFilterState!}
+                  setFiltersState={setFiltersState}
+                  path={path ? [...path, index] : [index]}
+                />
+              </>
+            ) : Array.isArray(state) ? (
+              <FilterRow
                 setFiltersState={setFiltersState}
+                filtersState={state}
                 path={path ? [...path, index] : [index]}
               />
-            </>
-          ) : Array.isArray(state) ? (
-            <FilterRow
-              setFiltersState={setFiltersState}
-              filtersState={state}
-              path={path ? [...path, index] : [index]}
-            />
-          ) : (
-            <>
-              <Condition
-                state={state}
-                setFiltersState={setFiltersState}
-                updateNestedObject={updateNestedObject(index)}
-                boardData={boardData}
-                path={path ? [...path, index] : [index]}
-              />
-              {(Array.isArray(sortedFiltersState[index + 1]) ||
-                index === sortedFiltersState.length - 1) && (
-                <OperatorBreak onClick={() => addOperator(index)}>
-                  + and/or
-                </OperatorBreak>
-              )}
-            </>
-          )}
-        </FilterRowContainer>
-      ))}
+            ) : (
+              <>
+                <Condition
+                  state={state}
+                  setFiltersState={setFiltersState}
+                  updateNestedObject={updateNestedObject(index)}
+                  boardData={boardData}
+                  path={path ? [...path, index] : [index]}
+                />
+                {(Array.isArray(sortedFiltersState[index + 1]) ||
+                  index === sortedFiltersState.length - 1) && (
+                  <OperatorBreak onClick={() => addOperator(index)}>
+                    + and/or
+                  </OperatorBreak>
+                )}
+              </>
+            )}
+          </FilterRowContainer>
+        ))
+      ) : (
+        <OperatorBreak onClick={() => addOperator(0)}>+ and/or</OperatorBreak>
+      )}
     </>
   );
 };

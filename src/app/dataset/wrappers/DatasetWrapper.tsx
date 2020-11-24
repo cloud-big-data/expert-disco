@@ -148,6 +148,8 @@ const DatasetWrapper: React.FC = () => {
     formatting: [],
   };
 
+  console.log(boardData);
+
   return (
     <DatasetContext.Provider
       value={{

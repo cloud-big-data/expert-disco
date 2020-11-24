@@ -1,9 +1,9 @@
+/* eslint-disable no-self-compare */
 import React, { createContext, useContext, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
 import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
-import { v4 as uuidv4 } from 'uuid';
 import * as R from 'ramda';
 import FilterRow from './FilterRow';
 
@@ -35,55 +35,57 @@ const FiltersContainer = styled.div`
   }
 `;
 
-const sampleState: IFilterLayer = [
-  'AND',
-  {
-    filterId: uuidv4(),
-    key: '2d9dc775-d7f2-4acc-ba07-6f20493abac8',
-    value: '1',
-    predicateType: 'equals',
-  },
-  // [
-  //   'OR',
-  //   {
-  //     filterId: uuidv4(),
-  //     key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8c06',
-  //     value: 'marvel/0001/002.jpg',
-  //     predicateType: 'equals',
-  //   },
-  //   {
-  //     filterId: uuidv4(),
-  //     key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8casdf06',
-  //     value: 'marvel/0001/003.jpg',
-  //     predicateType: 'equals',
-  //   },
-  //   [
-  //     'AND',
-  //     {
-  //       filterId: uuidv4(),
-  //       key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8c06',
-  //       value: 'marvel/0001/002.jpg',
-  //       predicateType: 'equals',
-  //     },
-  //     {
-  //       filterId: uuidv4(),
-  //       key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8casdf06',
-  //       value: 'marvel/0001/003.jpg',
-  //       predicateType: 'equals',
-  //     },
-  //   ],
-  // ],
-];
+// const sampleState: IFilterLayer = [
+//   'AND',
+//   {
+//     filterId: uuidv4(),
+//     key: '8c2c6300-2ac7-427f-bea4-1bfd9beb1098',
+//     value: '1',
+//     predicateType: 'equals',
+//   },
+//   // [
+//   //   'OR',
+//   //   {
+//   //     filterId: uuidv4(),
+//   //     key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8c06',
+//   //     value: 'marvel/0001/002.jpg',
+//   //     predicateType: 'equals',
+//   //   },
+//   //   {
+//   //     filterId: uuidv4(),
+//   //     key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8casdf06',
+//   //     value: 'marvel/0001/003.jpg',
+//   //     predicateType: 'equals',
+//   //   },
+//   //   [
+//   //     'AND',
+//   //     {
+//   //       filterId: uuidv4(),
+//   //       key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8c06',
+//   //       value: 'marvel/0001/002.jpg',
+//   //       predicateType: 'equals',
+//   //     },
+//   //     {
+//   //       filterId: uuidv4(),
+//   //       key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8casdf06',
+//   //       value: 'marvel/0001/003.jpg',
+//   //       predicateType: 'equals',
+//   //     },
+//   //   ],
+//   // ],
+// ];
 
 export const FilterContext = createContext<{
   parentFilterState?: IFilterLayer;
 }>({ parentFilterState: undefined });
 
 const DatasetFilters: React.FC = () => {
-  const initialFiltersState = useRef<IFilterLayer>(sampleState);
-  const [filtersState, setFiltersState] = useState<IFilterLayer>(sampleState);
+  const { boardData, datasetHead, socket } = useContext(DatasetContext)!;
+  const initialFiltersState = useRef<IFilterLayer>(boardData.layers?.filters ?? []);
+  const [filtersState, setFiltersState] = useState<IFilterLayer>(
+    boardData.layers?.filters ?? [],
+  );
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const { datasetHead } = useContext(DatasetContext)!;
 
   const sort = R.sortBy(x => Array.isArray(x));
   const sortFilterLayer = (layer: any) => {
@@ -99,9 +101,11 @@ const DatasetFilters: React.FC = () => {
     <FiltersContainer>
       <div className="top">
         <h6>Filter {datasetHead.title}</h6>
-        <ButtonTertiary onClick={() => setFiltersState([])}>
-          Clear all filters
-        </ButtonTertiary>
+        {filtersState.length > 0 && (
+          <ButtonTertiary onClick={() => setFiltersState([])}>
+            Clear all filters
+          </ButtonTertiary>
+        )}
       </div>
       <div className="options__container">
         <FilterContext.Provider
@@ -133,6 +137,10 @@ const DatasetFilters: React.FC = () => {
           <ButtonPrimary
             onClick={() => {
               setUnsavedChanges(false);
+              socket?.emit('layer', {
+                layerKey: 'filters',
+                layerData: sortedFiltersState,
+              });
               initialFiltersState.current = sortedFiltersState;
             }}
           >
