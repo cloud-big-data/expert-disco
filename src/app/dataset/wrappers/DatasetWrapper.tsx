@@ -143,12 +143,10 @@ const DatasetWrapper: React.FC = () => {
   const initial_layers = {
     joins: [],
     filters: [],
-    groupings: [],
+    groupings: {},
     sortings: [],
     formatting: [],
   };
-
-  console.log(boardData);
 
   return (
     <DatasetContext.Provider

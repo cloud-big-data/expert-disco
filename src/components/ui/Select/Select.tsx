@@ -194,6 +194,7 @@ const Select: React.FC<ISelect> = ({
   placeholder,
   value,
   fill,
+  className,
 }) => (
   <SelectContainer fill={fill}>
     <SelectSearch

@@ -60,7 +60,7 @@ export type IFilterLayer = Array<
     >
 >;
 
-type AggregateFunctions =
+export type AggregateFunctions =
   | 'sum'
   | 'mean'
   | 'median'
@@ -92,7 +92,7 @@ export interface IBoardData {
   layers?: {
     joins: any[];
     filters: IFilterLayer;
-    groupings: any[];
+    groupings: IGroupLayer;
     sortings: any[];
     formatting: any[];
   };

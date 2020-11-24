@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import styled from 'styled-components/macro';
 import DatasetFilters from './DatasetFilters';
 import DatasetSummary from './DatasetSummary';
+import DatasetGrouping from './DatasetGrouping';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
   display: flex;
@@ -75,7 +76,7 @@ const VIEWS = [
   },
   {
     name: 'Group this dataset',
-    value: 'group',
+    value: 'groupings',
     icon: <i className="fad fa-layer-group" />,
   },
   {
@@ -110,6 +111,7 @@ const ViewLookup: {
 } = {
   summary: <DatasetSummary />,
   filter: <DatasetFilters />,
+  groupings: <DatasetGrouping />,
 };
 
 const DatasetAggregates: React.FC = () => {
