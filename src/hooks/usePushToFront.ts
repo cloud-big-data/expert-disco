@@ -9,7 +9,6 @@ const usePushToFront = (ref?: React.RefObject<HTMLDivElement>) => {
         div.style.position = 'relative';
       }
     });
-
     return () => {
       document.querySelectorAll('div')?.forEach(div => {
         if (document.querySelectorAll('.push-to-front').length === 2) return;

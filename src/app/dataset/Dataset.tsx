@@ -11,6 +11,7 @@ import DatasetAggregates from './dataset_aggregates';
 
 const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   display: flex;
+  position: sticky;
   flex-direction: column;
   padding: 1rem;
   ${props => (props.fullScreen ? 'height: calc(100% - 4rem);' : '')};

@@ -69,7 +69,6 @@ const NavItem = styled.div<{ active?: boolean }>`
   flex: 0 1 auto;
   cursor: pointer;
   align-items: center;
-  transition-duration: 0.3s;
   &:hover {
     font-weight: bold;
   }
