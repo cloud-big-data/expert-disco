@@ -131,10 +131,15 @@ const DatasetWrapper: React.FC = () => {
   const _setBoardData = (newBoardData: IBoardData) => {
     setBoardData(prevBoardData => {
       if (!prevBoardData) return newBoardData;
-      socket?.emit('diff', {
-        colDiff: R.difference(newBoardData.columns, prevBoardData.columns),
-        rowDiff: R.difference(newBoardData.rows, prevBoardData.rows),
-      });
+      // todo This should be significantly smarter. It's only set up to handle particular cases.
+      const colDiff = R.difference(prevBoardData.columns, newBoardData.columns);
+      const rowDiff = R.difference(newBoardData.rows, prevBoardData.rows);
+      if (colDiff.length > 0 || rowDiff.length > 0) {
+        socket?.emit('diff', {
+          colDiff: R.difference(prevBoardData.columns, newBoardData.columns),
+          rowDiff: R.difference(newBoardData.rows, prevBoardData.rows),
+        });
+      }
 
       return newBoardData;
     });
