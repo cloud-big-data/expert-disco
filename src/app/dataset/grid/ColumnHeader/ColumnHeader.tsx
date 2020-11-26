@@ -7,7 +7,7 @@ import Styles from 'styles/Styles';
 import * as R from 'ramda';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
-import { IBoardState, IColumn } from '../../types';
+import { IBoardState, IColumn, ISortingLayer, SortDirections } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 import DraggableColEdge from './DraggableColEdge';
@@ -63,7 +63,7 @@ const MenuTrigger = styled.div`
   cursor: pointer;
   transition-duration: 0.2s;
   display: flex;
-  margin-left: auto;
+  margin-left: 0.25rem;
   align-self: center;
   margin-right: 0.25rem;
   opacity: 0.4;
@@ -90,10 +90,32 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     setBoardState,
     boardData,
     setBoardData,
+    socket,
   } = useContext(DatasetContext)!;
   const boardActions = makeBoardActions(boardData);
   const inputRef = useRef<HTMLInputElement>(null);
   const active = boardState.columnsState.activeColumn === columnIndex;
+  const columnSorting = boardData.layers?.sortings.find(
+    sorting => sorting.key === _id,
+  );
+
+  const handleSortingChange = (direction?: SortDirections) => {
+    let sortingLayer: ISortingLayer = boardData.layers?.sortings ?? [];
+    if (columnSorting?.key === _id) {
+      sortingLayer = direction
+        ? sortingLayer.map(layer =>
+            layer.key === _id ? { ...layer, direction } : layer,
+          )
+        : sortingLayer.filter(layer => layer.key !== _id);
+    } else if (direction) {
+      sortingLayer = [...sortingLayer, { key: _id, direction }];
+    }
+
+    socket?.emit('layer', {
+      layerKey: 'sortings',
+      layerData: sortingLayer,
+    });
+  };
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -108,14 +130,47 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       icon: <i style={{ color: Styles.red }} className="fal fa-times-circle" />,
     },
     {
-      label: 'Sort',
-      onClick: () => undefined,
-      icon: <i style={{ color: Styles.orange }} className="fad fa-sort" />,
-    },
-    {
       label: 'Format',
       onClick: () => undefined,
       icon: <i style={{ color: Styles.blue }} className="fad fa-remove-format" />,
+    },
+    {
+      label: 'Default sorting',
+      onClick: handleSortingChange,
+      icon: (
+        <i
+          style={{
+            color: !columnSorting?.direction ? Styles.orange : Styles.fontColor,
+          }}
+          className="fas fa-sort"
+        />
+      ),
+    },
+    {
+      label: 'Sort A-Z',
+      onClick: () => handleSortingChange('asc'),
+      icon: (
+        <i
+          style={{
+            color:
+              columnSorting?.direction === 'asc' ? Styles.orange : Styles.fontColor,
+          }}
+          className="fas fa-sort-down"
+        />
+      ),
+    },
+    {
+      label: 'Sort Z-A',
+      onClick: () => handleSortingChange('desc'),
+      icon: (
+        <i
+          style={{
+            color:
+              columnSorting?.direction === 'desc' ? Styles.orange : Styles.fontColor,
+          }}
+          className="fas fa-sort-up"
+        />
+      ),
     },
   ];
 
@@ -181,6 +236,16 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       ) : (
         <Label>{value}</Label>
       )}
+      <i
+        style={{ marginLeft: 'auto' }}
+        className={
+          !columnSorting?.direction
+            ? ''
+            : columnSorting?.direction === 'asc'
+            ? `fad fa-sort-down`
+            : `fad fa-sort-up`
+        }
+      />
       <MenuTrigger
         onDoubleClick={e => e.stopPropagation()}
         onClick={e => {

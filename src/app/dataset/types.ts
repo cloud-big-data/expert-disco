@@ -77,6 +77,12 @@ export interface IGroupLayer {
   };
 }
 
+export type SortDirections = 'desc' | 'asc';
+export type ISortingLayer = Array<{
+  key: string;
+  direction: SortDirections;
+}>;
+
 /**
  * The data stored in the grid itself. This information should persist from session to session.
  * For the viewable, non-persistent state of the board, use IBoardState
@@ -89,11 +95,11 @@ export interface IBoardData {
   };
   columns: IColumn[];
   rows: IRow[];
-  layers?: {
+  layers: {
     joins: any[];
     filters: IFilterLayer;
     groupings: IGroupLayer;
-    sortings: any[];
+    sortings: ISortingLayer;
     formatting: any[];
   };
 }

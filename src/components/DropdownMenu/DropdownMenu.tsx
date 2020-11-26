@@ -89,12 +89,11 @@ const DropdownMenu: React.FC<{
         <MenuOption
           key={opt.label}
           onClick={() => {
-            closeMenu();
             opt.onClick();
           }}
         >
           <div className="icon__container">{opt.icon}</div>
-          <Label hoverPurple unBold>
+          <Label style={{ margin: 0 }} hoverPurple unBold>
             {opt.label}
           </Label>
         </MenuOption>
