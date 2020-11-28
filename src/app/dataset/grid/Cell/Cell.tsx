@@ -7,13 +7,16 @@ import editCellsAndReturnBoard from 'app/dataset/lib/editCellsAndReturnBoard';
 import DropdownMenu from 'components/DropdownMenu';
 import useClippy from 'use-clippy';
 import getCellValueById from 'app/dataset/lib/getCellValueById';
-import { ICell, IBoardState } from '../../types';
+import { notification } from 'antd';
+import parseDataType from 'app/dataset/lib/parseDataType';
+import { ICell, IBoardState, DataTypes } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 
 interface ICellProps extends ICell {
   rowId: string;
   highlighted: boolean;
+  colIndex: number;
   active: boolean;
   selected: boolean;
   position: {
@@ -112,6 +115,13 @@ const CellContainer = styled.div<{
       : ''}
 `;
 
+const showTypeError = (colDataType: DataTypes, attemptedType: DataTypes) => {
+  notification.error({
+    message: 'Invalid data type',
+    description: `This column is of type ${colDataType}. Would you like to convert the column to type ${attemptedType}?`,
+  });
+};
+
 const Cell: React.FC<ICellProps> = ({
   _id,
   value,
@@ -121,6 +131,7 @@ const Cell: React.FC<ICellProps> = ({
   position,
   isCopying,
   colWidth,
+  colIndex,
 }) => {
   const [, setClipboard] = useClippy();
   const {
@@ -130,6 +141,7 @@ const Cell: React.FC<ICellProps> = ({
     boardData,
     setBoardData,
   } = useContext(DatasetContext)!;
+  const [errorNotificationIsOpen, setErrorNotification] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [localValue, setLocalValue] = useState(value);
@@ -143,6 +155,9 @@ const Cell: React.FC<ICellProps> = ({
     setClipboard(getCellValueById(boardData.rows, _id));
     setBoardState(R.set(R.lensPath(['cellsState', 'copyingCell']), _id, boardState));
   };
+
+  const colDataType = boardData.columns.find((col, index) => index === colIndex)
+    ?.dataType;
 
   const MENU_OPTIONS = [
     {
@@ -174,14 +189,14 @@ const Cell: React.FC<ICellProps> = ({
         e.preventDefault();
         setShowContextMenu(!showContextMenu);
       }}
-      onClick={() =>
+      onClick={() => {
         setBoardState(
           R.pipe(
             R.assocPath(['columnsState', 'selectedColumn'], -1),
             R.assocPath(['cellsState', 'selectedCell'], _id),
           )(boardState) as IBoardState,
-        )
-      }
+        );
+      }}
       onDoubleClick={() =>
         setBoardState(R.assocPath(['cellsState', 'activeCell'], _id, boardState))
       }
@@ -205,6 +220,21 @@ const Cell: React.FC<ICellProps> = ({
           }}
           onChange={e => {
             const { value } = e.target;
+            const attemptedInputType = parseDataType(value);
+            if (
+              colDataType !== 'string' &&
+              value !== '' &&
+              attemptedInputType !== colDataType
+            ) {
+              if (!errorNotificationIsOpen) {
+                showTypeError(colDataType!, attemptedInputType);
+              }
+              setErrorNotification(true);
+              setTimeout(() => {
+                setErrorNotification(false);
+              }, 4500);
+              return;
+            }
             setLocalValue(e.target.value);
             clearTimeout(typingTimeout.current);
 

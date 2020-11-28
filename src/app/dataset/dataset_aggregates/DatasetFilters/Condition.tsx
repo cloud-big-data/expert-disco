@@ -37,7 +37,7 @@ const BASE_OPTIONS: IFilterPredicateOption[] = [
 ];
 
 const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
-  [DataTypes.date]: [
+  date: [
     ...BASE_OPTIONS,
 
     { name: 'is less than', value: 'lessThan' },
@@ -49,7 +49,7 @@ const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
     },
     { name: 'is between (date)', value: 'dateBetween' },
   ],
-  [DataTypes.number]: [
+  number: [
     ...BASE_OPTIONS,
     { name: 'is less than', value: 'lessThan' },
     { name: 'is less than or equal to', value: 'lessThanEqualTo' },
@@ -59,7 +59,7 @@ const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
       value: 'greaterThanEqualTo',
     },
   ],
-  [DataTypes.string]: [...BASE_OPTIONS, { name: 'contains', value: 'contains' }],
+  string: [...BASE_OPTIONS, { name: 'contains', value: 'contains' }],
 };
 
 const DeleteConfirmationContainer = styled.div`
@@ -132,7 +132,7 @@ const Condition: React.FC<{
               options={
                 PREDICATE_OPTIONS[
                   boardData.columns.find(col => col._id === state.key)?.dataType ??
-                    DataTypes.string
+                    'string'
                 ]
               }
               onChange={value =>

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { DataTypes, IBoardData } from '../types';
+import { IBoardData } from '../types';
 
 export const makeBoardActions = (boardData: IBoardData) => {
   const colLength = boardData.columns.length;
@@ -37,7 +37,7 @@ export const makeBoardActions = (boardData: IBoardData) => {
         {
           _id: uuidv4(),
           value: value || `Column ${boardData.columns.length + 1}`,
-          dataType: DataTypes.string,
+          dataType: 'string',
         },
       ],
       rows: boardData.rows.map(row => ({

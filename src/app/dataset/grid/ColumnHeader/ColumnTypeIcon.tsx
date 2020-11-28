@@ -14,11 +14,11 @@ const ColumnTypeIcon: React.FC<{
   dataType: DataTypes;
 }> = ({ dataType }) => (
   <IconContainer>
-    {dataType === DataTypes.string ? (
+    {dataType === 'string' ? (
       <i className="fad fa-text-size" />
-    ) : dataType === DataTypes.number ? (
+    ) : dataType === 'number' ? (
       <i className="fad fa-hashtag" />
-    ) : dataType === DataTypes.date ? (
+    ) : dataType === 'date' ? (
       <i className="fad fa-calendar" />
     ) : (
       <></>

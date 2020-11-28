@@ -60,6 +60,7 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
       {cells.map((cell, index) => (
         <Cell
           key={cell._id}
+          colIndex={index}
           rowId={_id}
           highlighted={
             boardState.cellsState.highlightedCells.includes(cell._id) ||

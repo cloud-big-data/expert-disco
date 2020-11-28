@@ -22,7 +22,7 @@ const RightClickMenuContainer = styled.div<{
   border-radius: ${Styles.defaultBorderRadius};
   box-shadow: ${Styles.smBoxShadow};
   padding: ${Styles.defaultPadding};
-  margin-bottom: -8rem;
+  margin-bottom: -10rem;
   max-width: 20rem;
   min-width: 12rem;
   margin-left: 0.25rem;

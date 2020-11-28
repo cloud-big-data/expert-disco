@@ -6,7 +6,6 @@ import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import humanFileSize from 'utils/humanFileSize';
-import { DataTypes } from 'app/dataset/types';
 
 const DatasetSummaryContainer = styled.div`
   display: grid;
@@ -168,7 +167,7 @@ const DatasetSummary: React.FC = () => {
                 <Label unBold>{col.value}</Label>
               </div>
               <div className="field">
-                <Label unBold>{DataTypes[col.dataType]}</Label>
+                <Label unBold>{col.dataType}</Label>
               </div>
               <div />
             </React.Fragment>
