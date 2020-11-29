@@ -79,6 +79,14 @@ export type ISortingLayer = Array<{
   direction: SortDirections;
 }>;
 
+export type ISmartColumns = Array<{
+  _id: string;
+  columns: string[];
+  predicate: 'sum' | 'divide' | 'subtract' | 'concat' | 'avg';
+  columnName: string;
+  delim?: string;
+}>;
+
 /**
  * The data stored in the grid itself. This information should persist from session to session.
  * For the viewable, non-persistent state of the board, use IBoardState
@@ -96,6 +104,7 @@ export interface IBoardData {
     filters: IFilterLayer;
     groupings: IGroupLayer;
     sortings: ISortingLayer;
+    smartColumns: ISmartColumns;
     formatting: any[];
   };
 }

@@ -149,6 +149,7 @@ const DatasetWrapper: React.FC = () => {
     joins: [],
     filters: [],
     groupings: {},
+    smartColumns: [],
     sortings: [],
     formatting: [],
   };
