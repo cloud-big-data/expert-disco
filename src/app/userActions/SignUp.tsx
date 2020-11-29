@@ -335,7 +335,10 @@ const SignUp: React.FC = () => {
         </ButtonPrimary>
 
         <Helper>
-          Already have an account? <Link to="/login">Customer Login</Link>
+          Already have an account?{' '}
+          <strong>
+            <Link to="/login">Customer Login</Link>
+          </strong>
         </Helper>
       </div>
     </UserContainer>

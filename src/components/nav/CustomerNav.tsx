@@ -17,6 +17,7 @@ const CustomerNavContainer = styled.div<{ wide?: boolean }>`
   width: 100%;
   max-height: 4rem;
   .customer-nav__icon {
+    transition-duration: 0.2s;
     font-size: 1.25rem;
     font-weight: bold;
   }

@@ -7,19 +7,31 @@ import humanizeTimeAgo from 'utils/humanizeTimeAgo';
 
 const DatasetCardContainer = styled.div`
   display: flex;
-  flex: 1 1 auto;
   height: 100%;
-  flex-direction: column;
   border: 2px solid ${Styles.faintBorderColor};
   box-shadow: ${Styles.xsBoxShadow};
   border-radius: ${Styles.defaultBorderRadius};
-  padding: 0.5rem;
   transition-duration: 0.2s;
   min-height: 7rem;
   background: white;
 
+  .background {
+    border-radius: ${Styles.defaultBorderRadius} 0 0 ${Styles.defaultBorderRadius};
+    height: 100%;
+    width: 2rem;
+    background: linear-gradient(rgba(157, 113, 208, 0.15), rgba(66, 174, 203, 0.15));
+    border-right: 2px solid ${Styles.faintBorderColor};
+  }
+
+  .main {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
+
   &:hover {
-    border-color: ${Styles.purple};
+    transform: scale(1.009);
   }
 
   .meta__bar {
@@ -64,36 +76,37 @@ const DatasetCardBody: React.FC<{
     }}
   >
     <DatasetCardContainer>
-      <div className="meta__bar">
-        <div className="time-ago__container">
-          <Helper style={{ lineHeight: 0 }}>
-            Last updated: {humanizeTimeAgo(timestamp)}
-          </Helper>
+      <div className="background" />
+      <div className="main">
+        <div className="meta__bar">
+          <div className="time-ago__container">
+            <Helper>Last updated: {humanizeTimeAgo(timestamp)}</Helper>
+          </div>
+          <div className="actions">
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                setEditModalIsOpen(true);
+              }}
+              className="nostyle"
+            >
+              <i className="far fa-cog" />
+            </button>
+          </div>
         </div>
-        <div className="actions">
-          <button
-            onClick={e => {
-              e.stopPropagation();
-              e.preventDefault();
-              setEditModalIsOpen(true);
-            }}
-            className="nostyle"
-          >
-            <i className="far fa-cog" />
-          </button>
+        <div className="label__container">
+          <Label style={{ margin: 0 }}>{title}</Label>
         </div>
-      </div>
-      <div className="label__container">
-        <Label>{title}</Label>
-      </div>
 
-      {description && (
-        <div className="description__container">
-          <Text style={{ marginBottom: 0 }} size="sm" len="long">
-            {description}
-          </Text>
-        </div>
-      )}
+        {description && (
+          <div className="description__container">
+            <Text style={{ marginBottom: 0 }} size="sm" len="long">
+              {description}
+            </Text>
+          </div>
+        )}
+      </div>
     </DatasetCardContainer>
   </Link>
 );

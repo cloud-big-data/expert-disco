@@ -4,7 +4,10 @@ const usePushToFront = (ref?: React.RefObject<HTMLDivElement>) => {
   useEffect(() => {
     document.querySelectorAll('div')?.forEach(div => {
       const style = window.getComputedStyle(div);
-      if (style.getPropertyValue('position') === 'sticky') {
+      if (
+        style.getPropertyValue('position') === 'sticky' &&
+        !div.classList.toString().includes('Nav')
+      ) {
         div.classList.add('unsettled_divs');
         div.style.position = 'relative';
       }

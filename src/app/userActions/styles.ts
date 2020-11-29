@@ -16,6 +16,7 @@ export const UserContainer = styled.div`
 
   .input-group {
     width: 100%;
+    margin-top: 1rem;
 
     input {
       width: 100%;
@@ -30,6 +31,7 @@ export const UserContainer = styled.div`
     justify-content: center;
 
     button {
+      margin-bottom: 2rem;
     }
   }
 `;

@@ -172,10 +172,15 @@ const Login: React.FC = () => {
         </ButtonPrimary>
 
         <Helper>
-          Not a user yet? <Link to="/signup">Create Account</Link>
+          Not a user yet?{' '}
+          <strong>
+            <Link to="/signup">Create Account</Link>
+          </strong>
         </Helper>
         <Helper>
-          <Link to="/forgot_password">I forgot my password</Link>
+          <strong>
+            <Link to="/forgot_password">I forgot my password</Link>
+          </strong>
         </Helper>
       </div>
     </UserContainer>

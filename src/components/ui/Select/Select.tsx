@@ -153,7 +153,7 @@ const SelectContainer = styled.div<{ fill?: string }>`
   }
 
   .select-search:not(.select-search--multiple) .select-search__input:hover {
-    border-color: ${Styles.green};
+    border: 2px solid rgba(0, 0, 0, 0.1);
   }
 
   .select-search:not(.select-search--multiple) .select-search__select {

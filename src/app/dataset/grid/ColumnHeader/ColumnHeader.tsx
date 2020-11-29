@@ -198,12 +198,6 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       }
     >
       <ColumnTypeIcon dataType={dataType} />
-      {showContextMenu && (
-        <DropdownMenu
-          closeMenu={() => toggleShowContextMenu(false)}
-          options={MENU_OPTIONS}
-        />
-      )}
       {!readOnly && active ? (
         <ActiveInput
           ref={inputRef}
@@ -256,6 +250,13 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         <i className="fas fa-chevron-square-down" />
       </MenuTrigger>
       <DraggableColEdge colWidth={colWidth ?? defaults.COL_WIDTH} colId={_id} />
+      {showContextMenu && (
+        <DropdownMenu
+          pos={{ top: 2.5 }}
+          closeMenu={() => toggleShowContextMenu(false)}
+          options={MENU_OPTIONS}
+        />
+      )}
     </ColumnHeaderContainer>
   );
 };

@@ -4,6 +4,7 @@ import usePushToFront from 'hooks/usePushToFront';
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import FadeIn from 'react-fade-in';
 
 const RightClickMenuContainer = styled.div<{
   pos?: {
@@ -14,15 +15,12 @@ const RightClickMenuContainer = styled.div<{
   };
 }>`
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
   position: absolute;
   border: 1px solid ${Styles.faintBorderColor};
   background: white;
-  border-radius: ${Styles.defaultBorderRadius};
+  border-radius: .3rem;
   box-shadow: ${Styles.smBoxShadow};
   padding: ${Styles.defaultPadding};
-  margin-bottom: -10rem;
   max-width: 20rem;
   min-width: 12rem;
   margin-left: 0.25rem;
@@ -31,6 +29,12 @@ const RightClickMenuContainer = styled.div<{
   ${props => (props.pos?.right ? `right: ${props.pos?.right}rem;` : '')}
   ${props => (props.pos?.bottom ? `bottom: ${props.pos?.bottom}rem;` : '')}
   ${props => (props.pos?.left ? `left: ${props.pos?.left}rem;` : '')}
+
+  .options__container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const MenuOption = styled.div`
@@ -39,6 +43,11 @@ const MenuOption = styled.div`
   align-items: center;
   margin-top: 0.5rem;
   text-align: left;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    color: red;
+  }
 
   .icon__container {
     margin-right: 0.5rem;
@@ -85,19 +94,23 @@ const DropdownMenu: React.FC<{
 
   return (
     <RightClickMenuContainer className="push-to-front" pos={pos} ref={menuRef}>
-      {options.map(opt => (
-        <MenuOption
-          key={opt.label}
-          onClick={() => {
-            opt.onClick();
-          }}
-        >
-          <div className="icon__container">{opt.icon}</div>
-          <Label style={{ margin: 0 }} hoverPurple unBold>
-            {opt.label}
-          </Label>
-        </MenuOption>
-      ))}
+      <div className="options__container">
+        <FadeIn>
+          {options.map(opt => (
+            <MenuOption
+              key={opt.label}
+              onClick={() => {
+                opt.onClick();
+              }}
+            >
+              <div className="icon__container">{opt.icon}</div>
+              <Label style={{ margin: 0, fontSize: '14px' }} hoverPurple unBold>
+                {opt.label}
+              </Label>
+            </MenuOption>
+          ))}
+        </FadeIn>
+      </div>
     </RightClickMenuContainer>
   );
 };
