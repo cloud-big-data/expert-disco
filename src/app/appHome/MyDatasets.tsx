@@ -1,6 +1,6 @@
 import DatasetCard from 'components/DatasetCard';
 import DatasetUploader from 'components/DatasetUploader';
-import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
+import { ButtonPrimary } from 'components/ui/Buttons';
 import Modal from 'components/ui/Modal';
 import UserContext from 'contexts/userContext';
 import React, { useContext, useState } from 'react';
@@ -15,13 +15,6 @@ const MyDatasetsContainer = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  #new_dataset {
-    margin-left: 1rem;
-    i {
-      color: white;
-      margin-left: 0.5rem;
-    }
-  }
   .empty__container {
     display: flex;
     flex-direction: column;
@@ -35,6 +28,22 @@ const MyDatasetsContainer = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
+
+    #new_dataset {
+      margin-left: auto;
+      i {
+        color: white;
+        margin-left: 0.5rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+      #new_dataset {
+        margin-top: 0.5rem;
+        margin-right: auto;
+      }
+    }
   }
 
   #edit_toggle {
@@ -68,7 +77,6 @@ const ListContainer = styled.div`
 const MyDatasets: React.FC = () => {
   const { accessToken } = useContext(UserContext);
   const [newDatasetModalIsOpen, setNewDatasetModalIsOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false);
   const { isLoading, data, refetch } = useQuery(newDatasetModalIsOpen, () =>
     skyvueFetch(accessToken!).get('/datasets'),
   );
@@ -91,19 +99,6 @@ const MyDatasets: React.FC = () => {
         <h3 style={{ margin: 0 }}>My datasets</h3>
         {!isLoading && datasets.length > 0 && (
           <>
-            {editMode ? (
-              <ButtonPrimary
-                onClick={() => setEditMode(false)}
-                className="white"
-                id="edit_toggle"
-              >
-                <i className="fas fa-pencil" />
-              </ButtonPrimary>
-            ) : (
-              <ButtonTertiary onClick={() => setEditMode(true)} id="edit_toggle">
-                <i className="fas fa-pencil" />
-              </ButtonTertiary>
-            )}
             <ButtonPrimary
               onClick={() => setNewDatasetModalIsOpen(true)}
               id="new_dataset"

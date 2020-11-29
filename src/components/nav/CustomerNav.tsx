@@ -77,7 +77,7 @@ const UserDropdownExpanded = styled.div`
 
   a {
     &:first-of-type {
-      margin-top: 1rem;
+      margin-top: 0.25rem;
     }
     text-decoration: none;
     height: 2rem;
