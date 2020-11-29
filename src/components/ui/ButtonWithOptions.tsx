@@ -14,12 +14,14 @@ const Container = styled.button`
   justify-content: center;
   background: ${Styles.purpleGradient};
   color: white;
-  border-radius: 100px;
+  border-radius: ${Styles.defaultBorderRadius};
   padding: 0.75em 0 0.75em 2.5em;
   font-weight: 700;
   border: none;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
   height: 2.5rem;
   max-height: 2.5rem;
+  transition-duration: 0.2s;
 
   .dropdown__container {
     color: ${Styles.fontColor};

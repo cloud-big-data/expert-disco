@@ -48,7 +48,7 @@ const GroupingContainer = styled.div`
   .select__container {
     display: flex;
     align-items: center;
-    span:not(.ant-checkbox) {
+    span:not(.ant-checkbox-inner, .ant-checkbox) {
       margin-left: 0.25rem;
     }
     .select-search {

@@ -65,6 +65,7 @@ const SelectContainer = styled.div<{ fill?: string }>`
     background: #fff;
     box-shadow: ${Styles.boxShadow};
     border: 2px solid ${Styles.faintBorderColor};
+    ${Styles.fadeIn}
   }
 
   .select-search__options {

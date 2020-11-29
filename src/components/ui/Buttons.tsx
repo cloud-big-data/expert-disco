@@ -20,7 +20,7 @@ const Button = styled.button<{
   danger?: boolean;
   icon?: boolean;
 }>`
-  border-radius: 100px;
+  border-radius: .4rem;
   font-size: 1rem;
   padding: 0.75em 2.5em;
   text-align: center;
@@ -30,7 +30,7 @@ const Button = styled.button<{
   text-decoration: none;
   margin: 0.25em 0;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid ${Styles.faintBorderColor};
 
   &:disabled {
     pointer-events: none;

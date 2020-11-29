@@ -139,3 +139,22 @@ a:not(.no-hover):hover *,
 a:not(.no-hover):hover {
   color: var(--purple) !important;
 }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.5;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* #root .ant-checkbox::after,
+#root .ant-checkbox-inner {
+  border-color: #eaf5f7;
+} */
+#root .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--blue);
+  border-color: #eaf5f7;
+}

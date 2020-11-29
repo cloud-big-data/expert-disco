@@ -19,9 +19,10 @@ export default {
   defaultPadding: '1rem',
   defaultMaxWidth: '70rem',
   faintBorderColor: '#EAF5F7',
-  defaultBorderRadius: '.5rem',
+  defaultBorderRadius: '.4rem',
   defaultBgColor: '#f7f7fc',
   softGray: '#b8b8d9',
+  fadeIn: 'animation: fadeIn .4s linear forwards;',
 };
 
 // other idea for defaultBgColor: #FDFDFF
