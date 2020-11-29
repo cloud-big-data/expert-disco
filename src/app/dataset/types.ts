@@ -5,32 +5,6 @@ export interface ValueSet {
 
 export type DataTypes = 'number' | 'string' | 'date';
 
-export interface ICell {
-  _id: string;
-  value: string | number | null;
-}
-
-export interface IColumn extends ICell {
-  dataType: DataTypes;
-  /**
-   * colWidth: The width of the column, in px.
-   */
-  colWidth?: number;
-}
-
-export interface IRow {
-  _id: string;
-  cells: ICell[];
-  index: number;
-  /**
-   * rowHeight: The height of the row, in px.
-   */
-  rowHeight?: number;
-  dragging?: boolean;
-}
-
-type UserId = string;
-
 export type FilterTypes =
   | 'equals'
   | 'notEquals'
@@ -87,10 +61,49 @@ export type ISmartColumns = Array<{
   delim?: string;
 }>;
 
+export type IColumnFormatting = Array<{
+  colId: string;
+  format:
+    | 'number'
+    | 'decimal'
+    | 'percent'
+    | 'currency'
+    | 'date'
+    | 'time'
+    | 'datetime';
+  additional?: string;
+}>;
+
 /**
  * The data stored in the grid itself. This information should persist from session to session.
  * For the viewable, non-persistent state of the board, use IBoardState
  */
+
+export interface ICell {
+  _id: string;
+  value: string | number | null;
+}
+
+export interface IColumn extends ICell {
+  dataType: DataTypes;
+  /**
+   * colWidth: The width of the column, in px.
+   */
+  colWidth?: number;
+}
+
+export interface IRow {
+  _id: string;
+  cells: ICell[];
+  index: number;
+  /**
+   * rowHeight: The height of the row, in px.
+   */
+  rowHeight?: number;
+  dragging?: boolean;
+}
+
+type UserId = string;
 export interface IBoardData {
   visibilitySettings: {
     owner: UserId;
@@ -105,7 +118,7 @@ export interface IBoardData {
     groupings: IGroupLayer;
     sortings: ISortingLayer;
     smartColumns: ISmartColumns;
-    formatting: any[];
+    formatting: IColumnFormatting;
   };
 }
 

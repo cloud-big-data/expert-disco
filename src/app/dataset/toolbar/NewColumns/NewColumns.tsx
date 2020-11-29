@@ -51,7 +51,7 @@ const NewColumns: React.FC = () => {
             ),
           },
           {
-            label: 'New aggregate column',
+            label: 'New smart column',
             onClick: () => {
               setModalIsOpen(true);
               setView(NewColumnViews.aggregateColumn);
