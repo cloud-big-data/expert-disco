@@ -4,7 +4,7 @@ import Styles from 'styles/Styles';
 const Card = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   box-shadow: ${Styles.boxShadow};
   padding: 1rem 1.5rem;
   border-radius: ${Styles.defaultBorderRadius};
