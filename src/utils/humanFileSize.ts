@@ -1,4 +1,5 @@
-const humanFileSize = (size: number) => {
+const humanFileSize = (size?: number) => {
+  if (!size) return;
   const i = Math.floor(Math.log(size) / Math.log(1024));
 
   return `${Number((size / 1024 ** i).toFixed(2)) * 1}${

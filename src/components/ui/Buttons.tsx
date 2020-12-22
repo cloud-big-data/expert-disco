@@ -52,6 +52,10 @@ const Button = styled.button<{
     &:hover {
       opacity: 0.7;
     }
+
+    &:disabled {
+      opacity: .5;
+    }
   `
       : ''}
 

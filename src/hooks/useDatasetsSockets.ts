@@ -79,6 +79,10 @@ const useDatasetsSockets = (
       setBoardData(res);
     });
 
+    socket.on('downloadReady', (objectUrl: string) => {
+      window.open(objectUrl);
+    });
+
     window.addEventListener('unload', () => socket.emit('unload'));
     return () => window.removeEventListener('unload', () => socket.emit('unload'));
   }, [

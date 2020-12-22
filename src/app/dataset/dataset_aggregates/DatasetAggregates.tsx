@@ -8,6 +8,7 @@ import styled from 'styled-components/macro';
 import DatasetFilters from './DatasetFilters';
 import DatasetSummary from './DatasetSummary';
 import DatasetGrouping from './DatasetGrouping';
+import DatasetExport from './DatasetExport';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
   display: flex;
@@ -84,23 +85,13 @@ const VIEWS = [
     value: 'filter',
     icon: <i className="far fa-filter" />,
   },
-  // {
-  //   label: 'Make pivot-able',
-  //   value: 'pivotable',
-  //   icon: <i className="fad fa-table" />,
-  // },
-  // {
-  //   name: 'Join with other datasets',
-  //   value: 'join',
-  //   icon: <i className="fad fa-code-merge" />,
-  // },
   {
     name: 'Share this dataset',
     value: 'share',
     icon: <i className="fad fa-share" />,
   },
   {
-    name: 'Export to CSV',
+    name: 'Export this dataset',
     value: 'export',
     icon: <i className="fad fa-file-csv" />,
   },
@@ -112,6 +103,7 @@ const ViewLookup: {
   summary: <DatasetSummary />,
   filter: <DatasetFilters />,
   groupings: <DatasetGrouping />,
+  export: <DatasetExport />,
 };
 
 const DatasetAggregates: React.FC = () => {

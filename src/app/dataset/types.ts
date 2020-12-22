@@ -158,3 +158,5 @@ export interface IBoardState {
     active: boolean;
   };
 }
+
+export type Destinations = 'csv' | 'sheets';

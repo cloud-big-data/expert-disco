@@ -86,6 +86,7 @@ const InputField: React.FC<{
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   icon?: React.ReactNode;
   onFocus?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputRef?: React.RefObject<HTMLInputElement>;
   disabled?: boolean;
   role?: string;
@@ -115,7 +116,10 @@ const InputField: React.FC<{
           setActive(true);
           props.onFocus?.(e);
         }}
-        onBlur={() => setActive(false)}
+        onBlur={e => {
+          setActive(false);
+          props.onBlur?.(e);
+        }}
         role={props.role}
       />
     </InputContainer>
