@@ -1,5 +1,5 @@
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Helper } from 'components/ui/Typography';
 import humanizeTimeAgo from 'utils/humanizeTimeAgo';
@@ -57,12 +57,6 @@ const ToolbarContainer = styled.div`
   display: flex;
   padding: 1rem 2.25rem;
 `;
-// const FormulaBarContainer = styled.div`
-//   display: flex;
-//   align-items: center;
-//   width: 100%;
-//   padding: 0 2.25rem;
-// `;
 
 const Dataset: React.FC<{
   readOnly?: boolean;
@@ -70,6 +64,12 @@ const Dataset: React.FC<{
   const [fullScreen, setFullScreen] = useState(false);
   const datasetRef = useRef<HTMLDivElement>(null);
   const { datasetHead } = useContext(DatasetContext)!;
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 500);
+  }, []);
 
   return (
     <DatasetContainer fullScreen={fullScreen} ref={datasetRef}>
@@ -100,33 +100,6 @@ const Dataset: React.FC<{
           <DatasetToolbar />
         </ToolbarContainer>
       )}
-      {/* <FormulaBarContainer>
-        <InputField
-          inputRef={inputRef}
-          disabled={selectedCell === ''}
-          value={
-            selectedCell !== '' ? getCellValueById(boardData.rows, selectedCell) : ''
-          }
-          onFocus={() =>
-            setBoardState({ ...boardState, formulaBar: { active: true } })
-          }
-          onKeyDown={e => {
-            if (e.key === 'Enter') {
-              setBoardState({ ...boardState, formulaBar: { active: false } });
-              inputRef.current?.blur();
-            }
-          }}
-          onChange={e =>
-            setBoardData!(
-              editCellsAndReturnBoard(
-                [{ cellId: selectedCell, updatedValue: e.target.value }],
-                boardData,
-              ),
-            )
-          }
-          icon={<i className="fad fa-function" />}
-        />
-      </FormulaBarContainer> */}
       <ParentGridContainer>
         <Grid />
       </ParentGridContainer>

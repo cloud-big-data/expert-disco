@@ -59,12 +59,6 @@ const Grid: React.FC = () => {
   );
 
   useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 500);
-  }, []);
-
-  useEffect(() => {
     if (isScrolling) {
       getRowSlice(firstVisibleRow, lastVisibleRow);
     }

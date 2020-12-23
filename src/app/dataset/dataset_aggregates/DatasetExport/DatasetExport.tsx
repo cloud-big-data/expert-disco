@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Steps } from 'antd';
-import Styles from 'styles/Styles';
 import { Destinations } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
-// import humanFileSize from 'utils/humanFileSize';
 import { Text } from 'components/ui/Typography';
 import InputField from 'components/ui/InputField';
 import { ButtonPrimary } from 'components/ui/Buttons';
+import SingleSelect from 'components/SingleSelect';
+import Separator from 'components/Separator';
 
 const { Step } = Steps;
 
@@ -22,29 +22,10 @@ const ExportContainer = styled.div`
 
   .destinations__container {
     margin-top: 1rem;
-    display: grid;
-    grid-template-columns: repeat(3, 1.33fr);
   }
 
   .output-settings__container {
     margin-top: 2rem;
-    /* display: flex; */
-  }
-`;
-
-const Destination = styled.button`
-  background: none;
-  display: flex;
-  align-items: center;
-  border: 2px solid ${Styles.faintBorderColor};
-  border-radius: ${Styles.defaultBorderRadius};
-  padding: 1rem;
-  font-size: 1.25rem;
-  box-shadow: ${Styles.boxShadow};
-
-  .icon {
-    font-size: 1.5rem;
-    margin-right: 1rem;
   }
 `;
 
@@ -65,10 +46,12 @@ const DatasetExport: React.FC = () => {
           <Step
             title="Pick a destination"
             description="Where would you like us to send this dataset?"
+            onClick={() => setStep(0)}
           />
           <Step
             title="How should we send it?"
             description="Just a few more details"
+            onClick={() => (destination ? setStep(1) : undefined)}
           />
           <Step title="Access your data" />
         </Steps>
@@ -76,17 +59,19 @@ const DatasetExport: React.FC = () => {
       <div className="body__container">
         {step === 0 && (
           <div className="destinations__container">
-            <Destination
-              onClick={() => {
-                setDestination('csv');
-                setStep(1);
-              }}
-            >
-              <div className="icon">
-                <i className="fad fa-file-csv" />
-              </div>
-              export to csv
-            </Destination>
+            <SingleSelect
+              options={[
+                { label: 'csv', value: 'csv' },
+                { label: 'sheets', value: 'sheets' },
+              ]}
+              onSelect={(dest?: string) => setDestination(dest as Destinations)}
+              selected={destination}
+            />
+            <div className="buttons">
+              <ButtonPrimary onClick={() => setStep(1)} disabled={!destination}>
+                Continue
+              </ButtonPrimary>
+            </div>
           </div>
         )}
         {step === 1 &&
@@ -108,6 +93,7 @@ const DatasetExport: React.FC = () => {
                 }}
                 type="number"
               />
+              <Separator />
               <ButtonPrimary
                 onClick={() => {
                   socket?.emit('exportToCsv', datasetHead.title);
