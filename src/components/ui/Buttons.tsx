@@ -104,7 +104,7 @@ const Button = styled.button<{
     props.danger
       ? `
     border-color: ${Styles.red400};
-    background: ${Styles.red100};
+    background: transparent;
     color: ${Styles.red400};
     &:hover {
       background-color: ${Styles.red400};

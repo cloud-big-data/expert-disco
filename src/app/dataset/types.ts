@@ -105,6 +105,7 @@ export interface IRow {
 
 type UserId = string;
 export interface IBoardData {
+  [key: string]: any;
   visibilitySettings: {
     owner: UserId;
     editors: UserId[];

@@ -10,6 +10,7 @@ import { useQuery } from 'react-query';
 import skyvueFetch from 'services/skyvueFetch';
 import { IBoardState, IBoardData, IBoardHead } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
+import makeBoardDiff from '../lib/makeBoardDiff';
 
 enum DatasetUserTypes {
   owner,
@@ -131,15 +132,8 @@ const DatasetWrapper: React.FC = () => {
   const _setBoardData = (newBoardData: IBoardData) => {
     setBoardData(prevBoardData => {
       if (!prevBoardData) return newBoardData;
-      // todo This should be significantly smarter. It's only set up to handle particular cases.
-      const colDiff = R.difference(prevBoardData.columns, newBoardData.columns);
-      const rowDiff = R.difference(newBoardData.rows, prevBoardData.rows);
-      if (colDiff.length > 0 || rowDiff.length > 0) {
-        socket?.emit('diff', {
-          colDiff: R.difference(prevBoardData.columns, newBoardData.columns),
-          rowDiff: R.difference(newBoardData.rows, prevBoardData.rows),
-        });
-      }
+      const diff = makeBoardDiff(prevBoardData, newBoardData);
+      socket?.emit('diff', diff);
 
       return newBoardData;
     });

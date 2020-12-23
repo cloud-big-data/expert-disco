@@ -45,17 +45,17 @@ const skyvueFetch = (
   };
 
   return {
-    get: async (url: string) =>
+    get: (url: string) =>
       makeCall(url, {
         method: 'GET',
       }),
-    post: async (url: string, body: { [key: string]: any }) =>
+    post: (url: string, body: { [key: string]: any }) =>
       makeCall(url, { method: 'POST', body }),
-    postFile: async (url: string, file: FormData) =>
+    postFile: (url: string, file: FormData) =>
       makeCall(url, { method: 'POST', file }),
-    patch: async (url: string, body: { [key: string]: any }) =>
+    patch: (url: string, body: { [key: string]: any }) =>
       makeCall(url, { method: 'PATCH', body }),
-    delete: async (url: string, body: { [key: string]: any }) =>
+    delete: (url: string, body: { [key: string]: any }) =>
       makeCall(url, { method: 'DELETE', body }),
   };
 };
