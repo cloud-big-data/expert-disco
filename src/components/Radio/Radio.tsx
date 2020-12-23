@@ -13,9 +13,9 @@ const RadioContainer = styled.button<{ selected: boolean }>`
     height: 1rem;
     width: 1rem;
     border-radius: 100%;
-    border: 3px solid ${props => (props.selected ? Styles.purple : Styles.midPurple)};
-    background: ${props =>
-      props.selected ? Styles.midPurple : Styles.purpleAccent};
+    border: 3px solid
+      ${props => (props.selected ? Styles.purple400 : Styles.purple200)};
+    background: ${props => (props.selected ? Styles.purple200 : Styles.purple100)};
   }
 `;
 

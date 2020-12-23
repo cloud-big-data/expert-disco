@@ -1,4 +1,5 @@
 import {
+  ButtonDanger,
   ButtonPrimary,
   ButtonSecondary,
   ButtonTertiary,
@@ -76,7 +77,7 @@ const EditDatasetModal: React.FC<{
           <Text size="lg" len="short">
             Are you sure you want to delete <strong>{datasetTitle}</strong>?
           </Text>
-          <ButtonSecondary onClick={deleteDataset}>Yes, I'm sure</ButtonSecondary>
+          <ButtonDanger onClick={deleteDataset}>Yes, I'm sure</ButtonDanger>
           <ButtonTertiary onClick={() => setDeleteConf(false)}>
             Cancel
           </ButtonTertiary>

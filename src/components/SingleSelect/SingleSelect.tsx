@@ -18,8 +18,10 @@ const SingleSelectContainer = styled.div`
     border-radius: ${Styles.defaultBorderRadius};
     border: 1px solid ${Styles.faintBorderColor};
     text-align: left;
-    background: ${Styles.purpleAccent};
+    background: ${Styles.purple100};
     outline: none;
+    box-shadow: ${Styles.xsBoxShadow};
+    transition-duration: ${Styles.defaultTransitionDuration};
 
     .label {
       margin-left: 0.5rem;
@@ -28,8 +30,9 @@ const SingleSelectContainer = styled.div`
 
   .option:hover {
     cursor: pointer;
-    background: ${Styles.purpleAccent};
-    border-color: ${Styles.purple};
+    background: ${Styles.purple100};
+    border-color: ${Styles.purple400};
+    box-shadow: ${Styles.smBoxShadow};
   }
 `;
 

@@ -112,7 +112,7 @@ const Condition: React.FC<{
         <>
           <IconButton onClick={() => setShowDeleteConf(true)}>
             <i
-              style={{ color: Styles.red, marginRight: '.5rem' }}
+              style={{ color: Styles.red400, marginRight: '.5rem' }}
               className="far fa-times"
             />
           </IconButton>

@@ -13,12 +13,12 @@ const InputContainer = styled.div<{
   background: ${props => (props.disabled ? 'rgba(239, 239, 239, 0.3)' : 'white')};
   border: ${props =>
     props.error
-      ? `2px solid ${Styles.red}`
+      ? `2px solid ${Styles.red400}`
       : `2px solid ${Styles.faintBorderColor}`};
   ${props =>
     props.active
       ? `
-    border: 2px solid ${Styles.purple};
+    border: 2px solid ${Styles.purple400};
   `
       : ''}
   border-radius: .625rem;
@@ -41,7 +41,7 @@ const InputContainer = styled.div<{
       ${props =>
         props.active
           ? `
-        color: ${Styles.purple};
+        color: ${Styles.purple400};
       `
           : ''}
     }
@@ -63,7 +63,7 @@ const Input = styled.input<{
   `
       : ''}
   border: none;
-  color: ${Styles.fontColor};
+  color: ${Styles.dark400};
   padding: ${props => (props.icon ? '0.5rem .75rem .5rem 0' : '.5rem .75rem')};
   outline: none;
   transition-duration: 0.1s;

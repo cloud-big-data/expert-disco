@@ -39,7 +39,7 @@ const CellContainer = styled.div<{
 }>`
   display: flex;
   align-items: center;
-  color: ${Styles.fontColor};
+  color: ${Styles.dark400};
   height: 100%;
   width: ${props => props.width}px;
   max-width: ${props => props.width}px;
@@ -86,7 +86,7 @@ const CellContainer = styled.div<{
   ${props =>
     props.selected
       ? `
-    border: 2px solid ${Styles.purple};
+    border: 2px solid ${Styles.purple400};
     border-radius: ${Styles.defaultBorderRadius}; 
     box-shadow: ${Styles.smBoxShadow};
   `
@@ -102,14 +102,14 @@ const CellContainer = styled.div<{
   ${props =>
     props.highlighted
       ? `
-    background: ${Styles.purpleAccent};
+    background: ${Styles.purple100};
   `
       : ''}
 
   ${props =>
     props.isCopying
       ? `
-    border: 2px dashed ${Styles.purple};
+    border: 2px dashed ${Styles.purple400};
     border-radius: ${Styles.defaultBorderRadius};
   `
       : ''}

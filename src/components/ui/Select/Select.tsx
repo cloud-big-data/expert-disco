@@ -136,8 +136,8 @@ const SelectContainer = styled.div<{ fill?: string }>`
   .select-search:not(.is-loading):not(.select-search--multiple)
     .select-search__value::after {
     transform: rotate(45deg);
-    border-right: 2px solid ${Styles.fontColor};
-    border-bottom: 2px solid ${Styles.fontColor};
+    border-right: 2px solid ${Styles.dark400};
+    border-bottom: 2px solid ${Styles.dark400};
     pointer-events: none;
   }
 

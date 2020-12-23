@@ -44,7 +44,7 @@ const DatasetCardContainer = styled.div`
       }
       &:hover {
         * {
-          color: ${Styles.purple};
+          color: ${Styles.purple400};
         }
       }
     }

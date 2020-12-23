@@ -11,7 +11,7 @@ const MetricContainer = styled.div`
   align-items: center;
   margin: 0;
   h5 {
-    color: ${Styles.purple};
+    color: ${Styles.purple400};
     margin: 0;
   }
 `;

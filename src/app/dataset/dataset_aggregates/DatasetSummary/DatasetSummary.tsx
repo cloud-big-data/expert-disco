@@ -185,7 +185,7 @@ const DatasetSummary: React.FC = () => {
             {validateSizeLimits(sizeLimits, tool.limits) ? (
               <i style={{ color: Styles.green }} className="fas fa-check-square" />
             ) : (
-              <i style={{ color: Styles.red }} className="fad fa-times-square" />
+              <i style={{ color: Styles.red400 }} className="fad fa-times-square" />
             )}
             <Label unBold>{tool.label}</Label>
           </div>

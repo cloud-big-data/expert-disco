@@ -32,7 +32,10 @@ const NewRows: React.FC = () => {
               setModalIsOpen(true);
             },
             icon: (
-              <i style={{ color: Styles.purple }} className="fad fa-line-columns" />
+              <i
+                style={{ color: Styles.purple400 }}
+                className="fad fa-line-columns"
+              />
             ),
           },
           {

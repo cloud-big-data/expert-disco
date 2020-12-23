@@ -52,7 +52,7 @@ const LeftNav = styled.div`
 const NavItem = styled.div<{ active?: boolean }>`
   font-weight: ${props => (props.active ? 'bold' : 'normal')};
   i {
-    color: ${props => (props.active ? Styles.purple : 'inherit')};
+    color: ${props => (props.active ? Styles.purple400 : 'inherit')};
   }
   .label__container {
     transition-duration: 0.2s;
@@ -95,7 +95,7 @@ const NavItem = styled.div<{ active?: boolean }>`
   }
   &:nth-of-type(6) {
     i {
-      color: ${Styles.red};
+      color: ${Styles.red400};
     }
   }
 `;

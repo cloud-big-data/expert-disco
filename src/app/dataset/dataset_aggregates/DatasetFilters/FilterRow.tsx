@@ -28,7 +28,7 @@ const OperatorBreak = styled.button`
   font-size: 0.8rem;
   max-width: 5rem;
   &:hover {
-    color: ${Styles.fontColor};
+    color: ${Styles.dark400};
   }
 `;
 

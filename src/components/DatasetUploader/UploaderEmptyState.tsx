@@ -1,5 +1,5 @@
 import { ButtonSecondary } from 'components/ui/Buttons';
-import { Label } from 'components/ui/Typography';
+import { TertiaryLabel } from 'components/ui/Typography';
 import React from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
@@ -11,22 +11,14 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-
-  .icon__container {
-    i {
-      font-size: 6rem;
-      color: ${Styles.purple};
-    }
-  }
+  border: 2px dashed ${Styles.dark100};
+  border-radius: ${Styles.defaultBorderRadius};
 `;
 
 const UploaderEmptyState: React.FC = () => (
   <Container>
-    <div className="icon__container">
-      <i className="fad fa-file-csv" />
-    </div>
     <h3>Drag and drop your file(s) here to begin uploading</h3>
-    <Label>OR</Label>
+    <TertiaryLabel style={{ marginBottom: 0 }}>OR</TertiaryLabel>
     <br />
     <ButtonSecondary>Browse files</ButtonSecondary>
   </Container>

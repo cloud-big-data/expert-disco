@@ -63,8 +63,8 @@ const Button = styled.button<{
     props.secondary
       ? `
     background: transparent;
-    border-color: ${Styles.fontColor};
-    color: ${Styles.fontColor};
+    border-color: ${Styles.dark400};
+    color: ${Styles.dark400};
 
     &:hover {
       background: linear-gradient(115.8deg, #6e30f2 0%, #86e2ff 100%);
@@ -84,13 +84,13 @@ const Button = styled.button<{
     props.tertiary
       ? `
       border-color: transparent;
-      color: ${Styles.fontColor};
+      color: ${Styles.dark400};
       background: transparent;
 
       &:hover {
-        color: ${Styles.purple};
+        color: ${Styles.purple400};
         * {
-          color: ${Styles.purple};
+          color: ${Styles.purple400};
         }
       }
 
@@ -103,10 +103,13 @@ const Button = styled.button<{
   ${props =>
     props.danger
       ? `
-    border-color: ${Styles.red};
-    background: transparent;
+    border-color: ${Styles.red400};
+    background: ${Styles.red100};
+    color: ${Styles.red400};
     &:hover {
-      background-color: #fa9596;
+      background-color: ${Styles.red400};
+      border-color: ${Styles.red200};
+      color: white;
     }
   `
       : ''}
@@ -123,7 +126,7 @@ const Button = styled.button<{
 
       &:hover {
         i {
-          color: ${Styles.purple};
+          color: ${Styles.purple400};
         }
       }
     `

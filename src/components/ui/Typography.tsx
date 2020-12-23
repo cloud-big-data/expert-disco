@@ -14,7 +14,7 @@ const TextContainer = styled.p<{
   len: string;
   danger?: boolean;
 }>`
-  ${props => (props.danger ? `color: ${Styles.red};` : '')}
+  ${props => (props.danger ? `color: ${Styles.red400};` : '')}
   ${props =>
     props.size === 'sm' && props.len === 'short'
       ? `
@@ -75,7 +75,7 @@ const LabelContainer = styled.span<{
 }>`
   display: flex;
   font-weight: ${props => (props.unBold ? 500 : 600)};
-  color: ${Styles.fontColor};
+  color: ${Styles.dark400};
   margin: 0.5rem 0;
   ${props =>
     props.hoverBold
@@ -90,7 +90,7 @@ const LabelContainer = styled.span<{
     props.hoverPurple
       ? `
     &:hover {
-      color: ${Styles.purple};
+      color: ${Styles.purple400};
     }
   `
       : ''}
@@ -129,12 +129,25 @@ const Helper: React.FC<{
   <HelperContainer style={style}>{children}</HelperContainer>
 );
 
-const Pill = styled.p<{ color: 'green' | 'red' }>`
+const PillColor: {
+  [key in 'green' | 'red' | 'softGray']: string;
+} = {
+  green: Styles.green,
+  red: Styles.red400,
+  softGray: Styles.softGray,
+};
+
+const Pill = styled.p<{ color?: 'green' | 'red' | 'softGray' }>`
   display: block;
   width: auto;
   border-radius: ${Styles.defaultBorderRadius};
   padding: 0.5rem;
-  background: ${props => (props.color === 'green' ? Styles.green : Styles.red)};
+  background: ${props => PillColor[props.color ?? 'red']};
 `;
 
-export { Text, Helper, DangerText, Label, Pill };
+const TertiaryLabel = styled.p`
+  color: ${Styles.softGray} !important;
+  font-weight: 700;
+`;
+
+export { Text, Helper, DangerText, Label, Pill, TertiaryLabel };

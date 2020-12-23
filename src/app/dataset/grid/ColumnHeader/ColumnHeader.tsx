@@ -127,7 +127,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       onClick: () => {
         setBoardData!(boardActions.removeColumn(_id));
       },
-      icon: <i style={{ color: Styles.red }} className="fal fa-times-circle" />,
+      icon: <i style={{ color: Styles.red400 }} className="fal fa-times-circle" />,
     },
     {
       label: 'Format',
@@ -140,7 +140,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       icon: (
         <i
           style={{
-            color: !columnSorting?.direction ? Styles.orange : Styles.fontColor,
+            color: !columnSorting?.direction ? Styles.orange : Styles.dark400,
           }}
           className="fas fa-sort"
         />
@@ -153,7 +153,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         <i
           style={{
             color:
-              columnSorting?.direction === 'asc' ? Styles.orange : Styles.fontColor,
+              columnSorting?.direction === 'asc' ? Styles.orange : Styles.dark400,
           }}
           className="fas fa-sort-down"
         />
@@ -166,7 +166,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         <i
           style={{
             color:
-              columnSorting?.direction === 'desc' ? Styles.orange : Styles.fontColor,
+              columnSorting?.direction === 'desc' ? Styles.orange : Styles.dark400,
           }}
           className="fas fa-sort-up"
         />

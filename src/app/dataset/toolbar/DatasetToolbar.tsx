@@ -40,7 +40,7 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
       : `
     &:hover {
       * {
-        color: ${Styles.purple};
+        color: ${Styles.purple400};
       }
     }
   `}

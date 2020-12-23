@@ -9,7 +9,7 @@ const ActiveDragContainer = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 2px dashed ${Styles.purple};
+  border: 2px dashed ${Styles.purple400};
   border-radius: ${Styles.defaultBorderRadius};
 `;
 

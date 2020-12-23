@@ -97,10 +97,10 @@ const UserDropdownExpanded = styled.div`
   }
 
   a.active {
-    color: ${Styles.purple};
+    color: ${Styles.purple400};
     font-weight: bold;
     * {
-      color: ${Styles.purple};
+      color: ${Styles.purple400};
     }
   }
 `;

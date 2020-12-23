@@ -13,9 +13,9 @@ const ErrorContainer = styled.div`
   .x__container {
     font-size: 10rem;
     font-weight: bold;
-    color: ${Styles.red};
+    color: ${Styles.red400};
   }
-  border: 2px solid ${Styles.red};
+  border: 2px solid ${Styles.red400};
   border-radius: ${Styles.defaultBorderRadius};
 `;
 

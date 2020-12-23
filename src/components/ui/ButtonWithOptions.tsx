@@ -24,7 +24,7 @@ const Container = styled.button`
   transition-duration: 0.2s;
 
   .dropdown__container {
-    color: ${Styles.fontColor};
+    color: ${Styles.dark400};
     margin-bottom: -3rem;
     right: 2rem;
   }

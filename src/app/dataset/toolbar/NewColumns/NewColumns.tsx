@@ -47,7 +47,10 @@ const NewColumns: React.FC = () => {
               setView(NewColumnViews.multipleEmpty);
             },
             icon: (
-              <i style={{ color: Styles.purple }} className="fad fa-line-columns" />
+              <i
+                style={{ color: Styles.purple400 }}
+                className="fad fa-line-columns"
+              />
             ),
           },
           {
@@ -57,7 +60,10 @@ const NewColumns: React.FC = () => {
               setView(NewColumnViews.aggregateColumn);
             },
             icon: (
-              <i style={{ color: Styles.red }} className="fad fa-flux-capacitor" />
+              <i
+                style={{ color: Styles.red400 }}
+                className="fad fa-flux-capacitor"
+              />
             ),
           },
           {

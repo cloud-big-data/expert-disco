@@ -22,7 +22,7 @@ const ModalContainer = styled.div`
     padding: 0;
     color: rgba(0, 0, 0, 0.4);
     &:hover {
-      color: ${Styles.purple};
+      color: ${Styles.purple400};
     }
   }
 
