@@ -162,10 +162,18 @@ const DatasetWrapper: React.FC = () => {
     formatting: [],
   };
 
+  const alwaysEditableFields = R.omit(['sortings']);
+  const readOnly =
+    ![DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType) &&
+    (!boardData ||
+      !R.whereEq(alwaysEditableFields(boardData.layers))(
+        alwaysEditableFields(initial_layers),
+      ));
+
   return (
     <DatasetContext.Provider
       value={{
-        readOnly: !boardData || !R.whereEq(boardData.layers)(initial_layers),
+        readOnly,
         socket,
         datasetHead,
         boardData,
