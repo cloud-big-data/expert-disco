@@ -66,6 +66,8 @@ const DatasetWrapper: React.FC = () => {
   }>({});
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [currentRevision, setCurrentRevision] = useState(0);
+  const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
+
   const changeHistoryRef = useRef<IBoardData[]>([]);
   const { datasetId } = useParams<{ datasetId: string }>();
 
@@ -106,6 +108,7 @@ const DatasetWrapper: React.FC = () => {
       datasetHead,
     },
     changeHistoryRef,
+    setFilesToDownload,
   );
 
   const loader = (
@@ -182,6 +185,9 @@ const DatasetWrapper: React.FC = () => {
         },
       }}
     >
+      {filesToDownload.map(file => (
+        <iframe key={file} title="file" src={file} style={{ display: 'none' }} />
+      ))}
       <CustomerNav wide email={user.email} />
       {userType === DatasetUserTypes.owner && <DatasetWrapperOwner />}
     </DatasetContext.Provider>

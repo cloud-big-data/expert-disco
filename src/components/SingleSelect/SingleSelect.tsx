@@ -42,8 +42,10 @@ const SingleSelect: React.FC<{
   onSelect: (selected?: string) => void;
 }> = ({ options, selected, onSelect }) => (
   <SingleSelectContainer>
-    {options.map(opt => (
-      <button
+    {options.map((opt, index) => (
+      <div
+        role="button"
+        tabIndex={index}
         key={opt.value}
         onClick={() => onSelect(opt.value === selected ? undefined : opt.value)}
         className={classNames('option', { selected: selected === opt.value })}
@@ -52,7 +54,7 @@ const SingleSelect: React.FC<{
         <span className="label">
           <Label unBold>{opt.label}</Label>
         </span>
-      </button>
+      </div>
     ))}
   </SingleSelectContainer>
 );

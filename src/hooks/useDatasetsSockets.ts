@@ -21,6 +21,7 @@ const useDatasetsSockets = (
     datasetHead: IBoardHead;
   },
   changeHistoryRef: React.MutableRefObject<Array<IBoardData>>,
+  setFilesToDownload: (files: string[]) => void,
 ) => {
   const { userId, datasetId } = query;
   const {
@@ -79,8 +80,12 @@ const useDatasetsSockets = (
       setBoardData(res);
     });
 
-    socket.on('downloadReady', (objectUrl: string) => {
-      window.open(objectUrl);
+    socket.on('downloadReady', (objectUrls: string[]) => {
+      setFilesToDownload(objectUrls);
+
+      setTimeout(() => {
+        setFilesToDownload([]);
+      }, 5000);
     });
 
     window.addEventListener('unload', () => socket.emit('unload'));
@@ -97,6 +102,7 @@ const useDatasetsSockets = (
     datasetHead,
     skyvueFileSize,
     socketObj,
+    setFilesToDownload,
   ]);
 
   useEffect(() => {

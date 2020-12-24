@@ -58,11 +58,11 @@ const DatasetExport: React.FC = () => {
       </div>
       <div className="body__container">
         {step === 0 && (
-          <div className="destinations__container">
+          <div className="output-settings__container">
             <SingleSelect
               options={[
-                { label: 'csv', value: 'csv' },
-                { label: 'sheets', value: 'sheets' },
+                { label: 'CSV', value: 'csv' },
+                { label: 'Google Sheets', value: 'sheets' },
               ]}
               onSelect={(dest?: string) => setDestination(dest as Destinations)}
               selected={destination}
@@ -92,11 +92,15 @@ const DatasetExport: React.FC = () => {
                   }
                 }}
                 type="number"
+                prepend="files"
               />
               <Separator />
               <ButtonPrimary
                 onClick={() => {
-                  socket?.emit('exportToCsv', datasetHead.title);
+                  socket?.emit('exportToCsv', {
+                    title: datasetHead.title,
+                    quantity: numExports ?? 1,
+                  });
                   setStep(2);
                 }}
                 disabled={Number.isNaN(numExports) || numExports < 1}

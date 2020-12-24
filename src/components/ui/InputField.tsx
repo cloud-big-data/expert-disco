@@ -73,6 +73,48 @@ const Input = styled.input<{
   }
 `;
 
+const ErrorField = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  margin-bottom: 0.5rem;
+  * {
+    color: ${Styles.red400};
+  }
+  i {
+    margin-right: 0.5rem;
+  }
+`;
+
+const TextContainer = styled.div<{ pre?: boolean }>`
+  color: ${Styles.dark400};
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 0 0.75rem;
+  ${props => (props.pre ? `padding-right: 0;` : '')}
+
+  ${props =>
+    props.pre
+      ? `
+    &:after {
+      content: '';
+      border: 1px solid ${Styles.faintBorderColor};
+      height: 75%;
+      margin-left: .75rem;
+    }
+  `
+      : `
+    &:before {
+      content: '';
+      border: 1px solid ${Styles.faintBorderColor};
+      height: 75%;
+      margin-right: .75rem;
+    }
+      `}
+`;
+
 const InputField: React.FC<{
   onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
@@ -91,38 +133,55 @@ const InputField: React.FC<{
   disabled?: boolean;
   role?: string;
   unsetHeight?: boolean;
+  validationError?: string;
+  append?: string;
+  prepend?: string;
 }> = props => {
   const [active, setActive] = useState(false);
 
   return (
-    <InputContainer disabled={props.disabled} active={active} error={!!props.error}>
-      {props.icon && <div className="icon__container">{props.icon}</div>}
-      <Input
-        unsetHeight={props.unsetHeight}
-        ref={props.inputRef}
-        placeholder={props.placeholder}
+    <>
+      {props.validationError && (
+        <ErrorField>
+          <i className="fal fa-times-circle" />
+          <span>{props.validationError}</span>
+        </ErrorField>
+      )}
+      <InputContainer
         disabled={props.disabled}
-        className={props.className}
-        id={props.id}
-        style={props.style}
-        type={props.type ?? 'text'}
-        onChange={props.onChange}
-        defaultValue={props.defaultValue}
-        value={props.value || ''}
-        error={props.error}
-        onKeyDown={props.onKeyDown}
-        icon={!!props.icon}
-        onFocus={e => {
-          setActive(true);
-          props.onFocus?.(e);
-        }}
-        onBlur={e => {
-          setActive(false);
-          props.onBlur?.(e);
-        }}
-        role={props.role}
-      />
-    </InputContainer>
+        active={active}
+        error={!!props.error || !!props.validationError}
+      >
+        {props.icon && <div className="icon__container">{props.icon}</div>}
+        {props.prepend && <TextContainer pre>{props.prepend}</TextContainer>}
+        <Input
+          unsetHeight={props.unsetHeight}
+          ref={props.inputRef}
+          placeholder={props.placeholder}
+          disabled={props.disabled}
+          className={props.className}
+          id={props.id}
+          style={props.style}
+          type={props.type ?? 'text'}
+          onChange={props.onChange}
+          defaultValue={props.defaultValue}
+          value={props.value || ''}
+          error={props.error}
+          onKeyDown={props.onKeyDown}
+          icon={!!props.icon}
+          onFocus={e => {
+            setActive(true);
+            props.onFocus?.(e);
+          }}
+          onBlur={e => {
+            setActive(false);
+            props.onBlur?.(e);
+          }}
+          role={props.role}
+        />
+        {props.append && <TextContainer>{props.append}</TextContainer>}
+      </InputContainer>
+    </>
   );
 };
 
