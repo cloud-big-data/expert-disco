@@ -59,6 +59,7 @@ export const initialBoardState = {
 
 const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
   const [boardData, setBoardData] = useState<IBoardData | undefined>(undefined);
   const [boardState, setBoardState] = useState<IBoardState>(initialBoardState);
   const [boardHead, setBoardHead] = useState<{
@@ -117,6 +118,8 @@ const DatasetWrapper: React.FC = () => {
     },
     changeHistoryRef,
     setFilesToDownload,
+    loading,
+    setLoading,
   );
 
   const loader = (
@@ -170,6 +173,7 @@ const DatasetWrapper: React.FC = () => {
         changeHistoryRef,
         currentRevision,
         getRowSlice: (first: number, last: number) => {
+          setLoading(true);
           socket?.emit('getSlice', { first, last });
         },
         redo: () => {
@@ -191,6 +195,8 @@ const DatasetWrapper: React.FC = () => {
           setBoardData(changeHistoryRef.current[prevRevision]);
           setCurrentRevision(prevRevision);
         },
+        loading,
+        setLoading,
       }}
     >
       {filesToDownload.map(file => (

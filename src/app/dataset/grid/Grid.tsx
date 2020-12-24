@@ -55,7 +55,6 @@ const Grid: React.FC = () => {
       first: boardData.rows[0]?.index ?? 0,
       last: R.last(boardData.rows)?.index ?? 100,
     },
-    getRowSlice,
   );
 
   useEffect(() => {

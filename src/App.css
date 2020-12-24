@@ -150,6 +150,17 @@ a:not(.no-hover):hover {
   }
 }
 
+@keyframes placeholderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  
+  100% {
+    background-position: 468px 0; 
+  }
+}
+
+
 /* #root .ant-checkbox::after,
 #root .ant-checkbox-inner {
   border-color: #eaf5f7;

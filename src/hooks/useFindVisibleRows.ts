@@ -10,7 +10,6 @@ const useFindVisibleRows = (
     first: number;
     last: number;
   },
-  getRowSlice: (firstVisibleRow: number, lastVisibleRow: number) => void,
 ): [number, number, boolean] => {
   const [visibleRows, setVisibleRows] = useState<[number, number]>([first, last]);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -41,7 +40,7 @@ const useFindVisibleRows = (
 
     grid.addEventListener('scroll', handleScroll);
     return () => grid.removeEventListener('scroll', handleScroll);
-  }, [gridRef]);
+  }, [gridRef, visibleRows]);
 
   return [...visibleRows, isScrolling];
 };

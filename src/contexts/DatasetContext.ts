@@ -15,6 +15,8 @@ interface IDatasetContext {
   undo: () => void;
   redo: () => void;
   getRowSlice: (start: number, end: number) => void;
+  loading: boolean;
+  setLoading: (isLoading: boolean) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);
