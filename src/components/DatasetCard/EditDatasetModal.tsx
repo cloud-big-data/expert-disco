@@ -6,7 +6,7 @@ import {
 } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import Modal from 'components/ui/Modal';
-import { Text, DangerText, Label } from 'components/ui/Typography';
+import { Text, DangerText } from 'components/ui/Typography';
 
 import React, { useState } from 'react';
 import styled from 'styled-components/macro';
@@ -84,9 +84,8 @@ const EditDatasetModal: React.FC<{
         </div>
         <div className="body" style={{ display: deleteConf ? 'none' : 'flex' }}>
           <div className="edit-name__container">
-            <Label>Dataset name:</Label>
-            <br />
             <InputField
+              label="Dataset name:"
               value={datasetTitle}
               onChange={e => setDatasetTitle(e.target.value)}
             />

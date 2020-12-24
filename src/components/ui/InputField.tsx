@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import React, { useState } from 'react';
 import Styles from 'styles/Styles';
+import { Label } from './Typography';
 
 const InputContainer = styled.div<{
   error: boolean;
@@ -76,7 +77,6 @@ const Input = styled.input<{
 const ErrorField = styled.div`
   display: flex;
   align-items: center;
-  padding-left: 0.75rem;
   margin-bottom: 0.5rem;
   * {
     color: ${Styles.red400};
@@ -136,11 +136,13 @@ const InputField: React.FC<{
   validationError?: string;
   append?: string;
   prepend?: string;
+  label?: string;
 }> = props => {
   const [active, setActive] = useState(false);
 
   return (
     <>
+      {props.label && <Label>{props.label}</Label>}
       {props.validationError && (
         <ErrorField>
           <i className="fal fa-times-circle" />

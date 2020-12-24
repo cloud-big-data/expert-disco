@@ -63,6 +63,7 @@ const DatasetExport: React.FC = () => {
               options={[
                 { label: 'CSV', value: 'csv' },
                 { label: 'Google Sheets', value: 'sheets' },
+                { label: 'To a new Skyvue', value: 'skyvue' },
               ]}
               onSelect={(dest?: string) => setDestination(dest as Destinations)}
               selected={destination}
