@@ -163,7 +163,6 @@ const Cell: React.FC<ICellProps> = ({
     setBoardState,
     boardData,
     setBoardData,
-    loading,
   } = useContext(DatasetContext)!;
   const [errorNotificationIsOpen, setErrorNotification] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -209,7 +208,7 @@ const Cell: React.FC<ICellProps> = ({
       highlighted={highlighted}
       position={position}
       selected={selected}
-      loading={loading}
+      loading={false} // Add a smoother loading experience later
       onContextMenu={e => {
         e.preventDefault();
         setShowContextMenu(!showContextMenu);

@@ -36,6 +36,7 @@ const ColumnHeaderContainer = styled.div<{
   overflow: hidden;
   padding: 0.5rem;
   padding-right: 0;
+  box-shadow: ${Styles.xsBoxShadow};
 
   &:hover {
     font-weight: bold;
