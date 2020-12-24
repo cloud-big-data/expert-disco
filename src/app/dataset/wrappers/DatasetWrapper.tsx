@@ -2,7 +2,7 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as R from 'ramda';
 import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
@@ -76,6 +76,14 @@ const DatasetWrapper: React.FC = () => {
       ? skyvueFetch(user.accessToken).get(`/datasets/${datasetId}`)
       : () => undefined,
   );
+
+  const title = data?.dataset?.title;
+
+  useEffect(() => {
+    if (title && `${title} - Skyvue` !== document.title) {
+      document.title = `${title} - Skyvue`;
+    }
+  }, [title]);
 
   const datasetHead = useMemo<IBoardHead>(
     () => ({

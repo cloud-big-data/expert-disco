@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import logo from 'images/white_bg.svg';
 
 const CustomerNavContainer = styled.div<{ wide?: boolean }>`
   top: 0;
@@ -105,6 +106,26 @@ const UserDropdownExpanded = styled.div`
   }
 `;
 
+const LogoContainer = styled.div`
+  display: flex;
+  height: 2rem;
+  width: 6rem;
+  justify-content: flex-start;
+  transition-duration: ${Styles.defaultTransitionDuration};
+
+  img {
+    height: 100%;
+    width: 100%;
+    transition-duration: ${Styles.defaultTransitionDuration};
+  }
+
+  &:hover {
+    img {
+      opacity: 0.6;
+    }
+  }
+`;
+
 const CustomerNav: React.FC<{
   email: string;
   wide?: boolean;
@@ -118,7 +139,9 @@ const CustomerNav: React.FC<{
     <CustomerNavContainer wide={wide}>
       <div className="inner">
         <Link style={{ textDecoration: 'none' }} to="/home">
-          <span className="customer-nav__icon">Skyvue.io</span>
+          <LogoContainer>
+            <img alt="" src={logo} />
+          </LogoContainer>
         </Link>
         <UserDropdownContainer
           ref={expandedRef}
