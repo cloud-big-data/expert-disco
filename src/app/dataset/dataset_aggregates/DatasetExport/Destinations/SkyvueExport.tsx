@@ -35,9 +35,9 @@ const SkyvueExport: FC = () => {
     <ExportContainer>
       <h5>Export to a new Skyvue</h5>
       <Text size="sm" len="short">
-        Different apps require different sized files. Skyvue allows you to export
-        your dataset to as many files as you need in order to get manageable file
-        sizes that you can open in all of your favorite data tools.
+        Duplicate {datasetHead.title ?? 'this dataset'} and create a new Skyvue
+        without filters, groupings, or sorting applied. It's a snapshot in time of
+        what your dataset currently looks like.
       </Text>
 
       <InputField
