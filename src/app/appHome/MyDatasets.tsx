@@ -78,11 +78,12 @@ const MyDatasets: React.FC = () => {
   const { accessToken } = useContext(UserContext);
   const [newDatasetModalIsOpen, setNewDatasetModalIsOpen] = useState(false);
   const fetcher = skyvueFetch(accessToken!);
-
+  const [loadingState, setLoadingState] = useState(false);
   const { isLoading, data, refetch } = useQuery(newDatasetModalIsOpen, () =>
     fetcher.get('/datasets'),
   );
   const duplicateDataset = async (datasetId: string, title: string) => {
+    setLoadingState(true);
     const duplicatedDataset = await fetcher.post(
       `/datasets/duplicate/${datasetId}`,
       {
@@ -90,6 +91,8 @@ const MyDatasets: React.FC = () => {
         raw: true,
       },
     );
+
+    setLoadingState(false);
 
     if (duplicatedDataset._id) {
       refetch();
@@ -142,7 +145,7 @@ const MyDatasets: React.FC = () => {
         </div>
       )}
       <ListContainer>
-        {isLoading && <Loading />}
+        {(loadingState || isLoading) && <Loading />}
         {datasets.map(dataset => (
           <DatasetCard
             key={dataset._id}
