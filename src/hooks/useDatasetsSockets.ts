@@ -91,6 +91,10 @@ const useDatasetsSockets = (
       }, 5000);
     });
 
+    socket.on('duplicateReady', ({ _id }: { _id: string }) => {
+      window.open(`${window.location.host}/dataset/${_id}`);
+    });
+
     window.addEventListener('unload', () => socket.emit('unload'));
     return () => window.removeEventListener('unload', () => socket.emit('unload'));
   }, [

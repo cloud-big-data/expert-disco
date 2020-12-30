@@ -124,6 +124,7 @@ export interface IBoardData {
 }
 
 export interface IBoardHead {
+  _id?: string;
   title?: string;
   updatedAt?: string;
   createdAt?: string;
@@ -160,4 +161,4 @@ export interface IBoardState {
   };
 }
 
-export type Destinations = 'csv' | 'sheets';
+export type Destinations = 'csv' | 'sheets' | 'skyvue';

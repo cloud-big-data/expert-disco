@@ -17,7 +17,7 @@ const InputContainer = styled.div<{
       ? `2px solid ${Styles.red400}`
       : `2px solid ${Styles.faintBorderColor}`};
   ${props =>
-    props.active
+    props.active && !props.error
       ? `
     border: 2px solid ${Styles.purple400};
   `
@@ -26,7 +26,7 @@ const InputContainer = styled.div<{
 
   &:hover {
     ${props =>
-      props.active
+      props.active || props.error
         ? ``
         : `
       border: 2px solid rgba(0,0,0,.1);

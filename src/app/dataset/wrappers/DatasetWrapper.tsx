@@ -88,6 +88,7 @@ const DatasetWrapper: React.FC = () => {
 
   const datasetHead = useMemo<IBoardHead>(
     () => ({
+      _id: data?.dataset?._id,
       title: data?.dataset?.title,
       createdAt: data?.dataset?.createdAt,
       updatedAt: data?.dataset?.updatedAt,

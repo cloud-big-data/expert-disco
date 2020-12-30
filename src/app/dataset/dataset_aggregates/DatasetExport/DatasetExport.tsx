@@ -8,6 +8,7 @@ import InputField from 'components/ui/InputField';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import SingleSelect from 'components/SingleSelect';
 import Separator from 'components/Separator';
+import SkyvueExport from './Destinations/SkyvueExport';
 
 const { Step } = Steps;
 
@@ -108,6 +109,10 @@ const DatasetExport: React.FC = () => {
               >
                 Start download
               </ButtonPrimary>
+            </div>
+          ) : destination === 'skyvue' ? (
+            <div className="output-settings__container">
+              <SkyvueExport />
             </div>
           ) : (
             ''

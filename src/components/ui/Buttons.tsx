@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import React from 'react';
 import Styles from 'styles/Styles';
+import InlineLoading from './InlineLoading';
 
 interface IButton {
   id?: string;
@@ -10,6 +11,7 @@ interface IButton {
   style?: React.CSSProperties;
   className?: string;
   icon?: boolean;
+  loading?: boolean;
 }
 
 const Button = styled.button<{
@@ -31,6 +33,8 @@ const Button = styled.button<{
   margin: 0.25em 0;
   cursor: pointer;
   border: 2px solid ${Styles.faintBorderColor};
+  display: flex;
+  align-items: center;
 
   &:disabled {
     pointer-events: none;
@@ -142,6 +146,11 @@ const ButtonPrimary: React.FC<IButton> = props => (
     style={props.style}
     className={props.className}
   >
+    {props.loading && (
+      <div style={{ marginRight: '1rem', marginLeft: '-1rem' }}>
+        <InlineLoading style={{ width: '30px' }} fill="white" />
+      </div>
+    )}
     {props.children}
   </Button>
 );

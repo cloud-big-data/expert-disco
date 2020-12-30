@@ -1,5 +1,5 @@
 const skyvueFetch = (
-  accessToken?: string,
+  accessToken?: string | null,
 ): {
   get: (url: string) => Promise<any>;
   post: (url: string, body: { [key: string]: any }) => Promise<any>;
