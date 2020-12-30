@@ -77,9 +77,24 @@ const ListContainer = styled.div`
 const MyDatasets: React.FC = () => {
   const { accessToken } = useContext(UserContext);
   const [newDatasetModalIsOpen, setNewDatasetModalIsOpen] = useState(false);
+  const fetcher = skyvueFetch(accessToken!);
+
   const { isLoading, data, refetch } = useQuery(newDatasetModalIsOpen, () =>
-    skyvueFetch(accessToken!).get('/datasets'),
+    fetcher.get('/datasets'),
   );
+  const duplicateDataset = async (datasetId: string, title: string) => {
+    const duplicatedDataset = await fetcher.post(
+      `/datasets/duplicate/${datasetId}`,
+      {
+        newTitle: title,
+        raw: true,
+      },
+    );
+
+    if (duplicatedDataset._id) {
+      refetch();
+    }
+  };
 
   const { error } = data ?? {};
   if (error) {
@@ -135,6 +150,7 @@ const MyDatasets: React.FC = () => {
             timestamp={dataset.updatedAt}
             title={dataset.title}
             refetch={refetch}
+            duplicateDataset={duplicateDataset}
           />
         ))}
       </ListContainer>

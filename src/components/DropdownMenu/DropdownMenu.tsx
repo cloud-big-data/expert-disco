@@ -1,6 +1,5 @@
 import { Label } from 'components/ui/Typography';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import usePushToFront from 'hooks/usePushToFront';
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
@@ -78,7 +77,6 @@ const DropdownMenu: React.FC<{
 }> = ({ closeMenu, options, pos }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   useHandleClickOutside(menuRef, closeMenu);
-  usePushToFront(menuRef);
 
   // handles closing the context menu if you target the context menu on another node
   useEffect(() => {
@@ -93,13 +91,23 @@ const DropdownMenu: React.FC<{
   }, [closeMenu]);
 
   return (
-    <RightClickMenuContainer className="push-to-front" pos={pos} ref={menuRef}>
+    <RightClickMenuContainer
+      onClick={e => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+      className="push-to-front"
+      pos={pos}
+      ref={menuRef}
+    >
       <div className="options__container">
         <FadeIn>
           {options.map(opt => (
             <MenuOption
               key={opt.label}
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
                 opt.onClick();
               }}
             >

@@ -1,5 +1,6 @@
+import DropdownMenu from 'components/DropdownMenu';
 import { Helper, Label, Text } from 'components/ui/Typography';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
@@ -57,58 +58,82 @@ const DatasetCardBody: React.FC<{
   timestamp: string;
   description?: string;
   setEditModalIsOpen: (open: boolean) => void;
-  setContextMenuIsOpen: () => void;
+  duplicateDataset: (datasetId: string, title: string) => Promise<void>;
 }> = ({
   datasetId,
   title,
   timestamp,
   description,
   setEditModalIsOpen,
-  setContextMenuIsOpen,
-}) => (
-  <Link
-    className="no-hover"
-    style={{ textDecoration: 'none' }}
-    to={`/dataset/${datasetId}`}
-    onContextMenu={e => {
-      e.preventDefault();
-      setContextMenuIsOpen();
-    }}
-  >
-    <DatasetCardContainer>
-      <div className="background" />
-      <div className="main">
-        <div className="meta__bar">
-          <div className="time-ago__container">
-            <Helper>Last updated: {humanizeTimeAgo(timestamp)}</Helper>
-          </div>
-          <div className="actions">
-            <button
-              onClick={e => {
-                e.stopPropagation();
-                e.preventDefault();
-                setEditModalIsOpen(true);
-              }}
-              className="nostyle"
-            >
-              <i className="far fa-cog" />
-            </button>
-          </div>
-        </div>
-        <div className="label__container">
-          <Label style={{ margin: 0 }}>{title}</Label>
-        </div>
+  duplicateDataset,
+}) => {
+  const [contextMenuIsOpen, setContextMenuIsOpen] = useState(false);
 
-        {description && (
-          <div className="description__container">
-            <Text style={{ marginBottom: 0 }} size="sm" len="long">
-              {description}
-            </Text>
+  const OPTIONS = [
+    {
+      label: 'Open in new tab',
+      onClick: () => undefined,
+      icon: <i className="fad fa-external-link" />,
+    },
+    {
+      label: 'Duplicate',
+      onClick: () => duplicateDataset(datasetId, `${title} (copy)`),
+      icon: <i style={{ color: Styles.purple300 }} className="fad fa-folders" />,
+    },
+  ];
+
+  return (
+    <Link
+      className="no-hover"
+      style={{ textDecoration: 'none' }}
+      to={`/dataset/${datasetId}`}
+      onContextMenu={e => {
+        e.preventDefault();
+        setContextMenuIsOpen(true);
+      }}
+    >
+      <DatasetCardContainer>
+        <div className="background" />
+        <div className="main">
+          <div className="meta__bar">
+            <div className="time-ago__container">
+              <Helper>Last updated: {humanizeTimeAgo(timestamp)}</Helper>
+            </div>
+            <div className="actions">
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setEditModalIsOpen(true);
+                }}
+                className="nostyle"
+              >
+                <i className="far fa-cog" />
+              </button>
+            </div>
           </div>
-        )}
-      </div>
-    </DatasetCardContainer>
-  </Link>
-);
+          <div className="label__container">
+            <Label style={{ margin: 0 }}>{title}</Label>
+          </div>
+
+          {description && (
+            <div className="description__container">
+              <Text style={{ marginBottom: 0 }} size="sm" len="long">
+                {description}
+              </Text>
+            </div>
+          )}
+
+          {contextMenuIsOpen && (
+            <DropdownMenu
+              options={OPTIONS}
+              closeMenu={() => setContextMenuIsOpen(false)}
+            />
+          )}
+        </div>
+      </DatasetCardContainer>
+    </Link>
+  );
+};
 
 export default DatasetCardBody;

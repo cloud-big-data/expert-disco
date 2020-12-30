@@ -32,7 +32,6 @@ const ExportContainer = styled.div`
 
 const DatasetExport: React.FC = () => {
   const { datasetHead, socket } = useContext(DatasetContext)!;
-  // const { csvFileSize } = datasetHead;
   const [step, setStep] = useState(0);
   const [destination, setDestination] = useState<Destinations | undefined>(
     undefined,
