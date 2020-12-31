@@ -173,6 +173,7 @@ const Cell: React.FC<ICellProps> = ({
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [localValue, setLocalValue] = useState(value);
   const typingTimeout = useRef<any>(null);
+  const initialValue = useRef(value);
 
   const prevActive = usePrevious(active);
 
@@ -211,9 +212,10 @@ const Cell: React.FC<ICellProps> = ({
       handleChange?.({
         targetId: _id,
         changeTarget: 'cell',
-        prevValue: value,
+        prevValue: initialValue.current,
         newValue: localValue,
       });
+      initialValue.current = localValue;
     }
   });
 

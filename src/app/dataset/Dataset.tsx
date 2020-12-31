@@ -96,44 +96,75 @@ const Dataset: React.FC<{
     }
   }, [firstVisibleRow, getRowSlice, isScrolling, lastVisibleRow]);
 
-  const changeHistory = changeHistoryRef.current;
-  const currentVersion = currentVersionRef.current;
-
   const undo = () => {
-    const currentVersionIndex = changeHistory?.findIndex(
-      id => id === currentVersion,
+    const currentIndex = changeHistoryRef.current?.findIndex(
+      id => id === currentVersionRef.current,
     );
-    if (currentVersionIndex === -1 || !changeHistory?.[currentVersionIndex - 1]) {
-      return;
-    }
+    if (currentIndex === -1) return;
 
-    const nextVersion = changeHistory[currentVersionIndex - 1];
+    const targetVersionId = changeHistoryRef.current[currentIndex - 1];
+    currentVersionRef.current = targetVersionId;
+
+    console.log('undoing', currentIndex, targetVersionId, changeHistoryRef.current);
+
     socket?.emit('checkoutToVersion', {
-      versionId: nextVersion,
+      versionId: targetVersionId,
       start: firstVisibleRow,
       end: lastVisibleRow,
     });
   };
 
   const redo = () => {
-    const currentVersionIndex = changeHistory?.findIndex(
-      id => id === currentVersion,
+    const currentIndex = changeHistoryRef.current?.findIndex(
+      id => id === currentVersionRef.current,
     );
-    if (currentVersionIndex === -1 || !changeHistory?.[currentVersionIndex + 1]) {
-      return;
-    }
-    const nextVersion = changeHistory[currentVersionIndex + 1];
+    if (currentIndex === -1) return;
+
+    const targetVersionId = changeHistoryRef.current[currentIndex + 1];
+    if (!targetVersionId) return;
+
+    currentVersionRef.current = targetVersionId;
+
     socket?.emit('checkoutToVersion', {
-      versionId: nextVersion,
+      versionId: targetVersionId,
       start: firstVisibleRow,
       end: lastVisibleRow,
     });
   };
 
   const handleChange = (changeHistoryItem: ChangeHistoryItem) => {
+    if (changeHistoryItem.newValue === changeHistoryItem.prevValue) return;
+    console.log(changeHistoryItem, changeHistoryRef.current);
+
+    const revisionId = uuidv4();
+    const currentIndex = changeHistoryRef.current?.findIndex(
+      id => id === currentVersionRef.current,
+    );
+
+    const shouldRevert = currentIndex !== changeHistoryRef.current?.length - 1;
+
+    console.log(
+      shouldRevert,
+      currentVersionRef.current,
+      changeHistoryRef.current,
+      currentIndex,
+    );
+
+    currentVersionRef.current = revisionId;
+
+    if (shouldRevert && changeHistoryRef.current) {
+      changeHistoryRef.current = [
+        ...changeHistoryRef.current.slice(0, currentIndex + 1),
+        revisionId,
+      ];
+    } else {
+      changeHistoryRef.current = [...changeHistoryRef.current, revisionId];
+    }
+
     socket?.emit('saveToHistory', {
       ...changeHistoryItem,
-      revisionId: uuidv4(),
+      revisionId,
+      revert: shouldRevert,
     });
   };
 

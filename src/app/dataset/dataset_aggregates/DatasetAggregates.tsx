@@ -47,8 +47,7 @@ const ExpandWrapper = styled.div<{ expanded: boolean }>`
 const AggregatesContainer = styled.div`
   display: grid;
   width: 100%;
-  grid-template-columns: 3fr 1fr;
-  grid-column-gap: 1rem;
+  grid-template-columns: 4fr;
 
   h6 {
     margin: 0 0 1rem;
@@ -60,14 +59,14 @@ const AggregatesContainer = styled.div`
   }
 `;
 
-const ChangeHistoryContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-  @media (max-width: 1400px) {
-    margin-top: 1rem;
-  }
-`;
+// const ChangeHistoryContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   flex: 1 0 auto;
+//   @media (max-width: 1400px) {
+//     margin-top: 1rem;
+//   }
+// `;
 
 const VIEWS = [
   {
@@ -139,11 +138,11 @@ const DatasetAggregates: React.FC = () => {
           >
             <Card>{ViewComponent}</Card>
           </ViewWithLeftNav>
-          <ChangeHistoryContainer>
+          {/* <ChangeHistoryContainer>
             <Card>
               <h6>Change history</h6>
             </Card>
-          </ChangeHistoryContainer>
+          </ChangeHistoryContainer> */}
         </AggregatesContainer>
       ) : (
         <div className="contracted_buttons">

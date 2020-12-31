@@ -62,11 +62,11 @@ const DatasetToolbar: React.FC<{ undo: () => void; redo: () => void }> = ({
 
   <BoardActionsContainer>
     <div className="left">
-      <TimeTravel onClick={undo} disabled>
+      <TimeTravel onClick={undo} disabled={false}>
         <i className="fad fa-undo" />
         <Label>Undo</Label>
       </TimeTravel>
-      <TimeTravel onClick={redo} disabled>
+      <TimeTravel onClick={redo} disabled={false}>
         <i className="fad fa-redo" />
         <Label>Redo</Label>
       </TimeTravel>
