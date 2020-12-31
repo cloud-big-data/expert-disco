@@ -208,6 +208,13 @@ const Cell: React.FC<ICellProps> = ({
   ];
 
   useEffect(() => {
+    if (value !== localValue) {
+      setLocalValue(value);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  useEffect(() => {
     if (prevActive && !active) {
       handleChange?.({
         targetId: _id,

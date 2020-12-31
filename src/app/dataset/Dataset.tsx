@@ -75,6 +75,15 @@ const Dataset: React.FC<{
     changeHistoryRef.current?.[changeHistoryRef.current.length - 1],
   );
 
+  console.log(currentVersionRef.current, changeHistoryRef.current);
+
+  useEffect(() => {
+    if (!currentVersionRef.current && changeHistoryRef.current[0]) {
+      // eslint-disable-next-line prefer-destructuring
+      currentVersionRef.current = changeHistoryRef.current[0];
+    }
+  });
+
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, 0);
@@ -100,17 +109,16 @@ const Dataset: React.FC<{
     const currentIndex = changeHistoryRef.current?.findIndex(
       id => id === currentVersionRef.current,
     );
-    if (currentIndex === -1) return;
+    if (currentIndex === -1 || currentIndex === 0) return;
 
-    const targetVersionId = changeHistoryRef.current[currentIndex - 1];
-    currentVersionRef.current = targetVersionId;
-
-    console.log('undoing', currentIndex, targetVersionId, changeHistoryRef.current);
+    const targetVersionId = changeHistoryRef.current[currentIndex];
+    currentVersionRef.current = changeHistoryRef.current[currentIndex - 1];
 
     socket?.emit('checkoutToVersion', {
       versionId: targetVersionId,
       start: firstVisibleRow,
       end: lastVisibleRow,
+      direction: 'undo',
     });
   };
 
@@ -121,20 +129,22 @@ const Dataset: React.FC<{
     if (currentIndex === -1) return;
 
     const targetVersionId = changeHistoryRef.current[currentIndex + 1];
-    if (!targetVersionId) return;
+    const nextId = changeHistoryRef.current[currentIndex + 1];
+    if (!nextId) return;
+    currentVersionRef.current = nextId;
 
-    currentVersionRef.current = targetVersionId;
+    if (!targetVersionId) return;
 
     socket?.emit('checkoutToVersion', {
       versionId: targetVersionId,
       start: firstVisibleRow,
       end: lastVisibleRow,
+      direction: 'redo',
     });
   };
 
   const handleChange = (changeHistoryItem: ChangeHistoryItem) => {
     if (changeHistoryItem.newValue === changeHistoryItem.prevValue) return;
-    console.log(changeHistoryItem, changeHistoryRef.current);
 
     const revisionId = uuidv4();
     const currentIndex = changeHistoryRef.current?.findIndex(
@@ -142,13 +152,6 @@ const Dataset: React.FC<{
     );
 
     const shouldRevert = currentIndex !== changeHistoryRef.current?.length - 1;
-
-    console.log(
-      shouldRevert,
-      currentVersionRef.current,
-      changeHistoryRef.current,
-      currentIndex,
-    );
 
     currentVersionRef.current = revisionId;
 
@@ -165,6 +168,7 @@ const Dataset: React.FC<{
       ...changeHistoryItem,
       revisionId,
       revert: shouldRevert,
+      timestamp: Date.now(),
     });
   };
 
