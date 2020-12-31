@@ -9,11 +9,7 @@ interface IDatasetContext {
   setBoardData: null | ((data: IBoardData) => void);
   boardState: IBoardState;
   setBoardState: (boardState: IBoardState) => void;
-  changeHistoryRef: React.MutableRefObject<IBoardData[]>;
-  currentRevision: number;
-  setCurrentRevision: (revision: number) => void;
-  undo: () => void;
-  redo: () => void;
+  changeHistoryRef: React.MutableRefObject<string[]>;
   getRowSlice: (start: number, end: number) => void;
   loading: boolean;
   setLoading: (isLoading: boolean) => void;

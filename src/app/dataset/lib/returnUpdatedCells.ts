@@ -10,9 +10,7 @@ export interface ICellUpdates<IterableType> {
 /**
  * returns array of rows with an updated value
  */
-const returnUpdatedCells = <
-  IterableType extends { _id: string; value: string | number | null }
->({
+const returnUpdatedCells = <IterableType extends { _id: string; value?: string }>({
   iterable,
   cellUpdates,
 }: ICellUpdates<IterableType>): IterableType[] => {

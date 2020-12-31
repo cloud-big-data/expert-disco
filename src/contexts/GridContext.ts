@@ -1,8 +1,10 @@
+import { ChangeHistoryItem, IBoardData } from 'app/dataset/types';
 import { createContext } from 'react';
 
 interface IGridContext {
   gridRef: React.RefObject<HTMLDivElement>;
-  visibleRows?: [string, string];
+  visibleRows?: [number, number];
+  handleChange: (changeHistoryItem: ChangeHistoryItem) => void;
 }
 
 const GridContext = createContext<null | IGridContext>(null);

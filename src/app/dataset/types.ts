@@ -81,7 +81,7 @@ export type IColumnFormatting = Array<{
 
 export interface ICell {
   _id: string;
-  value: string | number | null;
+  value?: string;
 }
 
 export interface IColumn extends ICell {
@@ -133,6 +133,13 @@ export interface IBoardHead {
   rowCount?: number;
 }
 
+export interface ChangeHistoryItem {
+  changeTarget: 'row' | 'column' | 'cell';
+  targetId: string;
+  prevValue?: string;
+  newValue?: string;
+}
+
 /**
  * The non-persistent state of the grid.
  * This interfaces with viewable properties of the grid that should not persist from session to session, and
@@ -159,6 +166,7 @@ export interface IBoardState {
   formulaBar: {
     active: boolean;
   };
+  changeHistory: ChangeHistoryItem[];
 }
 
 export type Destinations = 'csv' | 'sheets' | 'skyvue';

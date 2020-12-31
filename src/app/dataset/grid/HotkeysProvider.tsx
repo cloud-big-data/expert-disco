@@ -2,18 +2,18 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as R from 'ramda';
 import useClippy from 'use-clippy';
 import DatasetContext from 'contexts/DatasetContext';
+// import GridContext from 'contexts/GridContext';
 import getCellValueById from '../lib/getCellValueById';
 import editCellsAndReturnBoard from '../lib/editCellsAndReturnBoard';
 
-const HotkeysProvider: React.FC = ({ children }) => {
-  const {
-    boardState,
-    setBoardState,
-    boardData,
-    setBoardData,
-    undo,
-    redo,
-  } = useContext(DatasetContext)!;
+const HotkeysProvider: React.FC<{
+  undo: () => void;
+  redo: () => void;
+}> = ({ children, undo, redo }) => {
+  const { boardState, setBoardState, setBoardData, boardData } = useContext(
+    DatasetContext,
+  )!;
+  // const { handleChange } = useContext(GridContext);
 
   const [clipboard, setClipboard] = useClippy();
   const [cut, toggleCut] = useState<{ cellId?: string; cutting: boolean }>({
@@ -58,7 +58,7 @@ const HotkeysProvider: React.FC = ({ children }) => {
             ]
           : baseCellUpdates;
 
-        setBoardData!(editCellsAndReturnBoard(cellUpdates, boardData));
+        setBoardData?.(editCellsAndReturnBoard(cellUpdates, boardData));
       };
 
       pasteClipboard(selectedCell);

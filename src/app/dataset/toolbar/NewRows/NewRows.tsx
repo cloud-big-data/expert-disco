@@ -13,8 +13,8 @@ const NewRows: React.FC = () => {
 
   const [view, setView] = useState(NewRowViews.multipleEmpty);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const { boardData, setBoardData } = useContext(DatasetContext)!;
-  const boardActions = makeBoardActions(boardData);
+  // const { boardData, setBoardData } = useContext(DatasetContext)!;
+  // const boardActions = makeBoardActions(boardData);
   return (
     <>
       <ButtonWithOptions
@@ -22,7 +22,7 @@ const NewRows: React.FC = () => {
         options={[
           {
             label: 'Empty row',
-            onClick: () => setBoardData!(boardActions.newRow()),
+            onClick: () => undefined, // setBoardData!(boardActions.newRow()),
             icon: <i className="fas fa-horizontal-rule" />,
           },
           {

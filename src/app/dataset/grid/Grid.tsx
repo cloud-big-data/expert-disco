@@ -3,8 +3,9 @@ import GridContext from 'contexts/GridContext';
 import useFindVisibleRows from 'hooks/useFindVisibleRows';
 import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
-import * as R from 'ramda';
+
 import Styles from 'styles/Styles';
+import { ChangeHistoryItem, IBoardData } from '../types';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';
 import HotkeysProvider from './HotkeysProvider';
@@ -45,33 +46,31 @@ const RowsContainer = styled.div`
   flex-direction: column;
 `;
 
-const Grid: React.FC = () => {
-  const gridRef = useRef<HTMLDivElement>(null);
-  const { boardData, getRowSlice } = useContext(DatasetContext)!;
+const Grid: React.FC<{
+  gridRef: React.RefObject<HTMLDivElement>;
+  visibleRows: [number, number];
+  undo: () => void;
+  redo: () => void;
+  handleChange: (changeHistoryItem: ChangeHistoryItem) => void;
+}> = ({ gridRef, visibleRows, undo, redo, handleChange }) => {
+  const { boardData, readOnly } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
-  const [firstVisibleRow, lastVisibleRow, isScrolling] = useFindVisibleRows(
-    gridRef,
-    {
-      first: boardData.rows[0]?.index ?? 0,
-      last: R.last(boardData.rows)?.index ?? 100,
-    },
-  );
-
-  useEffect(() => {
-    if (isScrolling) {
-      getRowSlice(firstVisibleRow, lastVisibleRow);
-    }
-  }, [firstVisibleRow, getRowSlice, isScrolling, lastVisibleRow]);
+  const [firstVisibleRow, lastVisibleRow] = visibleRows;
 
   return (
     <GridContext.Provider
       value={{
         gridRef,
+        visibleRows: [firstVisibleRow, lastVisibleRow],
+        handleChange,
       }}
     >
       <GridContainer ref={gridRef}>
         <EventsProvider>
-          <HotkeysProvider>
+          <HotkeysProvider
+            undo={!readOnly ? undo : () => undefined}
+            redo={!readOnly ? redo : () => undefined}
+          >
             <ColumnsContainer>
               {columns.map((col, index) => (
                 <ColumnHeader

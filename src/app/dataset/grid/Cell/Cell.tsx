@@ -9,7 +9,8 @@ import useClippy from 'use-clippy';
 import getCellValueById from 'app/dataset/lib/getCellValueById';
 import { notification } from 'antd';
 import parseDataType from 'app/dataset/lib/parseDataType';
-import { ICell, IBoardState, DataTypes } from '../../types';
+import GridContext from 'contexts/GridContext';
+import { ICell, IBoardState, DataTypes, ChangeHistoryItem } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 
@@ -36,7 +37,7 @@ const CellContainer = styled.div<{
   position: ICellProps['position'];
   isCopying: boolean;
   width: number;
-  loading: boolean;
+  isLoading: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -116,7 +117,7 @@ const CellContainer = styled.div<{
       : ''}
 
   ${props =>
-    props.loading
+    props.isLoading
       ? `
       background: #f6f7f8;
       background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
@@ -145,6 +146,14 @@ const showTypeError = (colDataType: DataTypes, attemptedType: DataTypes) => {
   });
 };
 
+const CellInputWrapper: React.FC<{ handleChange: () => void }> = ({
+  handleChange,
+  children,
+}) => {
+  useEffect(() => () => handleChange());
+  return <>{children}</>;
+};
+
 const Cell: React.FC<ICellProps> = ({
   _id,
   value,
@@ -164,6 +173,8 @@ const Cell: React.FC<ICellProps> = ({
     boardData,
     setBoardData,
   } = useContext(DatasetContext)!;
+  const { handleChange } = useContext(GridContext)!;
+
   const [errorNotificationIsOpen, setErrorNotification] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -208,7 +219,7 @@ const Cell: React.FC<ICellProps> = ({
       highlighted={highlighted}
       position={position}
       selected={selected}
-      loading={false} // Add a smoother loading experience later
+      isLoading={false} // Add a smoother loading experience later
       onContextMenu={e => {
         e.preventDefault();
         setShowContextMenu(!showContextMenu);
@@ -226,57 +237,68 @@ const Cell: React.FC<ICellProps> = ({
       }
     >
       {!readOnly && active ? (
-        <ActiveInput
-          ref={inputRef}
-          value={localValue ?? ''}
-          type="text"
-          onKeyDown={e => {
-            if (e.key !== 'Enter') return;
-            const setCells = (key: string, value: any) =>
-              R.over(R.lensProp('cellsState'), R.assoc(key, value));
-
-            setBoardState(
-              R.pipe(
-                setCells('activeCell', ''),
-                setCells('selectedCell', _id),
-              )(boardState) as IBoardState,
-            );
+        <CellInputWrapper
+          handleChange={() => {
+            handleChange?.({
+              targetId: _id,
+              changeTarget: 'cell',
+              prevValue: value,
+              newValue: localValue,
+            });
           }}
-          onChange={e => {
-            const { value } = e.target;
-            const attemptedInputType = parseDataType(value);
-            if (
-              colDataType !== 'string' &&
-              value !== '' &&
-              attemptedInputType !== colDataType
-            ) {
-              if (!errorNotificationIsOpen) {
-                showTypeError(colDataType!, attemptedInputType);
-              }
-              setErrorNotification(true);
-              setTimeout(() => {
-                setErrorNotification(false);
-              }, 4500);
-              return;
-            }
-            setLocalValue(e.target.value);
-            clearTimeout(typingTimeout.current);
+        >
+          <ActiveInput
+            ref={inputRef}
+            value={localValue ?? ''}
+            type="text"
+            onKeyDown={e => {
+              if (e.key !== 'Enter') return;
+              const setCells = (key: string, value: any) =>
+                R.over(R.lensProp('cellsState'), R.assoc(key, value));
 
-            typingTimeout.current = setTimeout(() => {
-              setBoardData!(
-                editCellsAndReturnBoard(
-                  [
-                    {
-                      cellId: _id,
-                      updatedValue: (value as string) ?? '',
-                    },
-                  ],
-                  boardData,
-                ),
+              setBoardState(
+                R.pipe(
+                  setCells('activeCell', ''),
+                  setCells('selectedCell', _id),
+                )(boardState) as IBoardState,
               );
-            }, 200);
-          }}
-        />
+            }}
+            onChange={e => {
+              const { value } = e.target;
+              const attemptedInputType = parseDataType(value);
+              if (
+                colDataType !== 'string' &&
+                value !== '' &&
+                attemptedInputType !== colDataType
+              ) {
+                if (!errorNotificationIsOpen) {
+                  showTypeError(colDataType!, attemptedInputType);
+                }
+                setErrorNotification(true);
+                setTimeout(() => {
+                  setErrorNotification(false);
+                }, 4500);
+                return;
+              }
+              setLocalValue(e.target.value);
+              clearTimeout(typingTimeout.current);
+
+              typingTimeout.current = setTimeout(() => {
+                setBoardData?.(
+                  editCellsAndReturnBoard(
+                    [
+                      {
+                        cellId: _id,
+                        updatedValue: (value as string) ?? '',
+                      },
+                    ],
+                    boardData,
+                  ),
+                );
+              }, 200);
+            }}
+          />
+        </CellInputWrapper>
       ) : (
         <span className="cell__value">{value}</span>
       )}

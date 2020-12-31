@@ -55,6 +55,7 @@ export const initialBoardState = {
   formulaBar: {
     active: false,
   },
+  changeHistory: [],
 };
 
 const DatasetWrapper: React.FC = () => {
@@ -66,10 +67,9 @@ const DatasetWrapper: React.FC = () => {
     rowCount?: number;
   }>({});
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
-  const [currentRevision, setCurrentRevision] = useState(0);
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
 
-  const changeHistoryRef = useRef<IBoardData[]>([]);
+  const changeHistoryRef = useRef<string[]>([]);
   const { datasetId } = useParams<{ datasetId: string }>();
 
   const { data } = useQuery(user.accessToken, () =>
@@ -180,16 +180,9 @@ const DatasetWrapper: React.FC = () => {
         boardData,
         boardState,
         changeHistoryRef,
-        currentRevision,
         getRowSlice: (first: number, last: number) => {
           setLoading(true);
           socket?.emit('getSlice', { first, last });
-        },
-        redo: () => {
-          if (currentRevision === changeHistoryRef.current.length - 1) return;
-          const newRevision = currentRevision + 1;
-          setBoardData(changeHistoryRef.current[newRevision]);
-          setCurrentRevision(newRevision);
         },
         setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
           userType,
@@ -197,13 +190,6 @@ const DatasetWrapper: React.FC = () => {
           ? _setBoardData
           : null,
         setBoardState,
-        setCurrentRevision,
-        undo: () => {
-          if (currentRevision === 0) return;
-          const prevRevision = currentRevision - 1;
-          setBoardData(changeHistoryRef.current[prevRevision]);
-          setCurrentRevision(prevRevision);
-        },
         loading,
         setLoading,
       }}

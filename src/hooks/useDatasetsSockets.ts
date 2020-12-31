@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { IBoardData, IBoardHead } from 'app/dataset/types';
+import { v4 as uuidv4 } from 'uuid';
 
 const getDatasetsWSUrl = (skyvueFileSize: number) => {
   const prefix = skyvueFileSize ? 'xs' : 'xs';
@@ -20,7 +21,7 @@ const useDatasetsSockets = (
     setBoardHead: (head: { rowCount?: number }) => void;
     datasetHead: IBoardHead;
   },
-  changeHistoryRef: React.MutableRefObject<Array<IBoardData>>,
+  changeHistoryRef: React.MutableRefObject<Array<string>>,
   setFilesToDownload: (files: string[]) => void,
   loading: boolean,
   setLoading: (isLoading: boolean) => void,
@@ -74,7 +75,7 @@ const useDatasetsSockets = (
     socket.on('initialDatasetReceived', (res: IBoardData) => {
       if (!boardData) {
         setBoardData(res);
-        changeHistoryRef.current = [res];
+        changeHistoryRef.current = [uuidv4()];
       }
     });
 

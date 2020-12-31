@@ -46,33 +46,29 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
   `}
 `;
 
-const DatasetToolbar: React.FC = () => {
+const DatasetToolbar: React.FC<{ undo: () => void; redo: () => void }> = ({
+  undo,
+  redo,
+}) => {
   const {
     boardData,
     setBoardData,
     changeHistoryRef,
-    currentRevision,
+    // currentRevision,
     ...dataset
   } = useContext(DatasetContext)!;
-  // const colLen = boardData.columns.length;
 
-  const undoDisabled = currentRevision === 0;
-  const redoDisabled = !changeHistoryRef.current[currentRevision + 1];
+  // const undoDisabled = currentRevision === 0;
+  // const redoDisabled = !changeHistoryRef.current[currentRevision + 1];
 
   return (
     <BoardActionsContainer>
       <div className="left">
-        <TimeTravel
-          onClick={undoDisabled ? undefined : dataset.undo}
-          disabled={undoDisabled}
-        >
+        <TimeTravel onClick={undo} disabled>
           <i className="fad fa-undo" />
           <Label>Undo</Label>
         </TimeTravel>
-        <TimeTravel
-          onClick={redoDisabled ? undefined : dataset.redo}
-          disabled={redoDisabled}
-        >
+        <TimeTravel onClick={redo} disabled>
           <i className="fad fa-redo" />
           <Label>Redo</Label>
         </TimeTravel>
