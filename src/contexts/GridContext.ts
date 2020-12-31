@@ -1,4 +1,4 @@
-import { ChangeHistoryItem, IBoardData } from 'app/dataset/types';
+import { ChangeHistoryItem } from 'app/dataset/types';
 import { createContext } from 'react';
 
 interface IGridContext {

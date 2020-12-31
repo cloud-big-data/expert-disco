@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Grid from './grid';
 import DatasetToolbar from './toolbar';
 import DatasetAggregates from './dataset_aggregates';
-import { ChangeHistoryItem, IBoardData } from './types';
+import { ChangeHistoryItem } from './types';
 
 const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   display: flex;
@@ -81,7 +81,7 @@ const Dataset: React.FC<{
     }, 500);
   }, []);
 
-  const { boardData, setBoardData, getRowSlice } = useContext(DatasetContext)!;
+  const { boardData, getRowSlice } = useContext(DatasetContext)!;
   const [firstVisibleRow, lastVisibleRow, isScrolling] = useFindVisibleRows(
     gridRef,
     {
@@ -131,7 +131,6 @@ const Dataset: React.FC<{
   };
 
   const handleChange = (changeHistoryItem: ChangeHistoryItem) => {
-    console.log(changeHistoryItem);
     socket?.emit('saveToHistory', {
       ...changeHistoryItem,
       revisionId: uuidv4(),

@@ -1,11 +1,10 @@
 import DatasetContext from 'contexts/DatasetContext';
 import GridContext from 'contexts/GridContext';
-import useFindVisibleRows from 'hooks/useFindVisibleRows';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 
 import Styles from 'styles/Styles';
-import { ChangeHistoryItem, IBoardData } from '../types';
+import { ChangeHistoryItem } from '../types';
 import ColumnHeader from './ColumnHeader';
 import EventsProvider from './EventsProvider';
 import HotkeysProvider from './HotkeysProvider';

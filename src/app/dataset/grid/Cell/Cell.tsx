@@ -10,7 +10,8 @@ import getCellValueById from 'app/dataset/lib/getCellValueById';
 import { notification } from 'antd';
 import parseDataType from 'app/dataset/lib/parseDataType';
 import GridContext from 'contexts/GridContext';
-import { ICell, IBoardState, DataTypes, ChangeHistoryItem } from '../../types';
+import usePrevious from 'hooks/usePrevious';
+import { ICell, IBoardState, DataTypes } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 
@@ -146,14 +147,6 @@ const showTypeError = (colDataType: DataTypes, attemptedType: DataTypes) => {
   });
 };
 
-const CellInputWrapper: React.FC<{ handleChange: () => void }> = ({
-  handleChange,
-  children,
-}) => {
-  useEffect(() => () => handleChange());
-  return <>{children}</>;
-};
-
 const Cell: React.FC<ICellProps> = ({
   _id,
   value,
@@ -180,6 +173,8 @@ const Cell: React.FC<ICellProps> = ({
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [localValue, setLocalValue] = useState(value);
   const typingTimeout = useRef<any>(null);
+
+  const prevActive = usePrevious(active);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -211,6 +206,17 @@ const Cell: React.FC<ICellProps> = ({
     },
   ];
 
+  useEffect(() => {
+    if (prevActive && !active) {
+      handleChange?.({
+        targetId: _id,
+        changeTarget: 'cell',
+        prevValue: value,
+        newValue: localValue,
+      });
+    }
+  });
+
   return (
     <CellContainer
       width={colWidth ?? defaults.COL_WIDTH}
@@ -237,68 +243,57 @@ const Cell: React.FC<ICellProps> = ({
       }
     >
       {!readOnly && active ? (
-        <CellInputWrapper
-          handleChange={() => {
-            handleChange?.({
-              targetId: _id,
-              changeTarget: 'cell',
-              prevValue: value,
-              newValue: localValue,
-            });
+        <ActiveInput
+          ref={inputRef}
+          value={localValue ?? ''}
+          type="text"
+          onKeyDown={e => {
+            if (e.key !== 'Enter') return;
+            const setCells = (key: string, value: any) =>
+              R.over(R.lensProp('cellsState'), R.assoc(key, value));
+
+            setBoardState(
+              R.pipe(
+                setCells('activeCell', ''),
+                setCells('selectedCell', _id),
+              )(boardState) as IBoardState,
+            );
           }}
-        >
-          <ActiveInput
-            ref={inputRef}
-            value={localValue ?? ''}
-            type="text"
-            onKeyDown={e => {
-              if (e.key !== 'Enter') return;
-              const setCells = (key: string, value: any) =>
-                R.over(R.lensProp('cellsState'), R.assoc(key, value));
-
-              setBoardState(
-                R.pipe(
-                  setCells('activeCell', ''),
-                  setCells('selectedCell', _id),
-                )(boardState) as IBoardState,
-              );
-            }}
-            onChange={e => {
-              const { value } = e.target;
-              const attemptedInputType = parseDataType(value);
-              if (
-                colDataType !== 'string' &&
-                value !== '' &&
-                attemptedInputType !== colDataType
-              ) {
-                if (!errorNotificationIsOpen) {
-                  showTypeError(colDataType!, attemptedInputType);
-                }
-                setErrorNotification(true);
-                setTimeout(() => {
-                  setErrorNotification(false);
-                }, 4500);
-                return;
+          onChange={e => {
+            const { value } = e.target;
+            const attemptedInputType = parseDataType(value);
+            if (
+              colDataType !== 'string' &&
+              value !== '' &&
+              attemptedInputType !== colDataType
+            ) {
+              if (!errorNotificationIsOpen) {
+                showTypeError(colDataType!, attemptedInputType);
               }
-              setLocalValue(e.target.value);
-              clearTimeout(typingTimeout.current);
+              setErrorNotification(true);
+              setTimeout(() => {
+                setErrorNotification(false);
+              }, 4500);
+              return;
+            }
+            setLocalValue(e.target.value);
+            clearTimeout(typingTimeout.current);
 
-              typingTimeout.current = setTimeout(() => {
-                setBoardData?.(
-                  editCellsAndReturnBoard(
-                    [
-                      {
-                        cellId: _id,
-                        updatedValue: (value as string) ?? '',
-                      },
-                    ],
-                    boardData,
-                  ),
-                );
-              }, 200);
-            }}
-          />
-        </CellInputWrapper>
+            typingTimeout.current = setTimeout(() => {
+              setBoardData?.(
+                editCellsAndReturnBoard(
+                  [
+                    {
+                      cellId: _id,
+                      updatedValue: (value as string) ?? '',
+                    },
+                  ],
+                  boardData,
+                ),
+              );
+            }, 200);
+          }}
+        />
       ) : (
         <span className="cell__value">{value}</span>
       )}

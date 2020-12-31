@@ -1,6 +1,5 @@
 import { Label } from 'components/ui/Typography';
-import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import NewRows from './NewRows';
@@ -49,34 +48,33 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
 const DatasetToolbar: React.FC<{ undo: () => void; redo: () => void }> = ({
   undo,
   redo,
-}) => {
-  const {
-    boardData,
-    setBoardData,
-    changeHistoryRef,
-    // currentRevision,
-    ...dataset
-  } = useContext(DatasetContext)!;
+}) => (
+  // const {
+  //   boardData,
+  //   setBoardData,
+  //   changeHistoryRef,
+  //   // currentRevision,
+  //   ...dataset
+  // } = useContext(DatasetContext)!;
 
   // const undoDisabled = currentRevision === 0;
   // const redoDisabled = !changeHistoryRef.current[currentRevision + 1];
 
-  return (
-    <BoardActionsContainer>
-      <div className="left">
-        <TimeTravel onClick={undo} disabled>
-          <i className="fad fa-undo" />
-          <Label>Undo</Label>
-        </TimeTravel>
-        <TimeTravel onClick={redo} disabled>
-          <i className="fad fa-redo" />
-          <Label>Redo</Label>
-        </TimeTravel>
-      </div>
-      <div className="right">
-        <NewColumns />
-        <NewRows />
-        {/* <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
+  <BoardActionsContainer>
+    <div className="left">
+      <TimeTravel onClick={undo} disabled>
+        <i className="fad fa-undo" />
+        <Label>Undo</Label>
+      </TimeTravel>
+      <TimeTravel onClick={redo} disabled>
+        <i className="fad fa-redo" />
+        <Label>Redo</Label>
+      </TimeTravel>
+    </div>
+    <div className="right">
+      <NewColumns />
+      <NewRows />
+      {/* <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
           Add row
         </ButtonPrimary>
         <ButtonPrimary
@@ -84,9 +82,7 @@ const DatasetToolbar: React.FC<{ undo: () => void; redo: () => void }> = ({
         >
           Add Column
         </ButtonPrimary> */}
-      </div>
-    </BoardActionsContainer>
-  );
-};
-
+    </div>
+  </BoardActionsContainer>
+);
 export default DatasetToolbar;
