@@ -240,6 +240,12 @@ const Cell: React.FC<ICellProps> = ({
         setShowContextMenu(!showContextMenu);
       }}
       onClick={() => {
+        // console.log(
+        //   R.pipe(
+        //     R.assocPath(['columnsState', 'selectedColumn'], -1),
+        //     R.assocPath(['cellsState', 'selectedCell'], _id),
+        //   )(boardState) as IBoardState,
+        // );
         setBoardState(
           R.pipe(
             R.assocPath(['columnsState', 'selectedColumn'], -1),

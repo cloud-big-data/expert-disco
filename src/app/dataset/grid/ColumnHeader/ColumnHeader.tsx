@@ -5,6 +5,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
+import usePrevious from 'hooks/usePrevious';
+import GridContext from 'contexts/GridContext';
+import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
 import { IBoardState, IColumn, ISortingLayer, SortDirections } from '../../types';
@@ -93,9 +96,24 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     setBoardData,
     socket,
   } = useContext(DatasetContext)!;
+  const { handleChange } = useContext(GridContext)!;
+
   const boardActions = makeBoardActions(boardData);
   const inputRef = useRef<HTMLInputElement>(null);
+  const colHeaderRef = useRef<HTMLDivElement>(null);
+  const prevValue = useRef<undefined | string>(value);
+
+  const prevActive = usePrevious(
+    boardState.columnsState.activeColumn === columnIndex,
+  );
   const active = boardState.columnsState.activeColumn === columnIndex;
+
+  useHandleClickOutside(colHeaderRef, () =>
+    active
+      ? setBoardState(R.assocPath(['columnsState', 'activeColumn'], -1, boardState))
+      : undefined,
+  );
+
   const columnSorting = boardData.layers?.sortings.find(
     sorting => sorting.key === _id,
   );
@@ -121,6 +139,17 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   useEffect(() => {
     inputRef.current?.focus();
   }, [active]);
+
+  useEffect(() => {
+    if (prevActive && !active) {
+      handleChange?.({
+        targetId: _id,
+        changeTarget: 'column',
+        prevValue: prevValue.current,
+        newValue: value,
+      });
+    }
+  });
 
   const MENU_OPTIONS = [
     {
@@ -177,6 +206,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
 
   return (
     <ColumnHeaderContainer
+      ref={colHeaderRef}
       onContextMenu={e => {
         e.preventDefault();
         toggleShowContextMenu(!showContextMenu);
@@ -215,7 +245,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               )(boardState),
             );
           }}
-          onChange={e =>
+          onChange={e => {
+            prevValue.current = value;
             setBoardData!(
               R.assoc(
                 'columns',
@@ -225,8 +256,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
                 }),
                 boardData,
               ),
-            )
-          }
+            );
+          }}
         />
       ) : (
         <Label>{value}</Label>

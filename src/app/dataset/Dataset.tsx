@@ -65,24 +65,21 @@ const ToolbarContainer = styled.div`
 const Dataset: React.FC<{
   readOnly?: boolean;
 }> = ({ readOnly }) => {
+  const { datasetHead, socket, changeHistoryRef } = useContext(DatasetContext)!;
+
   const [fullScreen, setFullScreen] = useState(false);
+  const [currentVersion, setCurrentVersion] = useState<string | undefined>(
+    changeHistoryRef.current?.[changeHistoryRef.current.length - 1],
+  );
 
   const datasetRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const { datasetHead, socket, changeHistoryRef } = useContext(DatasetContext)!;
-  const currentVersionRef = useRef<string | undefined>(
-    changeHistoryRef.current?.[changeHistoryRef.current.length - 1],
-  );
-
-  console.log(currentVersionRef.current, changeHistoryRef.current);
-
   useEffect(() => {
-    if (!currentVersionRef.current && changeHistoryRef.current[0]) {
-      // eslint-disable-next-line prefer-destructuring
-      currentVersionRef.current = changeHistoryRef.current[0];
+    if (!currentVersion && changeHistoryRef.current[0]) {
+      setCurrentVersion(changeHistoryRef.current[0]);
     }
-  });
+  }, [currentVersion, changeHistoryRef]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -107,12 +104,11 @@ const Dataset: React.FC<{
 
   const undo = () => {
     const currentIndex = changeHistoryRef.current?.findIndex(
-      id => id === currentVersionRef.current,
+      id => id === currentVersion,
     );
     if (currentIndex === -1 || currentIndex === 0) return;
 
     const targetVersionId = changeHistoryRef.current[currentIndex];
-    currentVersionRef.current = changeHistoryRef.current[currentIndex - 1];
 
     socket?.emit('checkoutToVersion', {
       versionId: targetVersionId,
@@ -120,19 +116,19 @@ const Dataset: React.FC<{
       end: lastVisibleRow,
       direction: 'undo',
     });
+
+    setCurrentVersion(changeHistoryRef.current[currentIndex - 1]);
   };
 
   const redo = () => {
     const currentIndex = changeHistoryRef.current?.findIndex(
-      id => id === currentVersionRef.current,
+      id => id === currentVersion,
     );
     if (currentIndex === -1) return;
 
     const targetVersionId = changeHistoryRef.current[currentIndex + 1];
     const nextId = changeHistoryRef.current[currentIndex + 1];
     if (!nextId) return;
-    currentVersionRef.current = nextId;
-
     if (!targetVersionId) return;
 
     socket?.emit('checkoutToVersion', {
@@ -141,19 +137,28 @@ const Dataset: React.FC<{
       end: lastVisibleRow,
       direction: 'redo',
     });
+
+    setCurrentVersion(nextId);
   };
+
+  console.log(currentVersion, changeHistoryRef.current);
 
   const handleChange = (changeHistoryItem: ChangeHistoryItem) => {
     if (changeHistoryItem.newValue === changeHistoryItem.prevValue) return;
 
     const revisionId = uuidv4();
     const currentIndex = changeHistoryRef.current?.findIndex(
-      id => id === currentVersionRef.current,
+      id => id === currentVersion,
     );
 
     const shouldRevert = currentIndex !== changeHistoryRef.current?.length - 1;
 
-    currentVersionRef.current = revisionId;
+    console.log(
+      currentIndex,
+      shouldRevert,
+      currentVersion,
+      changeHistoryRef.current,
+    );
 
     if (shouldRevert && changeHistoryRef.current) {
       changeHistoryRef.current = [
@@ -170,6 +175,7 @@ const Dataset: React.FC<{
       revert: shouldRevert,
       timestamp: Date.now(),
     });
+    setCurrentVersion(revisionId);
   };
 
   return (
@@ -198,11 +204,7 @@ const Dataset: React.FC<{
 
       {!fullScreen && !readOnly && (
         <ToolbarContainer>
-          <DatasetToolbar
-            currentVersionRef={currentVersionRef}
-            undo={undo}
-            redo={redo}
-          />
+          <DatasetToolbar currentVersion={currentVersion} undo={undo} redo={redo} />
         </ToolbarContainer>
       )}
       <ParentGridContainer>

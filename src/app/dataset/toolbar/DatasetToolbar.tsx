@@ -47,16 +47,18 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
 `;
 
 const DatasetToolbar: React.FC<{
-  currentVersionRef: React.MutableRefObject<string | undefined>;
+  currentVersion: string | undefined;
   undo: () => void;
   redo: () => void;
-}> = ({ currentVersionRef, undo, redo }) => {
+}> = ({ currentVersion, undo, redo }) => {
   const { changeHistoryRef } = useContext(DatasetContext)!;
 
-  const undoDisabled = currentVersionRef.current === changeHistoryRef.current?.[0];
+  const undoDisabled = currentVersion === changeHistoryRef.current?.[0];
   const redoDisabled =
-    currentVersionRef.current ===
+    currentVersion ===
     changeHistoryRef.current?.[changeHistoryRef.current.length - 1];
+
+  console.log('rendered');
 
   return (
     <BoardActionsContainer>
