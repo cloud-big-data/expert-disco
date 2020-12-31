@@ -51,7 +51,7 @@ const Button = styled.button<{
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     background-repeat: no-repeat;
     color: white;
-    border: none;
+    border: 1px solid ${Styles.faintBorderColor};
 
     &:hover {
       opacity: 0.7;

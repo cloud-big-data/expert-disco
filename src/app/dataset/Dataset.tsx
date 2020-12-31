@@ -198,7 +198,11 @@ const Dataset: React.FC<{
 
       {!fullScreen && !readOnly && (
         <ToolbarContainer>
-          <DatasetToolbar undo={undo} redo={redo} />
+          <DatasetToolbar
+            currentVersionRef={currentVersionRef}
+            undo={undo}
+            redo={redo}
+          />
         </ToolbarContainer>
       )}
       <ParentGridContainer>

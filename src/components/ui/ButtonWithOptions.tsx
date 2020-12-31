@@ -22,6 +22,7 @@ const Container = styled.button`
   height: 2.5rem;
   max-height: 2.5rem;
   transition-duration: 0.2s;
+  border: 1px solid ${Styles.faintBorderColor};
 
   .dropdown__container {
     color: ${Styles.dark400};

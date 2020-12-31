@@ -1,7 +1,8 @@
 import { Label } from 'components/ui/Typography';
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import DatasetContext from 'contexts/DatasetContext';
 import NewRows from './NewRows';
 import NewColumns from './NewColumns';
 
@@ -45,36 +46,34 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
   `}
 `;
 
-const DatasetToolbar: React.FC<{ undo: () => void; redo: () => void }> = ({
-  undo,
-  redo,
-}) => (
-  // const {
-  //   boardData,
-  //   setBoardData,
-  //   changeHistoryRef,
-  //   // currentRevision,
-  //   ...dataset
-  // } = useContext(DatasetContext)!;
+const DatasetToolbar: React.FC<{
+  currentVersionRef: React.MutableRefObject<string | undefined>;
+  undo: () => void;
+  redo: () => void;
+}> = ({ currentVersionRef, undo, redo }) => {
+  const { changeHistoryRef } = useContext(DatasetContext)!;
 
-  // const undoDisabled = currentRevision === 0;
-  // const redoDisabled = !changeHistoryRef.current[currentRevision + 1];
+  const undoDisabled = currentVersionRef.current === changeHistoryRef.current?.[0];
+  const redoDisabled =
+    currentVersionRef.current ===
+    changeHistoryRef.current?.[changeHistoryRef.current.length - 1];
 
-  <BoardActionsContainer>
-    <div className="left">
-      <TimeTravel onClick={undo} disabled={false}>
-        <i className="fad fa-undo" />
-        <Label>Undo</Label>
-      </TimeTravel>
-      <TimeTravel onClick={redo} disabled={false}>
-        <i className="fad fa-redo" />
-        <Label>Redo</Label>
-      </TimeTravel>
-    </div>
-    <div className="right">
-      <NewColumns />
-      <NewRows />
-      {/* <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
+  return (
+    <BoardActionsContainer>
+      <div className="left">
+        <TimeTravel onClick={undo} disabled={undoDisabled}>
+          <i className="fad fa-undo" />
+          <Label>Undo</Label>
+        </TimeTravel>
+        <TimeTravel onClick={redo} disabled={redoDisabled}>
+          <i className="fad fa-redo" />
+          <Label>Redo</Label>
+        </TimeTravel>
+      </div>
+      <div className="right">
+        <NewColumns />
+        <NewRows />
+        {/* <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
           Add row
         </ButtonPrimary>
         <ButtonPrimary
@@ -82,7 +81,8 @@ const DatasetToolbar: React.FC<{ undo: () => void; redo: () => void }> = ({
         >
           Add Column
         </ButtonPrimary> */}
-    </div>
-  </BoardActionsContainer>
-);
+      </div>
+    </BoardActionsContainer>
+  );
+};
 export default DatasetToolbar;
