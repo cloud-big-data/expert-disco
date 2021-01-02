@@ -1,4 +1,3 @@
-import DropdownMenu from 'components/DropdownMenu';
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -8,10 +7,18 @@ import * as R from 'ramda';
 import usePrevious from 'hooks/usePrevious';
 import GridContext from 'contexts/GridContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
+import { Menu, Dropdown } from 'antd';
+import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
-import { IBoardState, IColumn, ISortingLayer, SortDirections } from '../../types';
-import { defaults } from '../constants';
+import {
+  DataTypes,
+  IBoardState,
+  IColumn,
+  ISortingLayer,
+  SortDirections,
+} from '../../types';
+import { defaults, COLUMN_DATA_TYPES } from '../constants';
 import { ActiveInput } from '../styles';
 import DraggableColEdge from './DraggableColEdge';
 import ColumnTypeIcon from './ColumnTypeIcon';
@@ -77,6 +84,12 @@ const MenuTrigger = styled.div`
       color: ${Styles.blue};
     }
   }
+`;
+
+const MenuIcon = styled.i`
+  margin-right: 0.5rem;
+  width: 1rem;
+  height: 1rem;
 `;
 
 const ColumnHeader: React.FC<IColumnHeaderProps> = ({
@@ -151,145 +164,166 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     }
   });
 
-  const MENU_OPTIONS = [
-    {
-      label: 'Remove column',
-      onClick: () => {
-        setBoardData!(boardActions.removeColumn(_id));
-      },
-      icon: <i style={{ color: Styles.red400 }} className="fal fa-times-circle" />,
-    },
-    {
-      label: 'Format',
-      onClick: () => undefined,
-      icon: <i style={{ color: Styles.blue }} className="fad fa-remove-format" />,
-    },
-    {
-      label: 'Default sorting',
-      onClick: handleSortingChange,
-      icon: (
-        <i
-          style={{
-            color: !columnSorting?.direction ? Styles.orange : Styles.dark400,
-          }}
-          className="fas fa-sort"
-        />
-      ),
-    },
-    {
-      label: 'Sort A-Z',
-      onClick: () => handleSortingChange('asc'),
-      icon: (
-        <i
-          style={{
-            color:
-              columnSorting?.direction === 'asc' ? Styles.orange : Styles.dark400,
-          }}
-          className="fas fa-sort-down"
-        />
-      ),
-    },
-    {
-      label: 'Sort Z-A',
-      onClick: () => handleSortingChange('desc'),
-      icon: (
-        <i
-          style={{
-            color:
-              columnSorting?.direction === 'desc' ? Styles.orange : Styles.dark400,
-          }}
-          className="fas fa-sort-up"
-        />
-      ),
-    },
-  ];
+  const menu = (
+    <Menu>
+      <Menu.ItemGroup title="Dataset Settings">
+        <Menu.Item onClick={() => setBoardData!(boardActions.removeColumn(_id))}>
+          <MenuIcon
+            style={{ color: Styles.red400 }}
+            className="fal fa-times-circle"
+          />
+          Remove column
+        </Menu.Item>
+        <Menu.Item>
+          <MenuIcon
+            style={{ color: Styles.blue }}
+            className="fad fa-remove-format"
+          />
+          Format
+        </Menu.Item>
+      </Menu.ItemGroup>
+      <Menu.SubMenu title="Sort">
+        <Menu.Item onClick={() => handleSortingChange()}>
+          <MenuIcon
+            style={{
+              color: !columnSorting?.direction ? Styles.orange : Styles.dark400,
+            }}
+            className="fas fa-sort"
+          />
+          Default
+        </Menu.Item>
+        <Menu.Item onClick={() => handleSortingChange('asc')}>
+          <MenuIcon
+            style={{
+              color:
+                columnSorting?.direction === 'asc' ? Styles.orange : Styles.dark400,
+            }}
+            className="fas fa-sort-down"
+          />
+          A-Z
+        </Menu.Item>
+        <Menu.Item onClick={() => handleSortingChange('desc')}>
+          <MenuIcon
+            style={{
+              color:
+                columnSorting?.direction === 'desc' ? Styles.orange : Styles.dark400,
+            }}
+            className="fas fa-sort-up"
+          />
+          Z-A
+        </Menu.Item>
+      </Menu.SubMenu>
+      <Menu.SubMenu title="Data type">
+        {COLUMN_DATA_TYPES.map((type: DataTypes) => (
+          <Menu.Item
+            disabled={!typesAreCompatible(dataType, type)}
+            onClick={() => {
+              setBoardData?.({
+                ...boardData,
+                columns: boardData.columns.map(col =>
+                  col._id === _id
+                    ? {
+                        ...col,
+                        dataType: type,
+                      }
+                    : col,
+                ),
+              });
+            }}
+            key={type}
+          >
+            <span style={{ fontWeight: type === dataType ? 'bold' : 'initial' }}>
+              {type}
+            </span>
+          </Menu.Item>
+        ))}
+      </Menu.SubMenu>
+    </Menu>
+  );
 
   return (
-    <ColumnHeaderContainer
-      ref={colHeaderRef}
-      onContextMenu={e => {
-        e.preventDefault();
-        toggleShowContextMenu(!showContextMenu);
-      }}
-      position={position}
-      active={active}
-      colWidth={colWidth ?? defaults.COL_WIDTH}
-      onDoubleClick={() =>
-        setBoardState(
-          R.assocPath(['columnsState', 'activeColumn'], columnIndex, boardState),
-        )
-      }
-      onClick={() =>
-        setBoardState(
-          R.pipe(
-            R.assocPath(['columnsState', 'selectedColumn'], columnIndex),
-            R.assocPath(['rowsState', 'selectedRow'], ''),
-          )(boardState) as IBoardState,
-        )
-      }
-    >
-      <ColumnTypeIcon dataType={dataType} />
-      {!readOnly && active ? (
-        <ActiveInput
-          ref={inputRef}
-          value={value ?? ''}
-          type="text"
-          onKeyDown={e => {
-            if (e.key !== 'Enter') return;
-            const set = (key: string, value: any) =>
-              R.over(R.lensProp('columnsState'), R.assoc(key, value));
-            setBoardState(
-              R.pipe(
-                set('selectedColumn', 'columnIndex'),
-                set('activeColumn', -1),
-              )(boardState),
-            );
-          }}
-          onChange={e => {
-            prevValue.current = value;
-            setBoardData!(
-              R.assoc(
-                'columns',
-                returnUpdatedCells<IColumn>({
-                  iterable: boardData.columns,
-                  cellUpdates: [{ cellId: _id, updatedValue: e.target.value }],
-                }),
-                boardData,
-              ),
-            );
-          }}
-        />
-      ) : (
-        <Label>{value}</Label>
-      )}
-      <i
-        style={{ marginLeft: 'auto' }}
-        className={
-          !columnSorting?.direction
-            ? ''
-            : columnSorting?.direction === 'asc'
-            ? `fad fa-sort-down`
-            : `fad fa-sort-up`
-        }
-      />
-      <MenuTrigger
-        onDoubleClick={e => e.stopPropagation()}
-        onClick={e => {
-          e.stopPropagation();
-          toggleShowContextMenu(true);
+    <Dropdown trigger={['contextMenu']} overlay={menu}>
+      <ColumnHeaderContainer
+        ref={colHeaderRef}
+        onContextMenu={e => {
+          e.preventDefault();
+          toggleShowContextMenu(!showContextMenu);
         }}
+        position={position}
+        active={active}
+        colWidth={colWidth ?? defaults.COL_WIDTH}
+        onDoubleClick={() =>
+          setBoardState(
+            R.assocPath(['columnsState', 'activeColumn'], columnIndex, boardState),
+          )
+        }
+        onClick={() =>
+          setBoardState(
+            R.pipe(
+              R.assocPath(['columnsState', 'selectedColumn'], columnIndex),
+              R.assocPath(['rowsState', 'selectedRow'], ''),
+            )(boardState) as IBoardState,
+          )
+        }
       >
-        <i className="fas fa-chevron-square-down" />
-      </MenuTrigger>
-      <DraggableColEdge colWidth={colWidth ?? defaults.COL_WIDTH} colId={_id} />
-      {showContextMenu && (
-        <DropdownMenu
-          pos={{ top: 2.5 }}
-          closeMenu={() => toggleShowContextMenu(false)}
-          options={MENU_OPTIONS}
+        <ColumnTypeIcon dataType={dataType} />
+        {!readOnly && active ? (
+          <ActiveInput
+            ref={inputRef}
+            value={value ?? ''}
+            type="text"
+            onKeyDown={e => {
+              if (e.key !== 'Enter') return;
+              const set = (key: string, value: any) =>
+                R.over(R.lensProp('columnsState'), R.assoc(key, value));
+              setBoardState(
+                R.pipe(
+                  set('selectedColumn', 'columnIndex'),
+                  set('activeColumn', -1),
+                )(boardState),
+              );
+            }}
+            onChange={e => {
+              prevValue.current = value;
+              setBoardData!(
+                R.assoc(
+                  'columns',
+                  returnUpdatedCells<IColumn>({
+                    iterable: boardData.columns,
+                    cellUpdates: [{ cellId: _id, updatedValue: e.target.value }],
+                  }),
+                  boardData,
+                ),
+              );
+            }}
+          />
+        ) : (
+          <Label>{value}</Label>
+        )}
+        <i
+          style={{ marginLeft: 'auto' }}
+          className={
+            !columnSorting?.direction
+              ? ''
+              : columnSorting?.direction === 'asc'
+              ? `fad fa-sort-down`
+              : `fad fa-sort-up`
+          }
         />
-      )}
-    </ColumnHeaderContainer>
+        <DraggableColEdge colWidth={colWidth ?? defaults.COL_WIDTH} colId={_id} />
+        <Dropdown trigger={['click']} overlay={menu}>
+          <MenuTrigger
+            onDoubleClick={e => e.stopPropagation()}
+            onClick={e => {
+              e.stopPropagation();
+              toggleShowContextMenu(true);
+            }}
+          >
+            <i className="fas fa-chevron-square-down" />
+          </MenuTrigger>
+        </Dropdown>
+      </ColumnHeaderContainer>
+    </Dropdown>
   );
 };
 

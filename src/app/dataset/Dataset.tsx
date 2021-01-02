@@ -141,8 +141,6 @@ const Dataset: React.FC<{
     setCurrentVersion(nextId);
   };
 
-  console.log(currentVersion, changeHistoryRef.current);
-
   const handleChange = (changeHistoryItem: ChangeHistoryItem) => {
     if (changeHistoryItem.newValue === changeHistoryItem.prevValue) return;
 

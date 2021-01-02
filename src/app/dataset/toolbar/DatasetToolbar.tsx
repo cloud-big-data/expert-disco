@@ -58,8 +58,6 @@ const DatasetToolbar: React.FC<{
     currentVersion ===
     changeHistoryRef.current?.[changeHistoryRef.current.length - 1];
 
-  console.log('rendered');
-
   return (
     <BoardActionsContainer>
       <div className="left">
