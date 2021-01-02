@@ -166,7 +166,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
 
   const menu = (
     <Menu>
-      <Menu.ItemGroup title="Dataset Settings">
+      <Menu.ItemGroup>
         <Menu.Item onClick={() => setBoardData!(boardActions.removeColumn(_id))}>
           <MenuIcon
             style={{ color: Styles.red400 }}

@@ -226,7 +226,6 @@ a:not(.no-hover):hover {
   background-color: var(--purple);
 }
 
-#root .ant-dropdown-menu {
-  border-radius: var(--defaultBorderRadius);
-  box-shadow: var(--boxShadow);
+.ant-dropdown-menu {
+  border-radius: var(--defaultBorderRadius) !important;
 }

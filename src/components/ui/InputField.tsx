@@ -115,6 +115,15 @@ const TextContainer = styled.div<{ pre?: boolean }>`
       `}
 `;
 
+const OnConfirmContainer = styled.button`
+  background: ${Styles.defaultBgColor};
+  border: 2px solid ${Styles.dark100};
+  border-left: 2px solid ${Styles.dark100};
+  border-radius: 0 ${Styles.defaultBorderRadius} ${Styles.defaultBorderRadius} 0;
+  padding: 0 1rem;
+  outline: none;
+`;
+
 const InputField: React.FC<{
   onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
@@ -137,6 +146,10 @@ const InputField: React.FC<{
   append?: string;
   prepend?: string;
   label?: string;
+  onConfirm?: () => void;
+  confirmText?: string;
+  min?: number;
+  max?: number;
 }> = props => {
   const [active, setActive] = useState(false);
 
@@ -180,8 +193,15 @@ const InputField: React.FC<{
             props.onBlur?.(e);
           }}
           role={props.role}
+          min={props.min}
+          max={props.max}
         />
         {props.append && <TextContainer>{props.append}</TextContainer>}
+        {props.onConfirm && (
+          <OnConfirmContainer onClick={props.onConfirm}>
+            {props.confirmText ?? 'Submit'}
+          </OnConfirmContainer>
+        )}
       </InputContainer>
     </>
   );

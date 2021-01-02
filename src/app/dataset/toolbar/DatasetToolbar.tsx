@@ -1,8 +1,10 @@
 import { Label } from 'components/ui/Typography';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import DatasetContext from 'contexts/DatasetContext';
+import { ButtonTertiary } from 'components/ui/Buttons';
+import InputField from 'components/ui/InputField';
 import NewRows from './NewRows';
 import NewColumns from './NewColumns';
 
@@ -15,11 +17,29 @@ const BoardActionsContainer = styled.div`
     margin-right: auto;
     display: flex;
   }
-  .right {
+  .right,
+  .top,
+  .bottom {
     display: flex;
     margin-left: auto;
     button {
       margin-left: 1rem;
+    }
+  }
+  .right {
+    flex-direction: column;
+  }
+
+  .bottom button {
+    border: 1px solid transparent;
+    align-items: center;
+    padding: 0.5rem;
+    margin-right: -0.5rem;
+    font-size: 0.75rem;
+  }
+  .bottom button:hover {
+    p {
+      color: ${Styles.purple400} !important;
     }
   }
 `;
@@ -51,7 +71,9 @@ const DatasetToolbar: React.FC<{
   undo: () => void;
   redo: () => void;
 }> = ({ currentVersion, undo, redo }) => {
-  const { changeHistoryRef } = useContext(DatasetContext)!;
+  const [rowSelectOpen, setRowSelectOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(1);
+  const { changeHistoryRef, socket } = useContext(DatasetContext)!;
 
   const undoDisabled = currentVersion === changeHistoryRef.current?.[0];
   const redoDisabled =
@@ -71,16 +93,32 @@ const DatasetToolbar: React.FC<{
         </TimeTravel>
       </div>
       <div className="right">
-        <NewColumns />
-        <NewRows />
-        {/* <ButtonPrimary onClick={() => setBoardData!(boardActions.newRow())}>
-          Add row
-        </ButtonPrimary>
-        <ButtonPrimary
-          onClick={() => setBoardData!(boardActions.newColumn(`col ${colLen + 1}`))}
-        >
-          Add Column
-        </ButtonPrimary> */}
+        <div className="top">
+          <NewColumns />
+          <NewRows />
+        </div>
+        <div className="bottom">
+          <ButtonTertiary onClick={() => setRowSelectOpen(!rowSelectOpen)}>
+            <span style={{ color: rowSelectOpen ? Styles.purple400 : 'initial' }}>
+              Jump to row
+            </span>
+          </ButtonTertiary>
+        </div>
+        {rowSelectOpen && (
+          <InputField
+            type="number"
+            icon={<i className="fad fa-search" />}
+            value={selectedRow}
+            onChange={e => setSelectedRow(parseInt(e.target.value, 10))}
+            onConfirm={
+              selectedRow
+                ? () => socket?.emit('getSlice', selectedRow)
+                : () => undefined
+            }
+            confirmText="Go"
+            min={0}
+          />
+        )}
       </div>
     </BoardActionsContainer>
   );
