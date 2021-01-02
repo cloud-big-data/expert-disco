@@ -227,5 +227,6 @@ a:not(.no-hover):hover {
 }
 
 .ant-dropdown-menu {
+  padding: var(--defaultPadding);
   border-radius: var(--defaultBorderRadius) !important;
 }
