@@ -142,7 +142,7 @@ const Dataset: React.FC<{
   };
 
   const handleChange = (changeHistoryItem: ChangeHistoryItem) => {
-    if (changeHistoryItem.newValue === changeHistoryItem.prevValue) return;
+    if (R.equals(changeHistoryItem.newValue, changeHistoryItem.prevValue)) return;
 
     const revisionId = uuidv4();
     const currentIndex = changeHistoryRef.current?.findIndex(
@@ -166,6 +166,8 @@ const Dataset: React.FC<{
     } else {
       changeHistoryRef.current = [...changeHistoryRef.current, revisionId];
     }
+
+    console.log(changeHistoryItem);
 
     socket?.emit('saveToHistory', {
       ...changeHistoryItem,

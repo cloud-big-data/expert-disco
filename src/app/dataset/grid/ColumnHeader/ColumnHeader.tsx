@@ -9,6 +9,7 @@ import GridContext from 'contexts/GridContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import { Menu, Dropdown } from 'antd';
 import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
+import findColumnById from 'app/dataset/lib/findColumnById';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
 import {
@@ -119,6 +120,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   const prevActive = usePrevious(
     boardState.columnsState.activeColumn === columnIndex,
   );
+  const prevColumnValue = usePrevious(findColumnById(_id, boardData));
+
   const active = boardState.columnsState.activeColumn === columnIndex;
 
   useHandleClickOutside(colHeaderRef, () =>
@@ -167,7 +170,25 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   const menu = (
     <Menu>
       <Menu.ItemGroup>
-        <Menu.Item onClick={() => setBoardData!(boardActions.removeColumn(_id))}>
+        <Menu.Item
+          onClick={() => {
+            const newBoardData = boardActions.removeColumn(_id);
+            const cellsArray = boardData.rows.map(row => row.cells[columnIndex]);
+
+            handleChange?.({
+              changeTarget: 'column',
+              targetId: _id,
+              prevValue: prevColumnValue,
+              newValue: findColumnById(_id, newBoardData),
+              secondaryValue: {
+                changeTarget: 'cells',
+                prevValue: cellsArray,
+                newValue: undefined,
+              },
+            });
+            setBoardData?.(newBoardData);
+          }}
+        >
           <MenuIcon
             style={{ color: Styles.red400 }}
             className="fal fa-times-circle"

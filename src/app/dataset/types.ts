@@ -136,8 +136,13 @@ export interface IBoardHead {
 export interface ChangeHistoryItem {
   changeTarget: 'row' | 'column' | 'cell';
   targetId: string;
-  prevValue?: string;
-  newValue?: string;
+  prevValue?: string | IColumn | IRow;
+  newValue?: string | IColumn | IRow;
+  secondaryValue?: {
+    prevValue: string | IColumn | IRow | ICell[];
+    newValue?: string | IColumn | IRow | ICell[];
+    changeTarget: 'row' | 'column' | 'cell' | 'cells';
+  };
 }
 
 /**
