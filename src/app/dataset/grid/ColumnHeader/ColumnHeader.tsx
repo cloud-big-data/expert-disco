@@ -171,9 +171,9 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     <Menu>
       <Menu.ItemGroup>
         <Menu.Item
+          disabled={boardData.columns.length === 1}
           onClick={() => {
             const newBoardData = boardActions.removeColumn(_id);
-            const cellsArray = boardData.rows.map(row => row.cells[columnIndex]);
 
             handleChange?.({
               changeTarget: 'column',
@@ -182,8 +182,6 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               newValue: findColumnById(_id, newBoardData),
               secondaryValue: {
                 changeTarget: 'cells',
-                prevValue: cellsArray,
-                newValue: undefined,
               },
             });
             setBoardData?.(newBoardData);

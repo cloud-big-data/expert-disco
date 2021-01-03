@@ -139,9 +139,9 @@ export interface ChangeHistoryItem {
   prevValue?: string | IColumn | IRow;
   newValue?: string | IColumn | IRow;
   secondaryValue?: {
-    prevValue: string | IColumn | IRow | ICell[];
+    prevValue?: string | IColumn | IRow | ICell[];
     newValue?: string | IColumn | IRow | ICell[];
-    changeTarget: 'row' | 'column' | 'cell' | 'cells';
+    changeTarget?: 'row' | 'column' | 'cell' | 'cells';
   };
 }
 
