@@ -167,8 +167,10 @@ const Dataset: React.FC<{
       changeHistoryRef.current = [...changeHistoryRef.current, revisionId];
     }
 
-    console.log(changeHistoryItem);
-
+    localStorage.setItem(
+      `${datasetHead._id}-change-history`,
+      JSON.stringify(changeHistoryRef.current),
+    );
     socket?.emit('saveToHistory', {
       ...changeHistoryItem,
       revisionId,

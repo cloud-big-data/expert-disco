@@ -69,8 +69,19 @@ const DatasetWrapper: React.FC = () => {
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
 
-  const changeHistoryRef = useRef<string[]>([]);
   const { datasetId } = useParams<{ datasetId: string }>();
+
+  const localStorageLookup = `${datasetId}-change-history`;
+
+  if (datasetId && !localStorage.getItem(localStorageLookup)) {
+    localStorage.setItem(localStorageLookup, JSON.stringify([]));
+  }
+
+  const changeHistoryRef = useRef<string[]>(
+    JSON.parse(localStorage.getItem(localStorageLookup) ?? '[]'),
+  );
+
+  console.log(changeHistoryRef.current);
 
   const { data } = useQuery(user.accessToken, () =>
     user.accessToken

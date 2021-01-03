@@ -75,7 +75,14 @@ const useDatasetsSockets = (
     socket.on('initialDatasetReceived', (res: IBoardData) => {
       if (!boardData) {
         setBoardData(res);
-        changeHistoryRef.current = [uuidv4()];
+        if (!changeHistoryRef.current?.[0]) {
+          changeHistoryRef.current = [uuidv4()];
+        }
+
+        localStorage.setItem(
+          `${datasetId}-change-history`,
+          JSON.stringify(changeHistoryRef.current),
+        );
       }
     });
 
