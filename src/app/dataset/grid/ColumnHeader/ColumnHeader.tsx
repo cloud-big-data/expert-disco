@@ -10,6 +10,8 @@ import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import { Menu, Dropdown } from 'antd';
 import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
 import findColumnById from 'app/dataset/lib/findColumnById';
+import { dateFormats, numberFormats, CURRENCY_CODES } from 'app/dataset/constants';
+import updateColumnById from 'app/dataset/lib/updateColumnById';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
 import {
@@ -18,6 +20,7 @@ import {
   IColumn,
   ISortingLayer,
   SortDirections,
+  Formats,
 } from '../../types';
 import { defaults, COLUMN_DATA_TYPES } from '../constants';
 import { ActiveInput } from '../styles';
@@ -100,6 +103,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   columnIndex,
   _id,
   dataType,
+  format,
+  additionalFormatKey,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
   const {
@@ -237,17 +242,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           <Menu.Item
             disabled={!typesAreCompatible(dataType, type)}
             onClick={() => {
-              setBoardData?.({
-                ...boardData,
-                columns: boardData.columns.map(col =>
-                  col._id === _id
-                    ? {
-                        ...col,
-                        dataType: type,
-                      }
-                    : col,
-                ),
-              });
+              setBoardData?.(updateColumnById(_id, { dataType: type }, boardData));
             }}
             key={type}
           >
@@ -256,6 +251,55 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             </span>
           </Menu.Item>
         ))}
+      </Menu.SubMenu>
+      <Menu.SubMenu disabled={dataType === 'string'} title="Formatting">
+        {(dataType === 'number'
+          ? numberFormats
+          : dataType === 'date'
+          ? dateFormats
+          : []
+        ).map((formatOpt: string) => (
+          <Menu.Item
+            key={formatOpt}
+            onClick={() => {
+              setBoardData?.(
+                updateColumnById(_id, { format: formatOpt as Formats }, boardData),
+              );
+            }}
+          >
+            <span style={{ fontWeight: format === formatOpt ? 'bold' : 'initial' }}>
+              {formatOpt}
+            </span>
+          </Menu.Item>
+        ))}
+        {dataType !== 'string' && (
+          <Menu.SubMenu title="Additional formats">
+            <Menu.SubMenu title="Currencies">
+              {CURRENCY_CODES.map(code => (
+                <Menu.Item
+                  key={code}
+                  onClick={() => {
+                    setBoardData?.(
+                      updateColumnById(
+                        _id,
+                        { format: 'currency', additionalFormatKey: code },
+                        boardData,
+                      ),
+                    );
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: code === additionalFormatKey ? 'bold' : 'initial',
+                    }}
+                  >
+                    {code}
+                  </span>
+                </Menu.Item>
+              ))}
+            </Menu.SubMenu>
+          </Menu.SubMenu>
+        )}
       </Menu.SubMenu>
     </Menu>
   );

@@ -61,16 +61,26 @@ export type ISmartColumns = Array<{
   delim?: string;
 }>;
 
+type DateFormats =
+  | 'MM-DD-YYYY'
+  | 'DD-MM-YYYY'
+  | 'YYYY-MM-DD'
+  | 'MM/DD/YYYY'
+  | 'DD/MM/YYYY'
+  | 'YYYY/MM/DD';
+
+export type Formats =
+  | 'number'
+  | 'decimal'
+  | 'percent'
+  | 'currency'
+  | 'time'
+  | 'datetime'
+  | DateFormats;
+
 export type IColumnFormatting = Array<{
   colId: string;
-  format:
-    | 'number'
-    | 'decimal'
-    | 'percent'
-    | 'currency'
-    | 'date'
-    | 'time'
-    | 'datetime';
+  format: Formats;
   additional?: string;
 }>;
 
@@ -90,7 +100,9 @@ export interface IColumn extends ICell {
    * colWidth: The width of the column, in px.
    */
   colWidth?: number;
-  format?: any;
+  format?: Formats;
+  additionalFormatKey?: string;
+  datetime?: boolean;
 }
 
 export interface IRow {

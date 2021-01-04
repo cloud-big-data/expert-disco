@@ -12,6 +12,7 @@ import parseDataType from 'app/dataset/lib/parseDataType';
 import GridContext from 'contexts/GridContext';
 import usePrevious from 'hooks/usePrevious';
 import moment from 'moment';
+import formatValue from 'app/dataset/lib/formatValue';
 import { ICell, IBoardState, DataTypes } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
@@ -30,6 +31,7 @@ interface ICellProps extends ICell {
   isCopying: boolean;
   colWidth?: number;
   colFormat?: any;
+  additionalFormatKey?: string;
 }
 
 const CELL_BORDER_COLOR = Styles.faintBorderColor;
@@ -160,6 +162,7 @@ const Cell: React.FC<ICellProps> = ({
   colWidth,
   colFormat,
   colIndex,
+  additionalFormatKey,
 }) => {
   const [, setClipboard] = useClippy();
   const {
@@ -331,7 +334,14 @@ const Cell: React.FC<ICellProps> = ({
           />
         )
       ) : (
-        <span className="cell__value">{value}</span>
+        <span className="cell__value">
+          {formatValue({
+            desiredFormat: colFormat,
+            dataType: colDataType,
+            value,
+            additionalFormatKey,
+          })}
+        </span>
       )}
       {showContextMenu && (
         <DropdownMenu
