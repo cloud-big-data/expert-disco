@@ -90,6 +90,7 @@ export interface IColumn extends ICell {
    * colWidth: The width of the column, in px.
    */
   colWidth?: number;
+  format?: any;
 }
 
 export interface IRow {

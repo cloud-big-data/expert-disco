@@ -7,10 +7,11 @@ import editCellsAndReturnBoard from 'app/dataset/lib/editCellsAndReturnBoard';
 import DropdownMenu from 'components/DropdownMenu';
 import useClippy from 'use-clippy';
 import getCellValueById from 'app/dataset/lib/getCellValueById';
-import { notification } from 'antd';
+import { notification, DatePicker } from 'antd';
 import parseDataType from 'app/dataset/lib/parseDataType';
 import GridContext from 'contexts/GridContext';
 import usePrevious from 'hooks/usePrevious';
+import moment from 'moment';
 import { ICell, IBoardState, DataTypes } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
@@ -28,6 +29,7 @@ interface ICellProps extends ICell {
   };
   isCopying: boolean;
   colWidth?: number;
+  colFormat?: any;
 }
 
 const CELL_BORDER_COLOR = Styles.faintBorderColor;
@@ -156,6 +158,7 @@ const Cell: React.FC<ICellProps> = ({
   position,
   isCopying,
   colWidth,
+  colFormat,
   colIndex,
 }) => {
   const [, setClipboard] = useClippy();
@@ -169,6 +172,7 @@ const Cell: React.FC<ICellProps> = ({
   const { handleChange } = useContext(GridContext)!;
 
   const [errorNotificationIsOpen, setErrorNotification] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [localValue, setLocalValue] = useState(value);
@@ -240,15 +244,11 @@ const Cell: React.FC<ICellProps> = ({
         setShowContextMenu(!showContextMenu);
       }}
       onClick={() => {
-        // console.log(
-        //   R.pipe(
-        //     R.assocPath(['columnsState', 'selectedColumn'], -1),
-        //     R.assocPath(['cellsState', 'selectedCell'], _id),
-        //   )(boardState) as IBoardState,
-        // );
+        if (boardState.cellsState.selectedCell === _id) return;
         setBoardState(
           R.pipe(
             R.assocPath(['columnsState', 'selectedColumn'], -1),
+            R.assocPath(['cellsState', 'activeCell'], -1),
             R.assocPath(['cellsState', 'selectedCell'], _id),
           )(boardState) as IBoardState,
         );
@@ -258,57 +258,78 @@ const Cell: React.FC<ICellProps> = ({
       }
     >
       {!readOnly && active ? (
-        <ActiveInput
-          ref={inputRef}
-          value={localValue ?? ''}
-          type="text"
-          onKeyDown={e => {
-            if (e.key !== 'Enter') return;
-            const setCells = (key: string, value: any) =>
-              R.over(R.lensProp('cellsState'), R.assoc(key, value));
-
-            setBoardState(
-              R.pipe(
-                setCells('activeCell', ''),
-                setCells('selectedCell', _id),
-              )(boardState) as IBoardState,
-            );
-          }}
-          onChange={e => {
-            const { value } = e.target;
-            const attemptedInputType = parseDataType(value);
-            if (
-              colDataType !== 'string' &&
-              value !== '' &&
-              attemptedInputType !== colDataType
-            ) {
-              if (!errorNotificationIsOpen) {
-                showTypeError(colDataType!, attemptedInputType);
-              }
-              setErrorNotification(true);
-              setTimeout(() => {
-                setErrorNotification(false);
-              }, 4500);
-              return;
-            }
-            setLocalValue(e.target.value);
-            clearTimeout(typingTimeout.current);
-
-            typingTimeout.current = setTimeout(() => {
+        colDataType === 'date' ? (
+          <DatePicker
+            onChange={(date, dateString) =>
               setBoardData?.(
                 editCellsAndReturnBoard(
                   [
                     {
                       cellId: _id,
-                      updatedValue: (value as string) ?? '',
+                      updatedValue: dateString ?? '',
                     },
                   ],
                   boardData,
                 ),
+              )
+            }
+            value={moment(value)}
+            bordered={false}
+            format={colFormat ?? 'MM-DD-YYYY'}
+          />
+        ) : (
+          <ActiveInput
+            ref={inputRef}
+            value={localValue ?? ''}
+            type={colDataType === 'string' ? 'text' : 'number'}
+            onKeyDown={e => {
+              if (e.key !== 'Enter') return;
+              const setCells = (key: string, value: any) =>
+                R.over(R.lensProp('cellsState'), R.assoc(key, value));
+
+              setBoardState(
+                R.pipe(
+                  setCells('activeCell', ''),
+                  setCells('selectedCell', _id),
+                )(boardState) as IBoardState,
               );
-            }, 200);
-          }}
-        />
+            }}
+            onChange={e => {
+              const { value } = e.target;
+              const attemptedInputType = parseDataType(value);
+              if (
+                colDataType !== 'string' &&
+                value !== '' &&
+                attemptedInputType !== colDataType
+              ) {
+                if (!errorNotificationIsOpen) {
+                  showTypeError(colDataType!, attemptedInputType);
+                }
+                setErrorNotification(true);
+                setTimeout(() => {
+                  setErrorNotification(false);
+                }, 4500);
+                return;
+              }
+              setLocalValue(e.target.value);
+              clearTimeout(typingTimeout.current);
+
+              typingTimeout.current = setTimeout(() => {
+                setBoardData?.(
+                  editCellsAndReturnBoard(
+                    [
+                      {
+                        cellId: _id,
+                        updatedValue: (value as string) ?? '',
+                      },
+                    ],
+                    boardData,
+                  ),
+                );
+              }, 200);
+            }}
+          />
+        )
       ) : (
         <span className="cell__value">{value}</span>
       )}

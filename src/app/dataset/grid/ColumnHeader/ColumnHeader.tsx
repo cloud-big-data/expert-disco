@@ -329,7 +329,6 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               : `fad fa-sort-up`
           }
         />
-        <DraggableColEdge colWidth={colWidth ?? defaults.COL_WIDTH} colId={_id} />
         <Dropdown trigger={['click']} overlay={menu}>
           <MenuTrigger
             onDoubleClick={e => e.stopPropagation()}
@@ -341,6 +340,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             <i className="fas fa-chevron-square-down" />
           </MenuTrigger>
         </Dropdown>
+        <DraggableColEdge colWidth={colWidth ?? defaults.COL_WIDTH} colId={_id} />
       </ColumnHeaderContainer>
     </Dropdown>
   );

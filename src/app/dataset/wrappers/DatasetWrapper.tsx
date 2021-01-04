@@ -81,8 +81,6 @@ const DatasetWrapper: React.FC = () => {
     JSON.parse(localStorage.getItem(localStorageLookup) ?? '[]'),
   );
 
-  console.log(changeHistoryRef.current);
-
   const { data } = useQuery(user.accessToken, () =>
     user.accessToken
       ? skyvueFetch(user.accessToken).get(`/datasets/${datasetId}`)

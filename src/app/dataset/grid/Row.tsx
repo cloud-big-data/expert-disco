@@ -76,6 +76,7 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
           }}
           isCopying={boardState.cellsState.copyingCell === cell._id}
           colWidth={boardData.columns[index].colWidth}
+          colFormat={boardData.columns[index].format}
           {...cell}
         />
       ))}
