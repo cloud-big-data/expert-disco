@@ -62,6 +62,10 @@ export const makeBoardActions = (boardData: IBoardData) => {
         })),
       };
     },
+    removeRow: (rowId: string) => ({
+      ...boardData,
+      rows: boardData.rows.filter(row => row._id !== rowId),
+    }),
     changeColWidth: (colId: string, newWidth: number) => ({
       ...boardData,
       columns: boardData.columns.map(col => ({

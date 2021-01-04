@@ -226,7 +226,12 @@ a:not(.no-hover):hover {
   background-color: var(--purple);
 }
 
-.ant-dropdown-menu {
+.ant-dropdown-menu,
+.ant-picker-panel-container {
   padding: var(--defaultPadding);
   border-radius: var(--defaultBorderRadius) !important;
+}
+
+.ant-picker-panel-container {
+  border: 1px solid var(--faintBorderColor);
 }
