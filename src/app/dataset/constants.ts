@@ -5,9 +5,10 @@ export const dateFormats = [
   'MM/DD/YYYY',
   'DD/MM/YYYY',
   'YYYY/MM/DD',
+  'iso string',
 ];
 
-export const numberFormats = ['number', 'decimal', 'percent', 'currency'];
+export const numberFormats = ['number', 'percent', 'currency'];
 
 export const CURRENCY_CODES = [
   'AED',

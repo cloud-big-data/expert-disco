@@ -67,11 +67,11 @@ type DateFormats =
   | 'YYYY-MM-DD'
   | 'MM/DD/YYYY'
   | 'DD/MM/YYYY'
-  | 'YYYY/MM/DD';
+  | 'YYYY/MM/DD'
+  | 'iso string';
 
 export type Formats =
   | 'number'
-  | 'decimal'
   | 'percent'
   | 'currency'
   | 'time'
@@ -94,6 +94,14 @@ export interface ICell {
   value?: string;
 }
 
+export interface NumberFormatSettings {
+  decimalPoints?: number;
+  currencyCode?: string;
+  commas?: boolean;
+}
+
+export type FormatSettings = NumberFormatSettings;
+
 export interface IColumn extends ICell {
   dataType: DataTypes;
   /**
@@ -101,8 +109,8 @@ export interface IColumn extends ICell {
    */
   colWidth?: number;
   format?: Formats;
-  additionalFormatKey?: string;
   datetime?: boolean;
+  formatSettings?: FormatSettings;
 }
 
 export interface IRow {

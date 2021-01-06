@@ -235,3 +235,11 @@ a:not(.no-hover):hover {
 .ant-picker-panel-container {
   border: 1px solid var(--faintBorderColor);
 }
+
+
+#root .ant-switch {
+  box-shadow: var(--boxShadow);
+}
+#root .ant-switch-checked {
+  background-color: var(--blue);
+}

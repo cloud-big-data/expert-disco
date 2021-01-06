@@ -1,20 +1,24 @@
 import moment from 'moment';
-import { DataTypes, Formats } from '../types';
+import { DataTypes, Formats, FormatSettings } from '../types';
 
 const formatValue = ({
   desiredFormat,
   dataType,
   value,
-  additionalFormatKey,
+  formatSettings,
 }: {
   desiredFormat?: Formats;
   dataType?: DataTypes;
   value?: string;
-  additionalFormatKey?: string;
+  formatSettings?: FormatSettings;
 }) => {
   if (!value) return;
   if (dataType === 'date') {
     const date = moment(value);
+    if (desiredFormat === 'iso string') {
+      return date.toISOString();
+    }
+
     return date.format(desiredFormat);
   }
 
@@ -22,22 +26,26 @@ const formatValue = ({
     const parsed = parseFloat(value);
 
     if (desiredFormat === 'currency') {
-      return new Intl.NumberFormat('en-US', {
+      const asCurrency = new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: additionalFormatKey ?? 'USD',
+        currency: formatSettings?.currencyCode ?? 'USD',
       }).format(parsed);
-    }
 
-    if (desiredFormat === 'decimal') {
-      return parsed.toFixed(2);
+      return (formatSettings?.decimalPoints ?? 2) < 1
+        ? asCurrency.replace(/\D00$/, '')
+        : asCurrency;
     }
 
     if (desiredFormat === 'percent') {
-      return `${parsed * 100}%`;
+      return `${(parsed * 100).toFixed(formatSettings?.decimalPoints ?? 2)}%`;
     }
-    // 'number', 'decimal', 'percent', 'currency'
 
-    return value;
+    return formatSettings?.commas ?? true
+      ? parsed.toLocaleString('en-US', {
+          minimumFractionDigits: formatSettings?.decimalPoints ?? 2,
+          maximumFractionDigits: formatSettings?.decimalPoints ?? 2,
+        })
+      : parsed.toFixed(formatSettings?.decimalPoints ?? 2);
   }
 
   return value;

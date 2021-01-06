@@ -104,7 +104,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   _id,
   dataType,
   format,
-  additionalFormatKey,
+  formatSettings,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
   const {
@@ -198,13 +198,6 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           />
           Remove column
         </Menu.Item>
-        <Menu.Item>
-          <MenuIcon
-            style={{ color: Styles.blue }}
-            className="fad fa-remove-format"
-          />
-          Format
-        </Menu.Item>
       </Menu.ItemGroup>
       <Menu.SubMenu title="Sort">
         <Menu.Item onClick={() => handleSortingChange()}>
@@ -252,7 +245,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           </Menu.Item>
         ))}
       </Menu.SubMenu>
-      <Menu.SubMenu disabled={dataType === 'string'} title="Formatting">
+      <Menu.SubMenu disabled={dataType === 'string'} title={<>Formatting</>}>
         {(dataType === 'number'
           ? numberFormats
           : dataType === 'date'
@@ -263,7 +256,14 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             key={formatOpt}
             onClick={() => {
               setBoardData?.(
-                updateColumnById(_id, { format: formatOpt as Formats }, boardData),
+                updateColumnById(
+                  _id,
+                  {
+                    format: formatOpt as Formats,
+                    formatSettings,
+                  },
+                  boardData,
+                ),
               );
             }}
           >
@@ -272,7 +272,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             </span>
           </Menu.Item>
         ))}
-        {dataType !== 'string' && (
+        {dataType === 'number' && (
           <Menu.SubMenu title="Additional formats">
             <Menu.SubMenu title="Currencies">
               {CURRENCY_CODES.map(code => (
@@ -282,7 +282,13 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
                     setBoardData?.(
                       updateColumnById(
                         _id,
-                        { format: 'currency', additionalFormatKey: code },
+                        {
+                          format: 'currency',
+                          formatSettings: {
+                            ...formatSettings,
+                            currencyCode: code,
+                          },
+                        },
                         boardData,
                       ),
                     );
@@ -290,7 +296,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
                 >
                   <span
                     style={{
-                      fontWeight: code === additionalFormatKey ? 'bold' : 'initial',
+                      fontWeight:
+                        code === formatSettings?.currencyCode ? 'bold' : 'initial',
                     }}
                   >
                     {code}
@@ -304,13 +311,26 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     </Menu>
   );
 
+  const selectColumn = () =>
+    setBoardState(
+      R.pipe(
+        R.assocPath(['columnsState', 'selectedColumn'], columnIndex),
+        R.assocPath(['rowsState', 'selectedRow'], ''),
+      )(boardState) as IBoardState,
+    );
+
   return (
-    <Dropdown trigger={['contextMenu']} overlay={menu}>
+    <Dropdown
+      trigger={['contextMenu']}
+      onVisibleChange={toggleShowContextMenu}
+      overlay={menu}
+    >
       <ColumnHeaderContainer
         ref={colHeaderRef}
         onContextMenu={e => {
           e.preventDefault();
           toggleShowContextMenu(!showContextMenu);
+          selectColumn();
         }}
         position={position}
         active={active}
@@ -320,14 +340,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             R.assocPath(['columnsState', 'activeColumn'], columnIndex, boardState),
           )
         }
-        onClick={() =>
-          setBoardState(
-            R.pipe(
-              R.assocPath(['columnsState', 'selectedColumn'], columnIndex),
-              R.assocPath(['rowsState', 'selectedRow'], ''),
-            )(boardState) as IBoardState,
-          )
-        }
+        onClick={selectColumn}
       >
         <ColumnTypeIcon dataType={dataType} />
         {!readOnly && active ? (
@@ -373,14 +386,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               : `fad fa-sort-up`
           }
         />
-        <Dropdown trigger={['click']} overlay={menu}>
-          <MenuTrigger
-            onDoubleClick={e => e.stopPropagation()}
-            onClick={e => {
-              e.stopPropagation();
-              toggleShowContextMenu(true);
-            }}
-          >
+        <Dropdown disabled={showContextMenu} trigger={['click']} overlay={menu}>
+          <MenuTrigger>
             <i className="fas fa-chevron-square-down" />
           </MenuTrigger>
         </Dropdown>

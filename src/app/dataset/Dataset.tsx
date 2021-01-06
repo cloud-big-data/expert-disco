@@ -151,13 +151,6 @@ const Dataset: React.FC<{
 
     const shouldRevert = currentIndex !== changeHistoryRef.current?.length - 1;
 
-    console.log(
-      currentIndex,
-      shouldRevert,
-      currentVersion,
-      changeHistoryRef.current,
-    );
-
     if (shouldRevert && changeHistoryRef.current) {
       changeHistoryRef.current = [
         ...changeHistoryRef.current.slice(0, currentIndex + 1),

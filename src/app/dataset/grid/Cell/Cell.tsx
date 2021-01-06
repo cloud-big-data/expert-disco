@@ -13,7 +13,7 @@ import GridContext from 'contexts/GridContext';
 import usePrevious from 'hooks/usePrevious';
 import moment from 'moment';
 import formatValue from 'app/dataset/lib/formatValue';
-import { ICell, IBoardState, DataTypes } from '../../types';
+import { ICell, IBoardState, DataTypes, NumberFormatSettings } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 
@@ -32,6 +32,7 @@ interface ICellProps extends ICell {
   colWidth?: number;
   colFormat?: any;
   additionalFormatKey?: string;
+  formatSettings?: NumberFormatSettings;
 }
 
 const CELL_BORDER_COLOR = Styles.faintBorderColor;
@@ -162,7 +163,7 @@ const Cell: React.FC<ICellProps> = ({
   colWidth,
   colFormat,
   colIndex,
-  additionalFormatKey,
+  formatSettings,
 }) => {
   const [, setClipboard] = useClippy();
   const {
@@ -339,7 +340,7 @@ const Cell: React.FC<ICellProps> = ({
             desiredFormat: colFormat,
             dataType: colDataType,
             value,
-            additionalFormatKey,
+            formatSettings,
           })}
         </span>
       )}

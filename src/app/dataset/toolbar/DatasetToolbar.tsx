@@ -5,8 +5,10 @@ import Styles from 'styles/Styles';
 import DatasetContext from 'contexts/DatasetContext';
 import { ButtonTertiary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
+import { Switch } from 'antd';
 import NewRows from './NewRows';
 import NewColumns from './NewColumns';
+import updateColumnById from '../lib/updateColumnById';
 
 const BoardActionsContainer = styled.div`
   display: flex;
@@ -66,6 +68,23 @@ const TimeTravel = styled.div<{ disabled?: boolean }>`
   `}
 `;
 
+const FormatContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-left: 2rem;
+  button {
+    margin-left: 1rem;
+    &:disabled,
+    &:disabled i {
+      opacity: 0.3;
+    }
+  }
+
+  .group {
+    margin-left: 3rem;
+  }
+`;
+
 const DatasetToolbar: React.FC<{
   currentVersion: string | undefined;
   undo: () => void;
@@ -73,12 +92,22 @@ const DatasetToolbar: React.FC<{
 }> = ({ currentVersion, undo, redo }) => {
   const [rowSelectOpen, setRowSelectOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(1);
-  const { changeHistoryRef, socket } = useContext(DatasetContext)!;
+  const {
+    changeHistoryRef,
+    socket,
+    boardState,
+    boardData,
+    setBoardData,
+  } = useContext(DatasetContext)!;
 
   const undoDisabled = currentVersion === changeHistoryRef.current?.[0];
   const redoDisabled =
     currentVersion ===
     changeHistoryRef.current?.[changeHistoryRef.current.length - 1];
+
+  const { selectedColumn } = boardState.columnsState;
+  const columnAtIndex = boardData.columns?.[selectedColumn];
+  const { formatSettings } = columnAtIndex ?? {};
 
   return (
     <BoardActionsContainer>
@@ -91,6 +120,93 @@ const DatasetToolbar: React.FC<{
           <i className="fad fa-redo" />
           <Label>Redo</Label>
         </TimeTravel>
+        <FormatContainer>
+          {columnAtIndex?.dataType === 'number' && (
+            <>
+              <ButtonTertiary
+                disabled={
+                  !formatSettings?.decimalPoints ||
+                  formatSettings.decimalPoints === 0
+                }
+                onClick={
+                  columnAtIndex
+                    ? () =>
+                        setBoardData?.(
+                          updateColumnById(
+                            columnAtIndex._id,
+                            {
+                              formatSettings: {
+                                ...formatSettings,
+                                decimalPoints:
+                                  (formatSettings?.decimalPoints ?? 0) - 1,
+                              },
+                            },
+                            boardData,
+                          ),
+                        )
+                    : undefined
+                }
+                style={{ fontWeight: 400, padding: 0 }}
+              >
+                .00&nbsp;&nbsp;
+                <i className="fad fa-arrow-left" />
+              </ButtonTertiary>
+              <ButtonTertiary
+                disabled={
+                  (columnAtIndex.format === 'currency' &&
+                    formatSettings?.decimalPoints === 1) ||
+                  formatSettings?.decimalPoints === 20 // toFixed() method requires <= 20
+                }
+                onClick={
+                  columnAtIndex
+                    ? () =>
+                        setBoardData?.(
+                          updateColumnById(
+                            columnAtIndex._id,
+                            {
+                              formatSettings: {
+                                ...formatSettings,
+                                decimalPoints:
+                                  (formatSettings?.decimalPoints ?? 0) + 1,
+                              },
+                            },
+                            boardData,
+                          ),
+                        )
+                    : undefined
+                }
+                style={{ fontWeight: 400, padding: 0 }}
+              >
+                .00&nbsp;&nbsp;
+                <i className="fad fa-arrow-right" />
+              </ButtonTertiary>
+              {columnAtIndex.format !== 'currency' && (
+                <div className="group">
+                  <Label unBold>
+                    commas
+                    <Switch
+                      onChange={checked =>
+                        setBoardData?.(
+                          updateColumnById(
+                            columnAtIndex._id,
+                            {
+                              formatSettings: {
+                                ...formatSettings,
+                                commas: checked,
+                              },
+                            },
+                            boardData,
+                          ),
+                        )
+                      }
+                      checked={formatSettings?.commas ?? true}
+                    />
+                  </Label>
+                </div>
+              )}
+            </>
+          )}
+        </FormatContainer>
       </div>
       <div className="right">
         <div className="top">
