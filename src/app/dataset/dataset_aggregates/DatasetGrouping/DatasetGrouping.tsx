@@ -4,10 +4,24 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
-import getColumnNameById from 'app/dataset/lib/getColumnNameById';
-import Checkbox from 'components/ui/Checkbox';
-import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
-import { Label } from 'components/ui/Typography';
+import { ButtonPrimary, ButtonTertiary, IconButton } from 'components/ui/Buttons';
+import { Helper, Label } from 'components/ui/Typography';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
+import Styles from 'styles/Styles';
+import { OperatorBreak } from '../Styles';
+
+const reorder = (list: string[], startIndex: number, endIndex: number) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
 
 const GroupLayerContainer = styled.div`
   display: flex;
@@ -32,16 +46,38 @@ const GroupLayerContainer = styled.div`
 `;
 const GroupingContainer = styled.div`
   display: grid;
-  grid-template-columns: 2fr 2fr;
-  grid-column-gap: 1rem;
+  grid-template-columns: 1fr 3fr;
+  column-gap: 4rem;
 
-  > div {
+  .group-criteria__container {
+    display: grid;
+    grid-row-gap: 0.5rem;
+  }
+
+  .grouped-by__container {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    i {
+      margin-left: 0.5rem;
+    }
+  }
 
-    .group-criteria__container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  .aggregate__container {
+    display: 'flex';
+    flex-direction: column;
+  }
+
+  .agg-item__container {
+    margin-top: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    column-gap: 0.5rem;
+    align-items: center;
+
+    .first {
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -56,7 +92,7 @@ const GroupingContainer = styled.div`
     }
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1000px) {
     display: flex;
     flex-direction: column;
   }
@@ -94,10 +130,25 @@ const DatasetGrouping: React.FC = () => {
     });
   };
   const { groupedBy, columnAggregates } = groupingState;
-
   const availableColumns = boardData.columns
-    .filter(x => !groupedBy?.includes(x._id))
+    .filter(
+      x => !groupedBy?.includes(x._id) && !R.keys(columnAggregates).includes(x._id),
+    )
     .map(x => x._id);
+
+  const onDragEnd = (result: DropResult) => {
+    //    dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const { source, destination } = result;
+
+    setGroupingState({
+      ...groupingState,
+      groupedBy: reorder(groupedBy, source.index, destination.index),
+    });
+  };
 
   return (
     <GroupLayerContainer>
@@ -113,30 +164,159 @@ const DatasetGrouping: React.FC = () => {
         </div>
       </div>
       <GroupingContainer>
-        <div>
+        <div className="group-criteria__container">
           <Label>Group by:</Label>
-          <div className="group-criteria__container">
-            {boardData.columns.map(col => (
-              <div key={col._id} className="select__container">
-                <Checkbox
-                  disabled={R.includes(col._id, R.keys(columnAggregates))}
-                  checked={groupedBy.includes(col._id)}
-                  onChange={() => {
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided, snapshot) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {groupedBy.map((colId, index) => (
+                    <Draggable key={colId} draggableId={colId} index={index}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            marginLeft: snapshot.isDragging ? 0 : `${index * 2}rem`,
+                          }}
+                          key={colId}
+                          className="grouped-by__container"
+                        >
+                          <IconButton
+                            onClick={() =>
+                              setGroupingState({
+                                ...groupingState,
+                                groupedBy: groupedBy.filter(x => x !== colId),
+                              })
+                            }
+                          >
+                            <i
+                              style={{ color: Styles.red400 }}
+                              className="far fa-times-circle"
+                            />
+                          </IconButton>
+                          <Select
+                            options={boardData.columns.map(col => ({
+                              name: col.value ?? '',
+                              value: col._id ?? '',
+                              disabled: !availableColumns.find(
+                                col_ => col._id === col_,
+                              ),
+                            }))}
+                            value={colId}
+                            onChange={e =>
+                              setGroupingState({
+                                ...groupingState,
+                                groupedBy: groupedBy.map((col, index_) =>
+                                  index === index_ ? (e as string) : col,
+                                ),
+                              })
+                            }
+                          />
+                          <i className="fad fa-grip-lines" />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+
+          <OperatorBreak
+            onClick={() =>
+              setGroupingState({
+                ...groupingState,
+                groupedBy: [...groupedBy, availableColumns[0]],
+              })
+            }
+          >
+            + add column
+          </OperatorBreak>
+        </div>
+        <div
+          style={{ display: groupedBy.length === 0 ? 'none' : 'flex' }}
+          className="aggregate__container"
+        >
+          <Label>Values to be summarized + summary type</Label>
+          {R.keys(columnAggregates).map(key => (
+            <div key={key} className="agg-item__container">
+              <div className="first">
+                <IconButton
+                  style={{ marginRight: '.5rem' }}
+                  onClick={() =>
                     setGroupingState({
                       ...groupingState,
-                      groupedBy: groupedBy.includes(col._id)
-                        ? groupedBy.filter(x => x !== col._id)
-                        : [...groupedBy, col._id],
+                      columnAggregates: R.omit([key as string], columnAggregates),
+                    })
+                  }
+                >
+                  <i
+                    style={{ color: Styles.red400 }}
+                    className="far fa-times-circle"
+                  />
+                </IconButton>
+                <Select
+                  placeholder="column"
+                  value={key as string}
+                  options={boardData.columns.map(col => ({
+                    name: col.value ?? '',
+                    value: col._id ?? '',
+                    disabled: !availableColumns.find(col_ => col_ === col._id),
+                  }))}
+                  onChange={e => {
+                    const removed = R.omit([key as string])(columnAggregates);
+                    setGroupingState({
+                      ...groupingState,
+                      columnAggregates: {
+                        ...removed,
+                        [e]: columnAggregates[e] ?? 'sum',
+                      },
                     });
                   }}
-                >
-                  {col.value}
-                </Checkbox>
+                />
               </div>
-            ))}
-          </div>
+              {columnAggregates[key] && (
+                <>
+                  <Helper style={{ marginBottom: 0 }}>Summarized by</Helper>
+                  <Select
+                    value={columnAggregates[key]}
+                    placeholder="column"
+                    options={aggregateFunctions}
+                    onChange={e =>
+                      setGroupingState(
+                        R.assocPath(
+                          ['columnAggregates', key as string],
+                          e,
+                          groupingState,
+                        ),
+                      )
+                    }
+                  />
+                </>
+              )}
+            </div>
+          ))}
+
+          <OperatorBreak
+            onClick={() =>
+              setGroupingState({
+                ...groupingState,
+                columnAggregates: R.assoc(
+                  availableColumns[0],
+                  'sum',
+                  columnAggregates,
+                ),
+              })
+            }
+          >
+            + add column
+          </OperatorBreak>
         </div>
-        <div>
+        {/* <div>
           {availableColumns.length > 0 && groupedBy.length > 0 && (
             <>
               <Label>Aggregate functions</Label>
@@ -174,7 +354,7 @@ const DatasetGrouping: React.FC = () => {
               ))}
             </>
           )}
-        </div>
+        </div> */}
       </GroupingContainer>
       {unsavedChanges && (
         <div className="actions">

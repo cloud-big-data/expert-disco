@@ -128,7 +128,6 @@ const Condition: React.FC<{
           />
           <div className="select__container">
             <Select
-              fill={Styles.green}
               options={
                 PREDICATE_OPTIONS[
                   boardData.columns.find(col => col._id === state.key)?.dataType ??

@@ -7,7 +7,7 @@ import Styles from 'styles/Styles';
 import { v4 as uuidv4 } from 'uuid';
 import * as R from 'ramda';
 import DatasetContext from 'contexts/DatasetContext';
-import { Text } from 'components/ui/Typography';
+import { Helper, Text } from 'components/ui/Typography';
 
 const OperatorContainer = styled.div<{ first?: boolean }>`
   display: flex;
@@ -83,7 +83,6 @@ const Operator: React.FC<{
             </IconButton>
           )}
           <Select
-            fill={Styles.blue}
             onChange={value =>
               setFiltersState(R.assocPath(path, value, parentFilterState))
             }
@@ -114,6 +113,9 @@ const Operator: React.FC<{
               style={{ color: Styles.green, marginLeft: '.5rem' }}
               className="fas fa-plus-square"
             />
+            <Helper style={{ marginBottom: 0, marginLeft: '.5rem' }}>
+              Add condition
+            </Helper>
           </IconButton>
         </>
       )}

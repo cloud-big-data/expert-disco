@@ -243,3 +243,14 @@ a:not(.no-hover):hover {
 #root .ant-switch-checked {
   background-color: var(--blue);
 }
+
+#root .ant-select-selector {
+  border-radius: var(--defaultBorderRadius);
+  border: 2px solid var(--faintBorderColor);
+}
+
+@media only screen and (min-width: 1000px) {
+  #root .ant-select {
+    min-width: 250px;
+  }
+}

@@ -2,9 +2,9 @@ import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import Styles from 'styles/Styles';
 import * as R from 'ramda';
 import { v4 as uuidv4 } from 'uuid';
+import { OperatorBreak } from '../Styles';
 import { FilterContext } from './DatasetFilters';
 import Condition from './Condition';
 import Operator from './Operator';
@@ -13,23 +13,6 @@ const FilterRowContainer = styled.div<{ parent: boolean; indentation: number }>`
   display: flex;
   flex-direction: column;
   margin-left: ${props => (props.indentation ? props.indentation * 1.75 : 0)}rem;
-`;
-
-const OperatorBreak = styled.button`
-  color: ${Styles.softGray};
-  font-weight: bold;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  outline: none;
-  margin-top: 1rem;
-  padding: 0;
-  display: flex;
-  font-size: 0.8rem;
-  max-width: 5rem;
-  &:hover {
-    color: ${Styles.dark400};
-  }
 `;
 
 const FilterRow: React.FC<{
