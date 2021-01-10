@@ -4,8 +4,8 @@ import Styles from 'styles/Styles';
 
 interface IText {
   id?: string;
-  size: string;
-  len: string;
+  size: 'sm' | 'lg';
+  len: 'long' | 'short';
   style?: React.CSSProperties;
 }
 

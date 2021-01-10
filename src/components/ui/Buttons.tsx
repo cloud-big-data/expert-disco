@@ -12,6 +12,8 @@ interface IButton {
   className?: string;
   icon?: boolean;
   loading?: boolean;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
 }
 
 const Button = styled.button<{
@@ -41,6 +43,23 @@ const Button = styled.button<{
     cursor: not-allowed;
     &:hover {
       opacity: 0.5;
+    }
+  }
+
+  .icon {
+    i {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &.left {
+      margin-left: -1rem;
+      margin-right: 1rem;
+    }
+
+    &.right {
+      margin-right: -1rem;
+      margin-left: 1rem;
     }
   }
 
@@ -146,12 +165,14 @@ const ButtonPrimary: React.FC<IButton> = props => (
     style={props.style}
     className={props.className}
   >
+    {props.iconLeft && <div className="icon left">{props.iconLeft}</div>}
     {props.loading && (
       <div style={{ marginRight: '1rem', marginLeft: '-1rem' }}>
         <InlineLoading style={{ width: '30px' }} fill="white" />
       </div>
     )}
     {props.children}
+    {props.iconRight && <div className="icon right">{props.iconRight}</div>}
   </Button>
 );
 

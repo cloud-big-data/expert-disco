@@ -5,7 +5,7 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
 import { ButtonPrimary, ButtonTertiary, IconButton } from 'components/ui/Buttons';
-import { Helper, Label } from 'components/ui/Typography';
+import { Helper, Label, Text } from 'components/ui/Typography';
 import {
   DragDropContext,
   Droppable,
@@ -13,6 +13,7 @@ import {
   DropResult,
 } from 'react-beautiful-dnd';
 import Styles from 'styles/Styles';
+import { Empty } from 'antd';
 import { OperatorBreak } from '../Styles';
 
 const reorder = (list: string[], startIndex: number, endIndex: number) => {
@@ -44,9 +45,9 @@ const GroupLayerContainer = styled.div`
     }
   }
 `;
-const GroupingContainer = styled.div`
+const GroupingContainer = styled.div<{ length: number }>`
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: ${props => (props.length === 0 ? 'auto' : `1fr 3fr`)};
   column-gap: 4rem;
 
   .group-criteria__container {
@@ -163,9 +164,9 @@ const DatasetGrouping: React.FC = () => {
           </ButtonTertiary>
         </div>
       </div>
-      <GroupingContainer>
+      <GroupingContainer length={groupedBy.length}>
         <div className="group-criteria__container">
-          <Label>Group by:</Label>
+          {groupedBy.length > 0 && <Label>Group by:</Label>}
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable">
               {(provided, snapshot) => (
@@ -215,7 +216,9 @@ const DatasetGrouping: React.FC = () => {
                               })
                             }
                           />
-                          <i className="fad fa-grip-lines" />
+                          {groupedBy.length > 1 && (
+                            <i className="fad fa-grip-lines" />
+                          )}
                         </div>
                       )}
                     </Draggable>
@@ -226,16 +229,42 @@ const DatasetGrouping: React.FC = () => {
             </Droppable>
           </DragDropContext>
 
-          <OperatorBreak
-            onClick={() =>
-              setGroupingState({
-                ...groupingState,
-                groupedBy: [...groupedBy, availableColumns[0]],
-              })
-            }
-          >
-            + add column
-          </OperatorBreak>
+          {groupedBy.length === 0 ? (
+            <Empty
+              description={
+                <Text size="lg" len="short">
+                  Group your dataset copy blah blah
+                </Text>
+              }
+              style={{ textAlign: 'center' }}
+            >
+              <ButtonPrimary
+                onClick={() =>
+                  setGroupingState({
+                    ...groupingState,
+                    groupedBy: [...groupedBy, availableColumns[0]],
+                  })
+                }
+                style={{
+                  margin: '0 auto',
+                  display: unsavedChanges ? 'none' : 'flex',
+                }}
+              >
+                Start
+              </ButtonPrimary>
+            </Empty>
+          ) : (
+            <OperatorBreak
+              onClick={() =>
+                setGroupingState({
+                  ...groupingState,
+                  groupedBy: [...groupedBy, availableColumns[0]],
+                })
+              }
+            >
+              + add column
+            </OperatorBreak>
+          )}
         </div>
         <div
           style={{ display: groupedBy.length === 0 ? 'none' : 'flex' }}
@@ -316,45 +345,6 @@ const DatasetGrouping: React.FC = () => {
             + add column
           </OperatorBreak>
         </div>
-        {/* <div>
-          {availableColumns.length > 0 && groupedBy.length > 0 && (
-            <>
-              <Label>Aggregate functions</Label>
-              {availableColumns.map(col => (
-                <div key={col} className="select__container">
-                  <Checkbox
-                    checked={R.includes(col, R.keys(columnAggregates))}
-                    onChange={e => {
-                      setGroupingState(
-                        e.target.checked
-                          ? {
-                              ...groupingState,
-                              columnAggregates: {
-                                ...groupingState.columnAggregates,
-                                [col]: 'sum',
-                              },
-                            }
-                          : {
-                              ...groupingState,
-                              columnAggregates: R.omit([col], columnAggregates),
-                            },
-                      );
-                    }}
-                  >
-                    {getColumnNameById(col, boardData)}
-                  </Checkbox>
-
-                  {R.includes(col, R.keys(columnAggregates)) && (
-                    <Select
-                      onChange={e => console.log(e)}
-                      options={aggregateFunctions}
-                    />
-                  )}
-                </div>
-              ))}
-            </>
-          )}
-        </div> */}
       </GroupingContainer>
       {unsavedChanges && (
         <div className="actions">

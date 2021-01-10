@@ -4,6 +4,9 @@ import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
 import { v4 as uuidv4 } from 'uuid';
+import { Empty } from 'antd';
+import { ButtonPrimary } from 'components/ui/Buttons';
+import { Text } from 'components/ui/Typography';
 import { OperatorBreak } from '../Styles';
 import { FilterContext } from './DatasetFilters';
 import Condition from './Condition';
@@ -113,7 +116,17 @@ const FilterRow: React.FC<{
           </FilterRowContainer>
         ))
       ) : (
-        <OperatorBreak onClick={() => addOperator(0)}>+ and/or</OperatorBreak>
+        <Empty
+          description={
+            <Text size="lg" len="short">
+              Use a combination of "and" and "or" filtering rules on your dataset.
+            </Text>
+          }
+        >
+          <ButtonPrimary style={{ margin: '0 auto' }} onClick={() => addOperator(0)}>
+            Add a filter
+          </ButtonPrimary>
+        </Empty>
       )}
     </>
   );

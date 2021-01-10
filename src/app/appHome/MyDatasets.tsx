@@ -8,7 +8,8 @@ import skyvueFetch from 'services/skyvueFetch';
 import styled from 'styled-components/macro';
 import { useQuery } from 'react-query';
 import Loading from 'components/ui/Loading';
-import { Text } from 'components/ui/Typography';
+import { Empty } from 'antd';
+import Styles from 'styles/Styles';
 
 const MyDatasetsContainer = styled.div`
   display: flex;
@@ -132,17 +133,26 @@ const MyDatasets: React.FC = () => {
         )}
       </div>
       {!isLoading && datasets.length === 0 && (
-        <div className="empty__container">
-          <Text size="lg" len="short">
-            Start your first dataset (need a better empty state)
-          </Text>
+        <Empty
+          description="Import a CSV file to create your first dataset!"
+          image={
+            <i
+              style={{ color: Styles.purple300, fontSize: '90px' }}
+              className="fad fa-file-spreadsheet"
+            />
+          }
+        >
           <ButtonPrimary
+            style={{ margin: '0 auto' }}
+            iconLeft={
+              <i style={{ color: 'white' }} className="fad fa-plus-circle" />
+            }
             onClick={() => setNewDatasetModalIsOpen(true)}
             id="new_dataset"
           >
-            New dataset <i className="fad fa-plus-circle" />
+            New dataset
           </ButtonPrimary>
-        </div>
+        </Empty>
       )}
       <ListContainer>
         {(loadingState || isLoading) && <Loading />}
