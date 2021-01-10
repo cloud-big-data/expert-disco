@@ -5,6 +5,10 @@ export const dateFormats = [
   'MM/DD/YYYY',
   'DD/MM/YYYY',
   'YYYY/MM/DD',
+  'MM-YYYY',
+  'MM/YYYY',
+  'MM/YY',
+  'MM-YY',
   'iso string',
 ];
 

@@ -68,6 +68,10 @@ type DateFormats =
   | 'MM/DD/YYYY'
   | 'DD/MM/YYYY'
   | 'YYYY/MM/DD'
+  | 'MM-YYYY'
+  | 'MM/YYYY'
+  | 'MM/YY'
+  | 'MM-YY'
   | 'iso string';
 
 export type Formats =
@@ -141,6 +145,10 @@ export interface IBoardData {
     sortings: ISortingLayer;
     smartColumns: ISmartColumns;
     formatting: IColumnFormatting;
+  };
+  layerToggles: {
+    filters: boolean;
+    groupings: boolean;
   };
 }
 

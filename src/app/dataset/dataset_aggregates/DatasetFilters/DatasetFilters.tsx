@@ -5,6 +5,8 @@ import { IFilterLayer } from 'app/dataset/types';
 import DatasetContext from 'contexts/DatasetContext';
 import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
 import * as R from 'ramda';
+import { Label } from 'components/ui/Typography';
+import { Switch } from 'antd';
 import FilterRow from './FilterRow';
 
 const FiltersContainer = styled.div`
@@ -21,6 +23,13 @@ const FiltersContainer = styled.div`
       padding: 0;
       margin-bottom: 1.375rem;
     }
+
+    .right {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
   }
   .options__container {
     width: 100%;
@@ -35,52 +44,14 @@ const FiltersContainer = styled.div`
   }
 `;
 
-// const sampleState: IFilterLayer = [
-//   'AND',
-//   {
-//     filterId: uuidv4(),
-//     key: '8c2c6300-2ac7-427f-bea4-1bfd9beb1098',
-//     value: '1',
-//     predicateType: 'equals',
-//   },
-//   // [
-//   //   'OR',
-//   //   {
-//   //     filterId: uuidv4(),
-//   //     key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8c06',
-//   //     value: 'marvel/0001/002.jpg',
-//   //     predicateType: 'equals',
-//   //   },
-//   //   {
-//   //     filterId: uuidv4(),
-//   //     key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8casdf06',
-//   //     value: 'marvel/0001/003.jpg',
-//   //     predicateType: 'equals',
-//   //   },
-//   //   [
-//   //     'AND',
-//   //     {
-//   //       filterId: uuidv4(),
-//   //       key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8c06',
-//   //       value: 'marvel/0001/002.jpg',
-//   //       predicateType: 'equals',
-//   //     },
-//   //     {
-//   //       filterId: uuidv4(),
-//   //       key: 'fc8d530e-41d2-43f0-87ce-9e30ab6f8casdf06',
-//   //       value: 'marvel/0001/003.jpg',
-//   //       predicateType: 'equals',
-//   //     },
-//   //   ],
-//   // ],
-// ];
-
 export const FilterContext = createContext<{
   parentFilterState?: IFilterLayer;
 }>({ parentFilterState: undefined });
 
 const DatasetFilters: React.FC = () => {
-  const { boardData, datasetHead, socket } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, datasetHead, socket } = useContext(
+    DatasetContext,
+  )!;
   const initialFiltersState = useRef<IFilterLayer>(boardData.layers?.filters ?? []);
   const [filtersState, setFiltersState] = useState<IFilterLayer>(
     boardData.layers?.filters ?? [],
@@ -101,11 +72,25 @@ const DatasetFilters: React.FC = () => {
     <FiltersContainer>
       <div className="top">
         <h6>Filter {datasetHead.title}</h6>
-        {filtersState.length > 0 && (
-          <ButtonTertiary onClick={() => setFiltersState([])}>
-            Clear all filters
-          </ButtonTertiary>
-        )}
+        <div className="right">
+          <Label>Apply layer</Label>
+          <Switch
+            onChange={e => {
+              setBoardData?.({
+                ...boardData,
+                layerToggles: {
+                  ...boardData.layerToggles,
+                  filters: e,
+                },
+              });
+              socket?.emit('toggleLayer', {
+                toggle: 'filters',
+                visible: e,
+              });
+            }}
+            checked={boardData.layerToggles.filters}
+          />
+        </div>
       </div>
       <div className="options__container">
         <FilterContext.Provider

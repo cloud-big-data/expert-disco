@@ -4,8 +4,8 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
-import { ButtonPrimary, ButtonTertiary, IconButton } from 'components/ui/Buttons';
-import { Helper, Label, Text } from 'components/ui/Typography';
+import { ButtonPrimary, IconButton } from 'components/ui/Buttons';
+import { Helper, Label } from 'components/ui/Typography';
 import {
   DragDropContext,
   Droppable,
@@ -13,7 +13,7 @@ import {
   DropResult,
 } from 'react-beautiful-dnd';
 import Styles from 'styles/Styles';
-import { Empty } from 'antd';
+import { Empty, Switch } from 'antd';
 import { OperatorBreak } from '../Styles';
 
 const reorder = (list: string[], startIndex: number, endIndex: number) => {
@@ -42,6 +42,9 @@ const GroupLayerContainer = styled.div`
     }
     .right {
       margin-left: auto;
+      align-items: flex-end;
+      display: flex;
+      flex-direction: column;
     }
   }
 `;
@@ -114,7 +117,9 @@ const aggregateFunctions: Array<{
 ];
 
 const DatasetGrouping: React.FC = () => {
-  const { datasetHead, boardData, socket } = useContext(DatasetContext)!;
+  const { datasetHead, boardData, setBoardData, socket } = useContext(
+    DatasetContext,
+  )!;
   const [groupingState, _setGroupingState] = useState<IGroupLayer>(
     boardData.layers?.groupings.columnAggregates
       ? boardData.layers?.groupings
@@ -151,17 +156,30 @@ const DatasetGrouping: React.FC = () => {
     });
   };
 
+  const { layerToggles } = boardData;
+
   return (
     <GroupLayerContainer>
       <div className="top">
         <h6 className="left">Group {datasetHead.title}</h6>
         <div className="right">
-          <ButtonTertiary
-            onClick={() => socket?.emit('clearLayers')}
-            style={{ margin: 0, padding: 0 }}
-          >
-            Clear all filters
-          </ButtonTertiary>
+          <Label>Apply layer</Label>
+          <Switch
+            onChange={e => {
+              setBoardData?.({
+                ...boardData,
+                layerToggles: {
+                  ...boardData.layerToggles,
+                  groupings: e,
+                },
+              });
+              socket?.emit('toggleLayer', {
+                toggle: 'groupings',
+                visible: e,
+              });
+            }}
+            checked={layerToggles.groupings}
+          />
         </div>
       </div>
       <GroupingContainer length={groupedBy.length}>
@@ -231,11 +249,7 @@ const DatasetGrouping: React.FC = () => {
 
           {groupedBy.length === 0 ? (
             <Empty
-              description={
-                <Text size="lg" len="short">
-                  Group your dataset copy blah blah
-                </Text>
-              }
+              description={<span>Group your dataset copy blah blah</span>}
               style={{ textAlign: 'center' }}
             >
               <ButtonPrimary
