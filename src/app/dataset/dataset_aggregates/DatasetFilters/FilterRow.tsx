@@ -15,7 +15,15 @@ const FilterRowContainer = styled.div<{ parent: boolean; indentation: number }>`
   display: flex;
   flex-direction: column;
   margin-left: ${props => (props.indentation ? props.indentation * 1.75 : 0)}rem;
+
+  .add-buttons__container {
+    display: flex;
+    align-items: center;
+  }
 `;
+
+const makePath = (index: number, path?: number[]): number[] =>
+  path ? [...path, index] : [index];
 
 const FilterRow: React.FC<{
   parent?: boolean;
@@ -106,9 +114,38 @@ const FilterRow: React.FC<{
                 />
                 {(Array.isArray(sortedFiltersState[index + 1]) ||
                   index === sortedFiltersState.length - 1) && (
-                  <OperatorBreak onClick={() => addOperator(index)}>
-                    + and/or
-                  </OperatorBreak>
+                  <div className="add-buttons__container">
+                    <OperatorBreak onClick={() => addOperator(index)}>
+                      + and/or
+                    </OperatorBreak>
+
+                    {parentFilterState && makePath(index, path) && (
+                      <OperatorBreak
+                        style={{ marginLeft: '1rem' }}
+                        onClick={() =>
+                          setFiltersState(
+                            R.over(
+                              R.lensPath(
+                                makePath(index, path).slice(
+                                  0,
+                                  makePath(index, path).length - 1,
+                                ),
+                              ),
+                              R.append({
+                                filterId: uuidv4(),
+                                key: boardData.columns[0]._id,
+                                predicateType: 'equals',
+                                value: '',
+                              }),
+                              parentFilterState,
+                            ),
+                          )
+                        }
+                      >
+                        + add condition
+                      </OperatorBreak>
+                    )}
+                  </div>
                 )}
               </>
             )}

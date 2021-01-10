@@ -49,9 +49,7 @@ export const FilterContext = createContext<{
 }>({ parentFilterState: undefined });
 
 const DatasetFilters: React.FC = () => {
-  const { boardData, setBoardData, datasetHead, socket } = useContext(
-    DatasetContext,
-  )!;
+  const { boardData, setBoardData, socket } = useContext(DatasetContext)!;
   const initialFiltersState = useRef<IFilterLayer>(boardData.layers?.filters ?? []);
   const [filtersState, setFiltersState] = useState<IFilterLayer>(
     boardData.layers?.filters ?? [],
@@ -71,7 +69,7 @@ const DatasetFilters: React.FC = () => {
   return (
     <FiltersContainer>
       <div className="top">
-        <h6>Filter {datasetHead.title}</h6>
+        <h6>Filter this dataset</h6>
         <div className="right">
           <Label>Apply layer</Label>
           <Switch

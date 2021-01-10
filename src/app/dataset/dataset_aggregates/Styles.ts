@@ -12,7 +12,7 @@ export const OperatorBreak = styled.button`
   padding: 0;
   display: flex;
   font-size: 0.8rem;
-  max-width: 5rem;
+  max-width: 7rem;
   &:hover {
     color: ${Styles.dark400};
   }

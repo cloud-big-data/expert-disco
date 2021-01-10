@@ -1,13 +1,11 @@
 import { IFilterLayer, LogicalOperators } from 'app/dataset/types';
 import { ButtonDanger, ButtonTertiary, IconButton } from 'components/ui/Buttons';
 import Select from 'components/ui/Select';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { v4 as uuidv4 } from 'uuid';
 import * as R from 'ramda';
-import DatasetContext from 'contexts/DatasetContext';
-import { Helper, Text } from 'components/ui/Typography';
+import { Text } from 'components/ui/Typography';
 
 const OperatorContainer = styled.div<{ first?: boolean }>`
   display: flex;
@@ -43,7 +41,6 @@ const Operator: React.FC<{
   parent?: boolean;
   path: number[];
 }> = ({ path, parentFilterState, parent, state, setFiltersState }) => {
-  const { boardData } = useContext(DatasetContext)!;
   const [showDeleteConf, setShowDeleteConf] = useState(false);
 
   return (
@@ -78,7 +75,7 @@ const Operator: React.FC<{
             <IconButton onClick={() => setShowDeleteConf(true)}>
               <i
                 style={{ color: Styles.red400, marginRight: '.5rem' }}
-                className="far fa-times"
+                className="far fa-times-circle"
               />
             </IconButton>
           )}
@@ -93,30 +90,6 @@ const Operator: React.FC<{
             placeholder="select and/or"
             value={state}
           />
-          <IconButton
-            onClick={() => {
-              setFiltersState(
-                R.over(
-                  R.lensPath(path.slice(0, path.length - 1)),
-                  R.append({
-                    filterId: uuidv4(),
-                    key: boardData.columns[0]._id,
-                    predicateType: 'equals',
-                    value: '',
-                  }),
-                  parentFilterState,
-                ),
-              );
-            }}
-          >
-            <i
-              style={{ color: Styles.green, marginLeft: '.5rem' }}
-              className="fas fa-plus-square"
-            />
-            <Helper style={{ marginBottom: 0, marginLeft: '.5rem' }}>
-              Add condition
-            </Helper>
-          </IconButton>
         </>
       )}
     </OperatorContainer>
