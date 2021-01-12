@@ -5,8 +5,6 @@ import Styles from 'styles/Styles';
 import * as R from 'ramda';
 import editCellsAndReturnBoard from 'app/dataset/lib/editCellsAndReturnBoard';
 import DropdownMenu from 'components/DropdownMenu';
-import useClippy from 'use-clippy';
-import getCellValueById from 'app/dataset/lib/getCellValueById';
 import { notification, DatePicker } from 'antd';
 import parseDataType from 'app/dataset/lib/parseDataType';
 import GridContext from 'contexts/GridContext';
@@ -165,13 +163,13 @@ const Cell: React.FC<ICellProps> = ({
   colIndex,
   formatSettings,
 }) => {
-  const [, setClipboard] = useClippy();
   const {
     readOnly,
     boardState,
     setBoardState,
     boardData,
     setBoardData,
+    setClipboard,
   } = useContext(DatasetContext)!;
   const { handleChange } = useContext(GridContext)!;
 
@@ -190,7 +188,14 @@ const Cell: React.FC<ICellProps> = ({
   }, [active]);
 
   const handleCopy = () => {
-    setClipboard(getCellValueById(boardData.rows, _id));
+    setClipboard(
+      formatValue({
+        desiredFormat: colFormat,
+        dataType: colDataType,
+        value,
+        formatSettings,
+      }),
+    );
     setBoardState(R.set(R.lensPath(['cellsState', 'copyingCell']), _id, boardState));
   };
 

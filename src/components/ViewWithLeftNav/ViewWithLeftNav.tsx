@@ -117,7 +117,7 @@ const ViewWithLeftNav: React.FC<IViewWithLeftNav> = ({
   return (
     <Container cancelPadding={cancelPadding} stackNav={stackNav}>
       {stackNav ? (
-        <Select options={options} onChange={setView} />
+        <Select value={activeView} options={options} onChange={setView} />
       ) : (
         <LeftNav>
           {options.map(option => (

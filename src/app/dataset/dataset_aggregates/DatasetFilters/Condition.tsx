@@ -134,6 +134,7 @@ const Condition: React.FC<{
                     'string'
                 ]
               }
+              value={state.predicateType}
               onChange={value =>
                 setFiltersState(updateNestedObject('predicateType', value))
               }

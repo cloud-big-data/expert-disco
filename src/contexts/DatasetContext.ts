@@ -13,6 +13,8 @@ interface IDatasetContext {
   getRowSlice: (start: number, end: number) => void;
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
+  clipboard?: string;
+  setClipboard: (val?: string) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);

@@ -1,21 +1,27 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as R from 'ramda';
-import useClippy from 'use-clippy';
 import DatasetContext from 'contexts/DatasetContext';
 // import GridContext from 'contexts/GridContext';
+import GridContext from 'contexts/GridContext';
 import getCellValueById from '../lib/getCellValueById';
 import editCellsAndReturnBoard from '../lib/editCellsAndReturnBoard';
+import findCellCoordinates from '../lib/findCellIndex';
+import formatValue from '../lib/formatValue';
 
 const HotkeysProvider: React.FC<{
   undo: () => void;
   redo: () => void;
 }> = ({ children, undo, redo }) => {
-  const { boardState, setBoardState, setBoardData, boardData } = useContext(
-    DatasetContext,
-  )!;
-  // const { handleChange } = useContext(GridContext);
+  const {
+    boardState,
+    setBoardState,
+    setBoardData,
+    boardData,
+    clipboard,
+    setClipboard,
+  } = useContext(DatasetContext)!;
+  const { handleChange } = useContext(GridContext)!;
 
-  const [clipboard, setClipboard] = useClippy();
   const [cut, toggleCut] = useState<{ cellId?: string; cutting: boolean }>({
     cutting: false,
   });
@@ -35,7 +41,17 @@ const HotkeysProvider: React.FC<{
       R.set(R.lensPath(['cellsState', 'copyingCell']), selectedCell, boardState);
 
     const handleCopy = () => {
-      setClipboard(getCellValueById(boardData.rows, selectedCell));
+      const value = getCellValueById(boardData.rows, selectedCell);
+      const [, cellIndex] = findCellCoordinates(boardData.rows, selectedCell);
+      const colAssociated = boardData.columns[cellIndex];
+      setClipboard(
+        formatValue({
+          desiredFormat: colAssociated.format,
+          dataType: colAssociated.dataType,
+          value,
+          formatSettings: colAssociated.formatSettings,
+        }),
+      );
       setBoardState(setCopiedCell(selectedCell));
     };
 
@@ -44,7 +60,7 @@ const HotkeysProvider: React.FC<{
         const baseCellUpdates = [
           {
             cellId: targetCell,
-            updatedValue: clipboard,
+            updatedValue: clipboard ?? '',
           },
         ];
 
@@ -58,9 +74,15 @@ const HotkeysProvider: React.FC<{
             ]
           : baseCellUpdates;
 
+        handleChange({
+          changeTarget: 'cell',
+          targetId: selectedCell,
+          prevValue: getCellValueById(boardData.rows, selectedCell),
+          newValue: clipboard ?? '',
+        });
+
         setBoardData?.(editCellsAndReturnBoard(cellUpdates, boardData));
       };
-
       pasteClipboard(selectedCell);
       setBoardState(setCopiedCell(''));
     };
@@ -112,6 +134,7 @@ const HotkeysProvider: React.FC<{
     clipboard,
     cut,
     cut.cutting,
+    handleChange,
     keysPressed,
     redo,
     selectedCell,

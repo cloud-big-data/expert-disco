@@ -68,6 +68,7 @@ const DatasetWrapper: React.FC = () => {
   }>({});
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
+  const [clipboard, setClipboard] = useState<string | undefined>();
 
   const { datasetId } = useParams<{ datasetId: string }>();
 
@@ -157,7 +158,9 @@ const DatasetWrapper: React.FC = () => {
     setBoardData(prevBoardData => {
       if (!prevBoardData) return newBoardData;
       const diff = makeBoardDiff(prevBoardData, newBoardData);
-      socket?.emit('diff', diff);
+      if (diff.colDiff || diff.rowDiff) {
+        socket?.emit('diff', diff);
+      }
 
       return newBoardData;
     });
@@ -201,6 +204,12 @@ const DatasetWrapper: React.FC = () => {
         setBoardState,
         loading,
         setLoading,
+        clipboard,
+        setClipboard: async val => {
+          if (!val) return;
+          await navigator.clipboard.writeText(val);
+          setClipboard(val);
+        },
       }}
     >
       {filesToDownload.map(file => (

@@ -116,7 +116,7 @@ const DatasetAggregates: React.FC = () => {
   const ViewComponent = ViewLookup[activeView];
 
   return (
-    <ExpandWrapper expanded={expanded}>
+    <ExpandWrapper id="test" expanded={expanded}>
       <ButtonTertiary onClick={() => setExpanded(!expanded)} id="expand_toggle">
         Dataset actions
         {expanded ? (
