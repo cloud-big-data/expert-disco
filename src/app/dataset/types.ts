@@ -53,12 +53,6 @@ export type ISortingLayer = Array<{
   direction: SortDirections;
 }>;
 
-export interface ISmartColumn {
-  _id: string;
-  expression: string;
-  columnName: string;
-}
-
 type DateFormats =
   | 'MM-DD-YYYY'
   | 'DD-MM-YYYY'
@@ -116,6 +110,10 @@ export interface IColumn extends ICell {
   isSmartColumn?: boolean;
 }
 
+export interface ISmartColumn extends IColumn {
+  expression: string;
+}
+
 export interface IRow {
   _id: string;
   cells: ICell[];
@@ -126,6 +124,14 @@ export interface IRow {
   rowHeight?: number;
   dragging?: boolean;
 }
+
+export type LayersTypes =
+  | 'joins'
+  | 'filters'
+  | 'groupings'
+  | 'sortings'
+  | 'smartColumns'
+  | 'formatting';
 
 type UserId = string;
 export interface IBoardData {

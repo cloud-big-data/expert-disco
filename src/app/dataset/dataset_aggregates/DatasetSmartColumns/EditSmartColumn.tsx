@@ -8,6 +8,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import WarningBlock from 'components/WarningBlock';
+import ExpressionEditor from './ExpressionEditor';
 
 const EditingContainer = styled.div`
   display: flex;
@@ -44,11 +45,11 @@ const EditSmartColumn: React.FC<{
   const [showDeleteConf, setShowDeleteConf] = useState(false);
   const column = smartColumns.find(x => x._id === columnId);
   const [expression, setExpression] = useState(column?.expression);
-  const [columnName, setColumnName] = useState(column?.columnName);
+  const [columnName, setColumnName] = useState(column?.value);
 
   return (
     <EditingContainer>
-      <Label>Editing: {column?.columnName}</Label>
+      <Label>Editing: {column?.value}</Label>
       <InputField
         id="columnName"
         name="columnName"
@@ -59,15 +60,10 @@ const EditSmartColumn: React.FC<{
           setColumnName(e.target.value);
         }}
       />
-      <InputField
-        name="expression"
-        label="Expression"
-        icon={<i className="fad fa-function" />}
-        value={expression}
-        onChange={e => {
-          setUnsavedChanges(true);
-          setExpression(e.target.value);
-        }}
+      <ExpressionEditor
+        expression={expression}
+        setExpression={setExpression}
+        setUnsavedChanges={setUnsavedChanges}
       />
 
       <Separator />
@@ -91,8 +87,9 @@ const EditSmartColumn: React.FC<{
                 setSelectedSmartColumn();
                 saveSmartColumn({
                   _id: columnId,
+                  dataType: column?.dataType ?? 'number',
                   expression,
-                  columnName,
+                  value: columnName,
                 });
               }}
             >

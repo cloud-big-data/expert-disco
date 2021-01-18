@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import React, { useState } from 'react';
 import Styles from 'styles/Styles';
+import { AutoComplete } from 'antd';
 import { Label } from './Typography';
 
 const InputContainer = styled.div<{
@@ -126,6 +127,7 @@ const OnConfirmContainer = styled.button`
 
 const InputField: React.FC<{
   onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+  setValue?: (value: string) => void;
   className?: string;
   id?: string;
   style?: React.CSSProperties;
@@ -151,6 +153,9 @@ const InputField: React.FC<{
   confirmText?: string;
   min?: number;
   max?: number;
+  options?: Array<{ label?: string; value: string }>;
+  dropdownOpen?: boolean;
+  spellCheck?: boolean;
 }> = props => {
   const [active, setActive] = useState(false);
 
@@ -175,33 +180,42 @@ const InputField: React.FC<{
       >
         {props.icon && <div className="icon__container">{props.icon}</div>}
         {props.prepend && <TextContainer pre>{props.prepend}</TextContainer>}
-        <Input
-          unsetHeight={props.unsetHeight}
-          name={props.name ?? props.label}
-          ref={props.inputRef}
-          placeholder={props.placeholder}
-          disabled={props.disabled}
-          className={props.className}
-          style={props.style}
-          type={props.type ?? 'text'}
-          onChange={props.onChange}
-          defaultValue={props.defaultValue}
-          value={props.value || ''}
-          error={props.error}
-          onKeyDown={props.onKeyDown}
-          icon={!!props.icon}
-          onFocus={e => {
-            setActive(true);
-            props.onFocus?.(e);
-          }}
-          onBlur={e => {
-            setActive(false);
-            props.onBlur?.(e);
-          }}
-          role={props.role}
-          min={props.min}
-          max={props.max}
-        />
+        <AutoComplete
+          value={typeof props.value === 'string' ? props.value : ''}
+          open={props.dropdownOpen}
+          options={props.options}
+          style={{ width: '100%', border: 'none' }}
+          onSelect={props.setValue}
+        >
+          <Input
+            unsetHeight={props.unsetHeight}
+            name={props.name ?? props.label}
+            ref={props.inputRef}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            className={props.className}
+            style={props.style}
+            type={props.type ?? 'text'}
+            onChange={props.onChange}
+            defaultValue={props.defaultValue}
+            value={props.value || ''}
+            error={props.error}
+            onKeyDown={props.onKeyDown}
+            spellCheck={props.spellCheck ?? true}
+            icon={!!props.icon}
+            onFocus={e => {
+              setActive(true);
+              props.onFocus?.(e);
+            }}
+            onBlur={e => {
+              setActive(false);
+              props.onBlur?.(e);
+            }}
+            role={props.role}
+            min={props.min}
+            max={props.max}
+          />
+        </AutoComplete>
         {props.append && <TextContainer>{props.append}</TextContainer>}
         {props.onConfirm && (
           <OnConfirmContainer onClick={props.onConfirm}>

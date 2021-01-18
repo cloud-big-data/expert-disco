@@ -81,12 +81,6 @@ const Dataset: React.FC<{
     }
   }, [currentVersion, changeHistoryRef]);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     window.scrollTo(0, 0);
-  //   }, 500);
-  // }, []);
-
   const { boardData, getRowSlice } = useContext(DatasetContext)!;
   const [firstVisibleRow, lastVisibleRow, isScrolling] = useFindVisibleRows(
     gridRef,

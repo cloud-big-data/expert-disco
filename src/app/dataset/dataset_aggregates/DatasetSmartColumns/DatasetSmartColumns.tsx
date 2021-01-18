@@ -4,9 +4,10 @@ import SingleSelect from 'components/SingleSelect';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { v4 as uuidv4 } from 'uuid';
+import * as R from 'ramda';
 import EditSmartColumn from './EditSmartColumn';
 
 const SmartColumnsContainer = styled.div`
@@ -37,6 +38,14 @@ const DatasetSmartColumns: React.FC = () => {
     string | undefined
   >();
   const [smartColumns, setSmartColumns] = useState(boardData.layers.smartColumns);
+
+  useEffect(() => {
+    if (!R.equals(boardData.layers.smartColumns, smartColumns)) {
+      setSmartColumns(boardData.layers.smartColumns);
+    }
+    // disabling as this effect is just to notify the local state of global changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardData.layers.smartColumns]);
 
   return (
     <SmartColumnsContainer>
@@ -90,7 +99,7 @@ const DatasetSmartColumns: React.FC = () => {
           <>
             <SingleSelect
               options={smartColumns.map(x => ({
-                label: x.columnName,
+                label: x.value ?? '',
                 value: x._id,
               }))}
               onSelect={setSelectedSmartColumn}
@@ -105,7 +114,7 @@ const DatasetSmartColumns: React.FC = () => {
                   const _id = uuidv4();
                   setSmartColumns([
                     ...smartColumns,
-                    { _id, columnName: '', expression: '' },
+                    { _id, value: '', expression: '', dataType: 'number' },
                   ]);
                   setSelectedSmartColumn(_id);
                   setUnsavedChanges(true);
@@ -125,7 +134,7 @@ const DatasetSmartColumns: React.FC = () => {
                 const _id = uuidv4();
                 setSmartColumns([
                   ...smartColumns,
-                  { _id, columnName: '', expression: '' },
+                  { _id, value: '', expression: '', dataType: 'number' },
                 ]);
                 setSelectedSmartColumn(_id);
                 setUnsavedChanges(true);

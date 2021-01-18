@@ -12,6 +12,7 @@ import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
 import findColumnById from 'app/dataset/lib/findColumnById';
 import { dateFormats, numberFormats, CURRENCY_CODES } from 'app/dataset/constants';
 import updateColumnById from 'app/dataset/lib/updateColumnById';
+import updateLayers from 'app/dataset/lib/updateLayers';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
 import {
@@ -105,6 +106,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   dataType,
   format,
   formatSettings,
+  isSmartColumn,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
   const {
@@ -178,6 +180,18 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         <Menu.Item
           disabled={boardData.columns.length === 1}
           onClick={() => {
+            if (isSmartColumn) {
+              updateLayers(
+                {
+                  layerKey: 'smartColumns',
+                  layerData: boardData.layers.smartColumns.filter(
+                    col => col._id !== _id,
+                  ),
+                },
+                socket,
+              );
+              return;
+            }
             const newBoardData = boardActions.removeColumn(_id);
 
             handleChange?.({
@@ -336,9 +350,15 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         active={active}
         colWidth={colWidth ?? defaults.COL_WIDTH}
         onDoubleClick={() =>
-          setBoardState(
-            R.assocPath(['columnsState', 'activeColumn'], columnIndex, boardState),
-          )
+          isSmartColumn
+            ? undefined
+            : setBoardState(
+                R.assocPath(
+                  ['columnsState', 'activeColumn'],
+                  columnIndex,
+                  boardState,
+                ),
+              )
         }
         onClick={selectColumn}
       >

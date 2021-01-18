@@ -249,6 +249,10 @@ a:not(.no-hover):hover {
   border: 2px solid var(--faintBorderColor);
 }
 
+#root .ant-select-auto-complete .ant-select-selector {
+  border: none;
+}
+
 @media only screen and (min-width: 1000px) {
   #root .ant-select {
     min-width: 250px;
