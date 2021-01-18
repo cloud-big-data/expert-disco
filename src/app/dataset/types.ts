@@ -53,13 +53,10 @@ export type ISortingLayer = Array<{
   direction: SortDirections;
 }>;
 
-export type ISmartColumns = Array<{
-  _id: string;
-  columns: string[];
-  predicate: 'sum' | 'divide' | 'subtract' | 'concat' | 'avg';
+export interface ISmartColumn {
+  expression: string;
   columnName: string;
-  delim?: string;
-}>;
+}
 
 type DateFormats =
   | 'MM-DD-YYYY'
@@ -115,6 +112,7 @@ export interface IColumn extends ICell {
   format?: Formats;
   datetime?: boolean;
   formatSettings?: FormatSettings;
+  isSmartColumn?: boolean;
 }
 
 export interface IRow {
@@ -143,7 +141,7 @@ export interface IBoardData {
     filters: IFilterLayer;
     groupings: IGroupLayer;
     sortings: ISortingLayer;
-    smartColumns: ISmartColumns;
+    smartColumns: ISmartColumn[];
     formatting: IColumnFormatting;
   };
   layerToggles: {

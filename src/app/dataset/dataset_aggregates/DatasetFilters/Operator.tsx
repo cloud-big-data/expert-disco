@@ -61,7 +61,12 @@ const Operator: React.FC<{
             <ButtonDanger
               onClick={() => {
                 setFiltersState(
-                  R.dissocPath(path.slice(0, path.length - 1), parentFilterState),
+                  parent
+                    ? []
+                    : R.dissocPath(
+                        path.slice(0, path.length - 1),
+                        parentFilterState,
+                      ),
                 );
               }}
             >
@@ -71,14 +76,12 @@ const Operator: React.FC<{
         </DeleteConfirmationContainer>
       ) : (
         <>
-          {!parent && (
-            <IconButton onClick={() => setShowDeleteConf(true)}>
-              <i
-                style={{ color: Styles.red400, marginRight: '.5rem' }}
-                className="far fa-times-circle"
-              />
-            </IconButton>
-          )}
+          <IconButton onClick={() => setShowDeleteConf(true)}>
+            <i
+              style={{ color: Styles.red400, marginRight: '.5rem' }}
+              className="far fa-times-circle"
+            />
+          </IconButton>
           <Select
             onChange={value =>
               setFiltersState(R.assocPath(path, value, parentFilterState))
