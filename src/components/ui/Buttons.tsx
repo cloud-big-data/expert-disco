@@ -185,7 +185,9 @@ const ButtonSecondary: React.FC<IButton> = props => (
     style={props.style}
     className={props.className}
   >
+    {props.iconLeft && <div className="icon left">{props.iconLeft}</div>}
     {props.children}
+    {props.iconRight && <div className="icon right">{props.iconRight}</div>}
   </Button>
 );
 
@@ -198,7 +200,9 @@ const ButtonTertiary: React.FC<IButton> = props => (
     style={props.style}
     className={props.className}
   >
+    {props.iconLeft && <div className="icon left">{props.iconLeft}</div>}
     {props.children}
+    {props.iconRight && <div className="icon right">{props.iconRight}</div>}
   </Button>
 );
 

@@ -1,7 +1,7 @@
 import { Empty, Switch } from 'antd';
 import ConfirmationContainer from 'components/ConfirmationButtons';
 import SingleSelect from 'components/SingleSelect';
-import { ButtonPrimary } from 'components/ui/Buttons';
+import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useState } from 'react';
@@ -49,6 +49,15 @@ const DatasetSmartColumns: React.FC = () => {
 
   return (
     <SmartColumnsContainer>
+      {selectedSmartColumn && (
+        <ButtonTertiary
+          onClick={() => setSelectedSmartColumn(undefined)}
+          style={{ padding: '2rem 0 0', marginTop: '-1rem' }}
+          iconLeft={<i className="far fa-chevron-left" />}
+        >
+          Back
+        </ButtonTertiary>
+      )}
       <div className="top">
         <h6>Smart Columns</h6>
         <div className="right">
@@ -89,7 +98,6 @@ const DatasetSmartColumns: React.FC = () => {
                 layerKey: 'smartColumns',
                 layerData: updatedSmartColumns,
               });
-              console.log(updatedSmartColumns);
             }}
             unsavedChanges={unsavedChanges}
             setUnsavedChanges={setUnsavedChanges}
@@ -99,7 +107,9 @@ const DatasetSmartColumns: React.FC = () => {
           <>
             <SingleSelect
               options={smartColumns.map(x => ({
-                label: x.value ?? '',
+                label: boardData.errors?.some(err => err.target === x._id)
+                  ? `${x.value} (has errors)`
+                  : x.value ?? '',
                 value: x._id,
               }))}
               onSelect={setSelectedSmartColumn}

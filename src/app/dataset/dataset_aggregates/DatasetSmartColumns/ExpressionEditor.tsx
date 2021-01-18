@@ -1,7 +1,7 @@
 import { UUID_REGEX, UUID_REGEX_W_COL_PREFIX } from 'app/dataset/constants';
 import InputField from 'components/ui/InputField';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import * as R from 'ramda';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
 
@@ -9,16 +9,23 @@ const ExpressionEditor: React.FC<{
   expression?: string;
   setUnsavedChanges: (changes: boolean) => void;
   setExpression: (exp: string) => void;
-}> = ({ expression, setUnsavedChanges, setExpression }) => {
+  validationError?: string;
+  expressionRef: React.RefObject<HTMLInputElement>;
+}> = ({
+  expression,
+  setUnsavedChanges,
+  setExpression,
+  validationError,
+  expressionRef,
+}) => {
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const { boardData } = useContext(DatasetContext)!;
   const { columns } = boardData;
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  useHandleClickOutside(inputRef, () => setAutoCompleteOpen(false));
+  useHandleClickOutside(expressionRef, () => setAutoCompleteOpen(false));
 
   useEffect(() => {
-    const ref = inputRef.current;
+    const ref = expressionRef.current;
     const handleCaret = (e: KeyboardEvent) => {
       e.preventDefault();
       const start = ref?.selectionStart;
@@ -42,18 +49,18 @@ const ExpressionEditor: React.FC<{
     ref?.addEventListener('keyup', handleCaret);
 
     return () => ref?.removeEventListener('keyup', handleCaret);
-  }, [expression]);
+  }, [expression, expressionRef]);
 
   return (
     <InputField
-      inputRef={inputRef}
+      inputRef={expressionRef}
       options={columns.map(col => ({
         label: col.value,
         value: col._id,
       }))}
       setValue={value => {
         const expressionArr = expression?.split('');
-        const cursorPosition = inputRef.current?.selectionStart;
+        const cursorPosition = expressionRef.current?.selectionStart;
         if (!expressionArr || !cursorPosition) return;
         setExpression(
           R.insert(cursorPosition, value, expressionArr)
@@ -71,6 +78,7 @@ const ExpressionEditor: React.FC<{
         setUnsavedChanges(true);
         setExpression(e.target.value);
       }}
+      validationError={validationError}
     />
   );
 };

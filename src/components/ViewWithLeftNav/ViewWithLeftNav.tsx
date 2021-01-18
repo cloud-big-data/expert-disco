@@ -3,12 +3,14 @@ import useWindowSize from 'hooks/useWindowSize';
 import React from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import { Badge } from 'antd';
 
 interface IViewWithLeftNav {
   options: Array<{
     value: string;
     name: string;
     icon: React.ReactNode;
+    count?: number;
   }>;
   activeView: string;
   children: React.ReactNode;
@@ -127,7 +129,11 @@ const ViewWithLeftNav: React.FC<IViewWithLeftNav> = ({
               key={option.value}
             >
               <div className="icon__container">{option.icon}</div>
-              <div className="label__container">{option.name}</div>
+              <div className="label__container">
+                <Badge offset={[15, 0]} count={option.count}>
+                  {option.name}
+                </Badge>
+              </div>
             </NavItem>
           ))}
         </LeftNav>

@@ -134,6 +134,14 @@ export type LayersTypes =
   | 'formatting';
 
 type UserId = string;
+
+export interface BoardError {
+  message: any;
+  type: string;
+  target: string;
+  section: LayersTypes;
+}
+
 export interface IBoardData {
   [key: string]: any;
   visibilitySettings: {
@@ -156,6 +164,7 @@ export interface IBoardData {
     groupings: boolean;
     smartColumns: boolean;
   };
+  errors?: Array<BoardError>;
 }
 
 export interface IBoardHead {

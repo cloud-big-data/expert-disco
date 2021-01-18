@@ -43,8 +43,8 @@ const InputContainer = styled.div<{
       ${props =>
         props.active
           ? `
-        color: ${Styles.purple400};
-      `
+            color: ${props.error ? Styles.red400 : Styles.purple400};
+          `
           : ''}
     }
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { IBoardData, IBoardHead } from 'app/dataset/types';
+import { BoardError, IBoardData, IBoardHead, IBoardState } from 'app/dataset/types';
 import { v4 as uuidv4 } from 'uuid';
 
 const getDatasetsWSUrl = (skyvueFileSize: number) => {
@@ -20,6 +20,8 @@ const useDatasetsSockets = (
     boardHead: { rowCount?: number };
     setBoardHead: (head: { rowCount?: number }) => void;
     datasetHead: IBoardHead;
+    boardState: IBoardState;
+    setBoardState: (state: IBoardState) => void;
   },
   changeHistoryRef: React.MutableRefObject<Array<string>>,
   setFilesToDownload: (files: string[]) => void,
@@ -34,6 +36,8 @@ const useDatasetsSockets = (
     estCSVSize,
     setEstCSVSize,
     setBoardHead,
+    boardState,
+    setBoardState,
   } = board;
 
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
@@ -99,6 +103,22 @@ const useDatasetsSockets = (
       }, 5000);
     });
 
+    socket.on('clearErrors', () => {
+      if (!boardData) return;
+      setBoardData?.({
+        ...boardData,
+        errors: [],
+      });
+    });
+
+    socket.on('boardError', (err: BoardError) => {
+      if (!boardData) return;
+      setBoardData?.({
+        ...boardData,
+        errors: [...(boardData.errors ?? []), err],
+      });
+    });
+
     socket.on('duplicateReady', ({ _id }: { _id: string }) => {
       window.open(`${window.location.host}/dataset/${_id}`);
     });
@@ -120,6 +140,8 @@ const useDatasetsSockets = (
     setFilesToDownload,
     loading,
     setLoading,
+    boardState,
+    setBoardState,
   ]);
 
   useEffect(() => {

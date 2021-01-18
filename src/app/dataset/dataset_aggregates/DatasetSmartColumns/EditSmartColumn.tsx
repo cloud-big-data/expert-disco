@@ -1,13 +1,15 @@
-import { ISmartColumn } from 'app/dataset/types';
+import { IBoardData, ISmartColumn } from 'app/dataset/types';
 import ConfirmationContainer from 'components/ConfirmationButtons';
 import Separator from 'components/Separator';
 import { ButtonDanger, ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import WarningBlock from 'components/WarningBlock';
+import { UUID_REGEX } from 'app/dataset/constants';
+import findColumnById from 'app/dataset/lib/findColumnById';
 import ExpressionEditor from './ExpressionEditor';
 
 const EditingContainer = styled.div`
@@ -23,6 +25,12 @@ const EditingContainer = styled.div`
     }
   }
 `;
+
+const replaceColIdsWithValues = (expression: string, boardData: IBoardData) =>
+  expression.replace(
+    UUID_REGEX,
+    _id => `[${findColumnById(_id, boardData)?.value ?? ''}]`,
+  );
 
 const EditSmartColumn: React.FC<{
   smartColumns: ISmartColumn[];
@@ -41,11 +49,43 @@ const EditSmartColumn: React.FC<{
   setUnsavedChanges,
   setSelectedSmartColumn,
 }) => {
-  const { socket } = useContext(DatasetContext)!;
+  const { socket, boardData } = useContext(DatasetContext)!;
   const [showDeleteConf, setShowDeleteConf] = useState(false);
   const column = smartColumns.find(x => x._id === columnId);
   const [expression, setExpression] = useState(column?.expression);
   const [columnName, setColumnName] = useState(column?.value);
+
+  const [expressionIsFocused, setExpressionIsFocused] = useState(false);
+
+  const expressionRef = useRef<HTMLInputElement>(null);
+
+  const error = boardData.errors?.find(err => err.target === columnId);
+  const errorMessage =
+    error !== undefined
+      ? `There was an error in your formula: ${error.message.toString()}`
+      : undefined;
+
+  useEffect(() => {
+    const ref = expressionRef.current;
+    if (!ref) return;
+
+    const handleFocus = () => {
+      setExpressionIsFocused(true);
+    };
+    const handleBlur = () => {
+      setExpressionIsFocused(false);
+    };
+
+    ref.addEventListener('focus', handleFocus);
+    ref.addEventListener('blur', handleBlur);
+
+    return () => {
+      ref.removeEventListener('focus', handleFocus);
+      ref.removeEventListener('blur', handleBlur);
+    };
+  }, []);
+
+  console.log(columnId);
 
   return (
     <EditingContainer>
@@ -61,11 +101,16 @@ const EditSmartColumn: React.FC<{
         }}
       />
       <ExpressionEditor
-        expression={expression}
+        expressionRef={expressionRef}
+        validationError={errorMessage}
+        expression={
+          expressionIsFocused
+            ? expression
+            : replaceColIdsWithValues(expression ?? '', boardData)
+        }
         setExpression={setExpression}
         setUnsavedChanges={setUnsavedChanges}
       />
-
       <Separator />
       {!showDeleteConf && (
         <>
@@ -74,7 +119,6 @@ const EditSmartColumn: React.FC<{
               onClick={() => {
                 setUnsavedChanges(false);
                 setSelectedSmartColumn();
-                setSmartColumns(smartColumns.filter(col => col._id !== columnId));
               }}
             >
               Cancel
@@ -84,7 +128,6 @@ const EditSmartColumn: React.FC<{
               onClick={() => {
                 if (!expression || !columnName) return;
                 setUnsavedChanges(false);
-                setSelectedSmartColumn();
                 saveSmartColumn({
                   _id: columnId,
                   dataType: column?.dataType ?? 'number',

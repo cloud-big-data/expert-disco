@@ -1,11 +1,12 @@
 import { ButtonTertiary } from 'components/ui/Buttons';
 import Card from 'components/ui/Card';
 import ViewWithLeftNav from 'components/ViewWithLeftNav';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
+import DatasetContext from 'contexts/DatasetContext';
 import DatasetFilters from './DatasetFilters';
 import DatasetSummary from './DatasetSummary';
 import DatasetGrouping from './DatasetGrouping';
@@ -61,48 +62,6 @@ const AggregatesContainer = styled.div`
   }
 `;
 
-// const ChangeHistoryContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   flex: 1 0 auto;
-//   @media (max-width: 1400px) {
-//     margin-top: 1rem;
-//   }
-// `;
-
-const VIEWS = [
-  {
-    name: 'Dataset',
-    value: 'summary',
-    icon: <i className="fad fa-scroll" />,
-  },
-  {
-    name: 'Filters',
-    value: 'filter',
-    icon: <i className="far fa-filter" />,
-  },
-  {
-    name: 'Smart columns',
-    value: 'smartColumns',
-    icon: <i style={{ color: Styles.dark300 }} className="fad fa-flux-capacitor" />,
-  },
-  {
-    name: 'Grouping',
-    value: 'groupings',
-    icon: <i className="fad fa-layer-group" />,
-  },
-  {
-    name: 'Share',
-    value: 'share',
-    icon: <i className="fad fa-share" />,
-  },
-  {
-    name: 'Export',
-    value: 'export',
-    icon: <i className="fad fa-file-csv" />,
-  },
-];
-
 const ViewLookup: {
   [key: string]: React.ReactNode;
 } = {
@@ -114,6 +73,7 @@ const ViewLookup: {
 };
 
 const DatasetAggregates: React.FC = () => {
+  const { boardData } = useContext(DatasetContext)!;
   const history = useHistory();
   const location = useLocation();
   const querystring = queryString.parse(location.search);
@@ -122,6 +82,42 @@ const DatasetAggregates: React.FC = () => {
     (querystring.view as string) ?? 'summary',
   );
   const ViewComponent = ViewLookup[activeView];
+
+  const VIEWS = [
+    {
+      name: 'Dataset',
+      value: 'summary',
+      icon: <i className="fad fa-scroll" />,
+    },
+    {
+      name: 'Filters',
+      value: 'filter',
+      icon: <i className="far fa-filter" />,
+    },
+    {
+      name: 'Smart columns',
+      value: 'smartColumns',
+      icon: (
+        <i style={{ color: Styles.dark300 }} className="fad fa-flux-capacitor" />
+      ),
+      count: boardData.errors?.filter(err => err.section === 'smartColumns').length,
+    },
+    {
+      name: 'Grouping',
+      value: 'groupings',
+      icon: <i className="fad fa-layer-group" />,
+    },
+    {
+      name: 'Share',
+      value: 'share',
+      icon: <i className="fad fa-share" />,
+    },
+    {
+      name: 'Export',
+      value: 'export',
+      icon: <i className="fad fa-file-csv" />,
+    },
+  ];
 
   return (
     <ExpandWrapper id="test" expanded={expanded}>
@@ -146,11 +142,6 @@ const DatasetAggregates: React.FC = () => {
           >
             <Card>{ViewComponent}</Card>
           </ViewWithLeftNav>
-          {/* <ChangeHistoryContainer>
-            <Card>
-              <h6>Change history</h6>
-            </Card>
-          </ChangeHistoryContainer> */}
         </AggregatesContainer>
       ) : (
         <div className="contracted_buttons">

@@ -126,6 +126,8 @@ const DatasetWrapper: React.FC = () => {
       boardHead,
       setBoardHead,
       datasetHead,
+      boardState,
+      setBoardState,
     },
     changeHistoryRef,
     setFilesToDownload,
