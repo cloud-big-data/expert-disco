@@ -68,7 +68,7 @@ const DangerText: React.FC<IText> = props => (
   </TextContainer>
 );
 
-const LabelContainer = styled.span<{
+const LabelContainer = styled.label<{
   unBold?: boolean;
   hoverBold?: boolean;
   hoverPurple?: boolean;
@@ -103,12 +103,14 @@ const Label: React.FC<{
   hoverBold?: boolean;
   hoverPurple?: boolean;
   children: React.ReactNode;
+  htmlFor?: string;
 }> = props => (
   <LabelContainer
     hoverPurple={props.hoverPurple}
     hoverBold={props.hoverBold}
     unBold={props.unBold}
     id={props.id}
+    htmlFor={props.htmlFor}
     style={props.style}
   >
     {props.children}

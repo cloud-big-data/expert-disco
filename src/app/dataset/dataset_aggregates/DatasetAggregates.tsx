@@ -5,10 +5,12 @@ import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components/macro';
+import Styles from 'styles/Styles';
 import DatasetFilters from './DatasetFilters';
 import DatasetSummary from './DatasetSummary';
 import DatasetGrouping from './DatasetGrouping';
 import DatasetExport from './DatasetExport';
+import DatasetSmartColumns from './DatasetSmartColumns';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
   display: flex;
@@ -70,27 +72,32 @@ const AggregatesContainer = styled.div`
 
 const VIEWS = [
   {
-    name: 'Dataset summary',
+    name: 'Dataset',
     value: 'summary',
     icon: <i className="fad fa-scroll" />,
   },
   {
-    name: 'Group this dataset',
-    value: 'groupings',
-    icon: <i className="fad fa-layer-group" />,
-  },
-  {
-    name: 'Filter this dataset',
+    name: 'Filters',
     value: 'filter',
     icon: <i className="far fa-filter" />,
   },
   {
-    name: 'Share this dataset',
+    name: 'Smart columns',
+    value: 'smartColumns',
+    icon: <i style={{ color: Styles.dark300 }} className="fad fa-flux-capacitor" />,
+  },
+  {
+    name: 'Grouping',
+    value: 'groupings',
+    icon: <i className="fad fa-layer-group" />,
+  },
+  {
+    name: 'Share',
     value: 'share',
     icon: <i className="fad fa-share" />,
   },
   {
-    name: 'Export this dataset',
+    name: 'Export',
     value: 'export',
     icon: <i className="fad fa-file-csv" />,
   },
@@ -103,6 +110,7 @@ const ViewLookup: {
   filter: <DatasetFilters />,
   groupings: <DatasetGrouping />,
   export: <DatasetExport />,
+  smartColumns: <DatasetSmartColumns />,
 };
 
 const DatasetAggregates: React.FC = () => {

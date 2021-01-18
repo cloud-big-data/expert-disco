@@ -146,6 +146,7 @@ const InputField: React.FC<{
   append?: string;
   prepend?: string;
   label?: string;
+  name?: string;
   onConfirm?: () => void;
   confirmText?: string;
   min?: number;
@@ -155,7 +156,11 @@ const InputField: React.FC<{
 
   return (
     <>
-      {props.label && <Label>{props.label}</Label>}
+      {props.label && (
+        <Label unBold htmlFor={props.name ?? props.label}>
+          {props.label}
+        </Label>
+      )}
       {props.validationError && (
         <ErrorField>
           <i className="fal fa-times-circle" />
@@ -163,6 +168,7 @@ const InputField: React.FC<{
         </ErrorField>
       )}
       <InputContainer
+        id={props.id}
         disabled={props.disabled}
         active={active}
         error={!!props.error || !!props.validationError}
@@ -171,11 +177,11 @@ const InputField: React.FC<{
         {props.prepend && <TextContainer pre>{props.prepend}</TextContainer>}
         <Input
           unsetHeight={props.unsetHeight}
+          name={props.name ?? props.label}
           ref={props.inputRef}
           placeholder={props.placeholder}
           disabled={props.disabled}
           className={props.className}
-          id={props.id}
           style={props.style}
           type={props.type ?? 'text'}
           onChange={props.onChange}

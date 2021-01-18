@@ -12,6 +12,8 @@ export default {
   red300: '#ec7063',
   red200: '#F5B7B1',
   red100: '#FADBD8',
+  warning100: '#fff5e2',
+  warning200: '#f4dbab',
   blue: '#86E2FF',
   green: '#73FFCD',
   peach: '#FAC698',

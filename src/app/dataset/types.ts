@@ -54,6 +54,7 @@ export type ISortingLayer = Array<{
 }>;
 
 export interface ISmartColumn {
+  _id: string;
   expression: string;
   columnName: string;
 }
@@ -147,6 +148,7 @@ export interface IBoardData {
   layerToggles: {
     filters: boolean;
     groupings: boolean;
+    smartColumns: boolean;
   };
 }
 
