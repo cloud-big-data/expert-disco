@@ -257,6 +257,8 @@ a:not(.no-hover):hover {
   color: white !important;
 }
 
+
+
 @media only screen and (min-width: 1000px) {
   #root .ant-select {
     min-width: 250px;

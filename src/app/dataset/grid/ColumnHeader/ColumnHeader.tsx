@@ -7,7 +7,7 @@ import * as R from 'ramda';
 import usePrevious from 'hooks/usePrevious';
 import GridContext from 'contexts/GridContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import { Menu, Dropdown } from 'antd';
+import { Menu, Dropdown, Tooltip } from 'antd';
 import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
 import findColumnById from 'app/dataset/lib/findColumnById';
 import { dateFormats, numberFormats, CURRENCY_CODES } from 'app/dataset/constants';
@@ -26,7 +26,7 @@ import {
 import { defaults, COLUMN_DATA_TYPES } from '../constants';
 import { ActiveInput } from '../styles';
 import DraggableColEdge from './DraggableColEdge';
-import ColumnTypeIcon from './ColumnTypeIcon';
+import { ColumnTypeStyle } from './ColumnTypeIcon';
 
 interface IColumnHeaderProps extends IColumn {
   columnIndex: number;
@@ -362,7 +362,23 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         }
         onClick={selectColumn}
       >
-        <ColumnTypeIcon dataType={dataType} />
+        <Tooltip color="white" title={dataType}>
+          {dataType === 'string' ? (
+            <i className="fad fa-text-size" style={ColumnTypeStyle} />
+          ) : dataType === 'number' ? (
+            <i className="fad fa-hashtag" style={ColumnTypeStyle} />
+          ) : dataType === 'date' ? (
+            <i className="fad fa-calendar" style={ColumnTypeStyle} />
+          ) : (
+            <></>
+          )}
+        </Tooltip>
+
+        {isSmartColumn && (
+          <Tooltip color="white" title="Smart column">
+            <i style={{ marginRight: '1rem' }} className="fad fa-network-wired" />
+          </Tooltip>
+        )}
         {!readOnly && active ? (
           <ActiveInput
             ref={inputRef}

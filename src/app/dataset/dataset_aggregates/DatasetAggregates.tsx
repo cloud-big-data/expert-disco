@@ -97,9 +97,7 @@ const DatasetAggregates: React.FC = () => {
     {
       name: 'Smart columns',
       value: 'smartColumns',
-      icon: (
-        <i style={{ color: Styles.dark300 }} className="fad fa-flux-capacitor" />
-      ),
+      icon: <i style={{ color: Styles.dark300 }} className="fad fa-network-wired" />,
       count: boardData.errors?.filter(err => err.section === 'smartColumns').length,
     },
     {
