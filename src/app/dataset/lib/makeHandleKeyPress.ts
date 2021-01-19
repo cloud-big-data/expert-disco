@@ -58,21 +58,25 @@ const makeHandleKeyPress = ({
     }
 
     const getNextVerticalCell = () => {
-      if (rowIndex + 1 === rowLength) {
-        if (cellIndex + 1 === cellLength) {
-          return getCellId(0, 0);
+      try {
+        if (rowIndex + 1 === rowLength) {
+          if (cellIndex + 1 === cellLength) {
+            return getCellId(0, 0);
+          }
+          return getCellId(0, cellIndex + 1);
         }
-        return getCellId(0, cellIndex + 1);
-      }
 
-      return getCellId(rowIndex + 1, cellIndex);
+        return getCellId(rowIndex + 1, cellIndex);
+      } catch (e) {
+        console.log('error in makeHandleKeyPress', e);
+      }
     };
 
     setBoardState({
       ...boardState,
       cellsState: {
         ...boardState.cellsState,
-        selectedCell: getNextVerticalCell(),
+        selectedCell: getNextVerticalCell() ?? '',
         activeCell: '',
       },
     });

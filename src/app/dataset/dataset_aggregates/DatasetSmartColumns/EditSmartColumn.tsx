@@ -1,4 +1,4 @@
-import { IBoardData, ISmartColumn } from 'app/dataset/types';
+import { DataTypes, IBoardData, ISmartColumn } from 'app/dataset/types';
 import ConfirmationContainer from 'components/ConfirmationButtons';
 import Separator from 'components/Separator';
 import { ButtonDanger, ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
@@ -10,6 +10,7 @@ import styled from 'styled-components/macro';
 import WarningBlock from 'components/WarningBlock';
 import { UUID_REGEX } from 'app/dataset/constants';
 import findColumnById from 'app/dataset/lib/findColumnById';
+import Select from 'components/ui/Select';
 import ExpressionEditor from './ExpressionEditor';
 
 const EditingContainer = styled.div`
@@ -54,6 +55,7 @@ const EditSmartColumn: React.FC<{
   const column = smartColumns.find(x => x._id === columnId);
   const [expression, setExpression] = useState(column?.expression);
   const [columnName, setColumnName] = useState(column?.value);
+  const [dataType, setDataType] = useState(column?.dataType ?? 'number');
 
   const [expressionIsFocused, setExpressionIsFocused] = useState(false);
 
@@ -85,8 +87,6 @@ const EditSmartColumn: React.FC<{
     };
   }, []);
 
-  console.log(columnId);
-
   return (
     <EditingContainer>
       <Label>Editing: {column?.value}</Label>
@@ -101,6 +101,8 @@ const EditSmartColumn: React.FC<{
         }}
       />
       <ExpressionEditor
+        dataType={dataType}
+        setDataType={setDataType}
         expressionRef={expressionRef}
         validationError={errorMessage}
         expression={
@@ -110,6 +112,15 @@ const EditSmartColumn: React.FC<{
         }
         setExpression={setExpression}
         setUnsavedChanges={setUnsavedChanges}
+      />
+      <Label unBold>Data type:</Label>
+      <Select
+        options={[
+          { value: 'string', name: 'string' },
+          { value: 'number', name: 'number' },
+        ]}
+        onChange={e => setDataType(e as DataTypes)}
+        value={dataType}
       />
       <Separator />
       {!showDeleteConf && (
@@ -129,8 +140,9 @@ const EditSmartColumn: React.FC<{
                 if (!expression || !columnName) return;
                 setUnsavedChanges(false);
                 saveSmartColumn({
+                  ...column,
                   _id: columnId,
-                  dataType: column?.dataType ?? 'number',
+                  dataType: dataType ?? 'number',
                   expression,
                   value: columnName,
                 });

@@ -4,14 +4,19 @@ import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useState } from 'react';
 import * as R from 'ramda';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
+import { DataTypes } from 'app/dataset/types';
 
 const ExpressionEditor: React.FC<{
   expression?: string;
+  dataType?: DataTypes;
+  setDataType: (type: DataTypes) => void;
   setUnsavedChanges: (changes: boolean) => void;
   setExpression: (exp: string) => void;
   validationError?: string;
   expressionRef: React.RefObject<HTMLInputElement>;
 }> = ({
+  dataType,
+  setDataType,
   expression,
   setUnsavedChanges,
   setExpression,
@@ -37,19 +42,26 @@ const ExpressionEditor: React.FC<{
         activeInput.slice(start - stepsBehind, start).join('');
 
       if (
-        groupText('col('.length) === 'col(' ||
-        groupText('CONCATENATE('.length) === 'CONCATENATE('
+        groupText('col('.length).toUpperCase() === 'COL(' ||
+        groupText('CONCATENATE('.length).toUpperCase() === 'CONCATENATE('
       ) {
         setAutoCompleteOpen(true);
       } else {
         setAutoCompleteOpen(false);
+      }
+
+      if (
+        groupText('CONCATENATE('.length).toUpperCase() === 'CONCATENATE(' &&
+        dataType !== 'string'
+      ) {
+        setDataType('string');
       }
     };
 
     ref?.addEventListener('keyup', handleCaret);
 
     return () => ref?.removeEventListener('keyup', handleCaret);
-  }, [expression, expressionRef]);
+  }, [dataType, expression, expressionRef, setDataType]);
 
   return (
     <InputField
