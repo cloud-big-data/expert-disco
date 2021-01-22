@@ -64,9 +64,6 @@ const Input = styled.input<{
     font-size: 14px;
   `
       : ''}
-  &[type='search'] {
-    border: 1px solid red !important;
-  }
   border: none;
   color: ${Styles.dark400};
   padding: ${props => (props.icon ? '0.5rem .75rem .5rem 0' : '.5rem .75rem')};
@@ -119,10 +116,10 @@ const TextContainer = styled.div<{ pre?: boolean }>`
       `}
 `;
 
-const OnConfirmContainer = styled.button`
+const OnConfirmContainer = styled.button<{ active: boolean }>`
   background: ${Styles.defaultBgColor};
-  border: 2px solid ${Styles.dark100};
-  border-left: 2px solid ${Styles.dark100};
+  border: none;
+  border-left: 2px solid ${Styles.faintBorderColor};
   border-radius: 0 ${Styles.defaultBorderRadius} ${Styles.defaultBorderRadius} 0;
   padding: 0 1rem;
   outline: none;
@@ -229,7 +226,7 @@ const InputField: React.FC<{
         )}
         {props.append && <TextContainer>{props.append}</TextContainer>}
         {props.onConfirm && (
-          <OnConfirmContainer onClick={props.onConfirm}>
+          <OnConfirmContainer active={active} onClick={props.onConfirm}>
             {props.confirmText ?? 'Submit'}
           </OnConfirmContainer>
         )}

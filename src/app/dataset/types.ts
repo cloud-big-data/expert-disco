@@ -142,6 +142,8 @@ export interface BoardError {
   section: LayersTypes;
 }
 
+export type Privileges = 'owner' | 'editor' | 'viewer';
+
 export interface IBoardData {
   [key: string]: any;
   visibilitySettings: {

@@ -17,7 +17,6 @@ const FiltersContainer = styled.div`
     width: 100%;
     display: flex;
     z-index: 1;
-    align-items: center;
     button {
       margin-left: auto;
       padding: 0;
