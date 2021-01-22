@@ -104,6 +104,7 @@ const Label: React.FC<{
   hoverPurple?: boolean;
   children: React.ReactNode;
   htmlFor?: string;
+  onClick?: () => void;
 }> = props => (
   <LabelContainer
     hoverPurple={props.hoverPurple}
@@ -112,6 +113,7 @@ const Label: React.FC<{
     id={props.id}
     htmlFor={props.htmlFor}
     style={props.style}
+    onClick={props.onClick}
   >
     {props.children}
   </LabelContainer>

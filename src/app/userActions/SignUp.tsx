@@ -1,7 +1,7 @@
 import { ButtonPrimary } from 'components/ui/Buttons';
 import React, { useContext, useReducer, useState } from 'react';
 import InputField from 'components/ui/InputField';
-import { Helper, Text, DangerText } from 'components/ui/Typography';
+import { Helper, DangerText } from 'components/ui/Typography';
 import { Link, useHistory } from 'react-router-dom';
 import { IReducerAction } from 'types';
 import * as EmailValidator from 'email-validator';
@@ -110,6 +110,7 @@ const SignUp: React.FC = () => {
   const UserContext = useContext(userContext);
   const history = useHistory();
   const [accountExists, toggleAccountExists] = useState(false);
+  const [error, toggleError] = useState(false);
   const [formState, dispatchFormEvent] = useReducer(signUpFormReducer, initialState);
 
   const tryCreateAccount = async () => {
@@ -121,8 +122,12 @@ const SignUp: React.FC = () => {
       phone: formState.phone?.value,
     });
 
-    if (error) {
+    if (res.status === 409) {
       toggleAccountExists(true);
+      return;
+    }
+    if (error && res.status === 400) {
+      toggleError(true);
       return;
     }
 
@@ -136,8 +141,10 @@ const SignUp: React.FC = () => {
     history.push('/home');
   };
 
-  const onSubmit = () => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     toggleAccountExists(false);
+    toggleError(false);
     if (formState.firstName.value === '') {
       dispatchFormEvent({
         type: 'FIRST_NAME',
@@ -199,12 +206,6 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSubmit();
-    }
-  };
-
   const errors = formErrors(formState);
   const fieldsWithErrors = Object.keys(errors).filter(
     (x: any) => errors[x] === true,
@@ -216,6 +217,12 @@ const SignUp: React.FC = () => {
         <DangerText len="short" size="sm">
           An account already exists with this user name. Try{' '}
           <Link to="login">logging in.</Link>
+        </DangerText>
+      )}
+      {error && (
+        <DangerText len="short" size="sm">
+          There was an error when attempting to create your account. Please try again
+          later.
         </DangerText>
       )}
       {fieldsWithErrors.length > 0 && (
@@ -230,117 +237,115 @@ const SignUp: React.FC = () => {
           </ul>
         </>
       )}
+      <form onSubmit={onSubmit}>
+        <div className="input-group">
+          <InputField
+            label="First name"
+            name="firstname"
+            onChange={e =>
+              dispatchFormEvent({
+                type: 'FIRST_NAME',
+                payload: {
+                  value: e.target.value,
+                  error: false,
+                },
+              })
+            }
+            value={formState.firstName.value}
+            error={formState.firstName.error}
+          />
+        </div>
+        <div className="input-group">
+          <InputField
+            label="Last name"
+            name="lastname"
+            onChange={e =>
+              dispatchFormEvent({
+                type: 'LAST_NAME',
+                payload: {
+                  value: e.target.value,
+                  error: false,
+                },
+              })
+            }
+            value={formState.lastName.value}
+            error={formState.lastName.error}
+          />
+        </div>
+        <div className="input-group">
+          <InputField
+            label="Email"
+            name="email"
+            onChange={e =>
+              dispatchFormEvent({
+                type: 'EMAIL',
+                payload: {
+                  value: e.target.value,
+                  error: false,
+                },
+              })
+            }
+            type="email"
+            value={formState.email.value}
+            error={formState.email.error}
+          />
+        </div>
+        <div className="input-group">
+          <InputField
+            label="Password"
+            name="new-password"
+            onChange={e =>
+              dispatchFormEvent({
+                type: 'PASSWORD',
+                payload: {
+                  value: e.target.value,
+                  error: false,
+                },
+              })
+            }
+            value={formState.password.value}
+            error={formState.password.error}
+            type="password"
+          />
+        </div>
+        <div className="input-group">
+          <InputField
+            label="Phone number (optional)"
+            name="phone"
+            onChange={e =>
+              dispatchFormEvent({
+                type: 'PHONE',
+                payload: {
+                  value: e.target.value,
+                  error: false,
+                },
+              })
+            }
+            value={formState.phone?.value ?? ''}
+            error={formState.phone?.error}
+          />
+        </div>
 
-      <div className="input-group">
-        <Text len="short" size="sm">
-          First Name:
-        </Text>
-        <InputField
-          onChange={e =>
-            dispatchFormEvent({
-              type: 'FIRST_NAME',
-              payload: {
-                value: e.target.value,
-                error: false,
-              },
-            })
-          }
-          value={formState.firstName.value}
-          error={formState.firstName.error}
-          onKeyDown={onKeyDown}
-        />
-      </div>
-      <div className="input-group">
-        <Text len="short" size="sm">
-          Last Name:
-        </Text>
-        <InputField
-          onChange={e =>
-            dispatchFormEvent({
-              type: 'LAST_NAME',
-              payload: {
-                value: e.target.value,
-                error: false,
-              },
-            })
-          }
-          value={formState.lastName.value}
-          error={formState.lastName.error}
-          onKeyDown={onKeyDown}
-        />
-      </div>
-      <div className="input-group">
-        <Text len="short" size="sm">
-          Email:
-        </Text>
-        <InputField
-          onChange={e =>
-            dispatchFormEvent({
-              type: 'EMAIL',
-              payload: {
-                value: e.target.value,
-                error: false,
-              },
-            })
-          }
-          type="email"
-          value={formState.email.value}
-          error={formState.email.error}
-          onKeyDown={onKeyDown}
-        />
-      </div>
-      <div className="input-group">
-        <Text len="short" size="sm">
-          Password:
-        </Text>
-        <InputField
-          onChange={e =>
-            dispatchFormEvent({
-              type: 'PASSWORD',
-              payload: {
-                value: e.target.value,
-                error: false,
-              },
-            })
-          }
-          value={formState.password.value}
-          error={formState.password.error}
-          type="password"
-          onKeyDown={onKeyDown}
-        />
-      </div>
-      <div className="input-group">
-        <Text len="short" size="sm">
-          Phone Number (optional):
-        </Text>
-        <InputField
-          onChange={e =>
-            dispatchFormEvent({
-              type: 'PHONE',
-              payload: {
-                value: e.target.value,
-                error: false,
-              },
-            })
-          }
-          value={formState.phone?.value ?? ''}
-          error={formState.phone?.error}
-          onKeyDown={onKeyDown}
-        />
-      </div>
-
-      <div className="actions__container">
-        <ButtonPrimary onClick={onSubmit} id="complete_form">
-          Create Account
-        </ButtonPrimary>
-
-        <Helper>
-          Already have an account?{' '}
-          <strong>
-            <Link to="/login">Customer Login</Link>
-          </strong>
-        </Helper>
-      </div>
+        <div className="actions__container">
+          <ButtonPrimary
+            disabled={
+              !formState.email.value ||
+              !formState.password.value ||
+              !formState.firstName.value ||
+              !formState.lastName.value
+            }
+            id="complete_form"
+          >
+            Create Account
+          </ButtonPrimary>
+          <Helper>
+            Already have an account?{' '}
+            <strong>
+              <Link to="/login">Customer Login</Link>
+            </strong>
+          </Helper>
+        </div>
+      </form>
     </UserContainer>
   );
 };

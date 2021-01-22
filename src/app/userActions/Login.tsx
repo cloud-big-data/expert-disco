@@ -1,7 +1,7 @@
 import { ButtonPrimary } from 'components/ui/Buttons';
 import React, { useContext, useReducer, useState } from 'react';
 import InputField from 'components/ui/InputField';
-import { DangerText, Helper, Text } from 'components/ui/Typography';
+import { DangerText, Helper } from 'components/ui/Typography';
 import { Link, useHistory } from 'react-router-dom';
 import { IReducerAction } from 'types';
 import skyvueFetch from 'services/skyvueFetch';
@@ -83,7 +83,8 @@ const Login: React.FC = () => {
     history.push('/home');
   };
 
-  const onSubmit = () => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (formState.email.value === '') {
       dispatchFormEvent({
         type: 'EMAIL',
@@ -112,12 +113,6 @@ const Login: React.FC = () => {
     tryLogin();
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSubmit();
-    }
-  };
-
   return (
     <UserContainer>
       {badLogin && (
@@ -125,64 +120,60 @@ const Login: React.FC = () => {
           There was a problem with your email or password. Please try again!
         </DangerText>
       )}
-      <div className="input-group">
-        <Text len="short" size="sm">
-          Email:
-        </Text>
-        <InputField
-          onChange={e =>
-            dispatchFormEvent({
-              type: 'EMAIL',
-              payload: {
-                value: e.target.value,
-              },
-            })
-          }
-          error={formState.email.error}
-          value={formState.email.value}
-          onKeyDown={onKeyDown}
-          type="email"
-          icon={<i className="fad fa-envelope" />}
-        />
-      </div>
-      <div className="input-group">
-        <Text len="short" size="sm">
-          Password:
-        </Text>
-        <InputField
-          onChange={e =>
-            dispatchFormEvent({
-              type: 'PASSWORD',
-              payload: {
-                value: e.target.value,
-              },
-            })
-          }
-          error={formState.password.error}
-          value={formState.password.value}
-          type="password"
-          onKeyDown={onKeyDown}
-          icon={<i className="fad fa-lock-alt" />}
-        />
-      </div>
+      <form onSubmit={onSubmit}>
+        <div className="input-group">
+          <InputField
+            label="Email"
+            name="email"
+            onChange={e =>
+              dispatchFormEvent({
+                type: 'EMAIL',
+                payload: {
+                  value: e.target.value,
+                },
+              })
+            }
+            error={formState.email.error}
+            value={formState.email.value}
+            type="email"
+            icon={<i className="fad fa-envelope" />}
+          />
+        </div>
+        <div className="input-group">
+          <InputField
+            label="Password"
+            name="password"
+            onChange={e =>
+              dispatchFormEvent({
+                type: 'PASSWORD',
+                payload: {
+                  value: e.target.value,
+                },
+              })
+            }
+            error={formState.password.error}
+            value={formState.password.value}
+            type="password"
+            icon={<i className="fad fa-lock-alt" />}
+          />
+        </div>
 
-      <div className="actions__container">
-        <ButtonPrimary onClick={onSubmit} id="complete_form">
-          Login
-        </ButtonPrimary>
+        <div className="actions__container">
+          <ButtonPrimary id="complete_form">Login</ButtonPrimary>
 
-        <Helper>
-          Not a user yet?{' '}
-          <strong>
-            <Link to="/signup">Create Account</Link>
-          </strong>
-        </Helper>
-        <Helper>
-          <strong>
-            <Link to="/forgot_password">I forgot my password</Link>
-          </strong>
-        </Helper>
-      </div>
+          <Helper>
+            Not a user yet?{' '}
+            <strong>
+              <Link to="/signup">Create Account</Link>
+            </strong>
+          </Helper>
+          <Helper>
+            <strong>
+              <Link to="/forgot_password">I forgot my password</Link>
+            </strong>
+          </Helper>
+        </div>
+      </form>
     </UserContainer>
   );
 };

@@ -35,11 +35,13 @@ const skyvueFetch = (
       } catch (e) {
         return {
           error: e.message,
+          status: e.status,
         };
       }
     } catch (e) {
       return {
         error: e.message,
+        status: e.status,
       };
     }
   };

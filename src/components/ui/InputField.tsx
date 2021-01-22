@@ -64,6 +64,9 @@ const Input = styled.input<{
     font-size: 14px;
   `
       : ''}
+  &[type='search'] {
+    border: 1px solid red !important;
+  }
   border: none;
   color: ${Styles.dark400};
   padding: ${props => (props.icon ? '0.5rem .75rem .5rem 0' : '.5rem .75rem')};
@@ -159,6 +162,37 @@ const InputField: React.FC<{
 }> = props => {
   const [active, setActive] = useState(false);
 
+  const inputField = (
+    <Input
+      unsetHeight={props.unsetHeight}
+      name={props.name ?? props.label}
+      ref={props.inputRef}
+      placeholder={props.placeholder}
+      disabled={props.disabled}
+      className={props.className}
+      style={props.style}
+      type={props.type ?? 'text'}
+      onChange={props.onChange}
+      defaultValue={props.defaultValue}
+      value={props.value || ''}
+      error={props.error}
+      onKeyDown={props.onKeyDown}
+      spellCheck={props.spellCheck ?? true}
+      icon={!!props.icon}
+      onFocus={e => {
+        setActive(true);
+        props.onFocus?.(e);
+      }}
+      onBlur={e => {
+        setActive(false);
+        props.onBlur?.(e);
+      }}
+      role={props.role}
+      min={props.min}
+      max={props.max}
+    />
+  );
+
   return (
     <>
       {props.label && (
@@ -180,42 +214,19 @@ const InputField: React.FC<{
       >
         {props.icon && <div className="icon__container">{props.icon}</div>}
         {props.prepend && <TextContainer pre>{props.prepend}</TextContainer>}
-        <AutoComplete
-          value={typeof props.value === 'string' ? props.value : ''}
-          open={props.dropdownOpen}
-          options={props.options}
-          style={{ width: '100%', border: 'none' }}
-          onSelect={props.setValue}
-        >
-          <Input
-            unsetHeight={props.unsetHeight}
-            name={props.name ?? props.label}
-            ref={props.inputRef}
-            placeholder={props.placeholder}
-            disabled={props.disabled}
-            className={props.className}
-            style={props.style}
-            type={props.type ?? 'text'}
-            onChange={props.onChange}
-            defaultValue={props.defaultValue}
-            value={props.value || ''}
-            error={props.error}
-            onKeyDown={props.onKeyDown}
-            spellCheck={props.spellCheck ?? true}
-            icon={!!props.icon}
-            onFocus={e => {
-              setActive(true);
-              props.onFocus?.(e);
-            }}
-            onBlur={e => {
-              setActive(false);
-              props.onBlur?.(e);
-            }}
-            role={props.role}
-            min={props.min}
-            max={props.max}
-          />
-        </AutoComplete>
+        {props.options ? (
+          <AutoComplete
+            value={typeof props.value === 'string' ? props.value : ''}
+            open={props.dropdownOpen}
+            options={props.options}
+            style={{ width: '100%', border: 'none' }}
+            onSelect={props.setValue}
+          >
+            {inputField}
+          </AutoComplete>
+        ) : (
+          inputField
+        )}
         {props.append && <TextContainer>{props.append}</TextContainer>}
         {props.onConfirm && (
           <OnConfirmContainer onClick={props.onConfirm}>

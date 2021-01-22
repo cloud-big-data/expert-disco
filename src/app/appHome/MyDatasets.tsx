@@ -156,7 +156,7 @@ const MyDatasets: React.FC = () => {
       )}
       <ListContainer>
         {(loadingState || isLoading) && <Loading />}
-        {datasets.map(dataset => (
+        {datasets?.map(dataset => (
           <DatasetCard
             key={dataset._id}
             datasetId={dataset._id}
