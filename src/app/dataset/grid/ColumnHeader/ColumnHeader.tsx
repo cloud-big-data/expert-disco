@@ -10,7 +10,7 @@ import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import { Menu, Dropdown, Tooltip } from 'antd';
 import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
 import findColumnById from 'app/dataset/lib/findColumnById';
-import { dateFormats, numberFormats, CURRENCY_CODES } from 'app/dataset/constants';
+import { DATE_FORMATS, NUMBER_FORMATS, CURRENCY_CODES } from 'app/dataset/constants';
 import updateColumnById from 'app/dataset/lib/updateColumnById';
 import updateLayers from 'app/dataset/lib/updateLayers';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
@@ -261,9 +261,9 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       </Menu.SubMenu>
       <Menu.SubMenu disabled={dataType === 'string'} title={<>Formatting</>}>
         {(dataType === 'number'
-          ? numberFormats
+          ? NUMBER_FORMATS
           : dataType === 'date'
-          ? dateFormats
+          ? DATE_FORMATS
           : []
         ).map((formatOpt: string) => (
           <Menu.Item

@@ -43,6 +43,7 @@ const DatasetCard: React.FC<{
         description={description}
         setEditModalIsOpen={setEditModalIsOpen}
         duplicateDataset={duplicateDataset}
+        setDeleteConf={setDeleteConf}
       />
 
       {editModalIsOpen && (

@@ -54,17 +54,21 @@ export type ISortingLayer = Array<{
 }>;
 
 type DateFormats =
-  | 'MM-DD-YYYY'
-  | 'DD-MM-YYYY'
-  | 'YYYY-MM-DD'
-  | 'MM/DD/YYYY'
-  | 'DD/MM/YYYY'
-  | 'YYYY/MM/DD'
-  | 'MM-YYYY'
-  | 'MM/YYYY'
-  | 'MM/YY'
-  | 'MM-YY'
-  | 'iso string';
+  | 'MM-dd-yyyy'
+  | 'dd-MM-yyyy'
+  | 'yyyy-MM-dd'
+  | 'MM/dd/yyyy'
+  | 'dd/MM/yyyy'
+  | 'yyyy/MM/dd'
+  | 'MM-yyyy'
+  | 'MM/yyyy'
+  | 'MM/yy'
+  | 'MM-yy'
+  | 'time'
+  | 'datetime'
+  | 'iso string'
+  | 'locale date'
+  | 'locale time';
 
 export type Formats =
   | 'number'

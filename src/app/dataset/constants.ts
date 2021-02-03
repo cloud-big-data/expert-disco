@@ -1,18 +1,21 @@
-export const dateFormats = [
-  'MM-DD-YYYY',
-  'DD-MM-YYYY',
-  'YYYY-MM-DD',
-  'MM/DD/YYYY',
-  'DD/MM/YYYY',
-  'YYYY/MM/DD',
-  'MM-YYYY',
-  'MM/YYYY',
-  'MM/YY',
-  'MM-YY',
+export const DATE_FORMATS = [
+  'MM-dd-yyyy',
+  'dd-MM-yyyy',
+  'yyyy-MM-dd',
+  'MM/dd/yyyy',
+  'dd/MM/yyyy',
+  'yyyy/MM/dd',
+  'MM-yyyy',
+  'MM/yyyy',
+  'MM/yy',
+  'MM-yy',
   'iso string',
+  'datetime',
+  'locale date',
+  'locale time',
 ];
 
-export const numberFormats = ['number', 'percent', 'currency'];
+export const NUMBER_FORMATS = ['number', 'percent', 'currency'];
 
 export const CURRENCY_CODES = [
   'AED',

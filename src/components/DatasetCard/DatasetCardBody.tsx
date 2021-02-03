@@ -1,5 +1,6 @@
 import DropdownMenu from 'components/DropdownMenu';
 import { Helper, Label, Text } from 'components/ui/Typography';
+import makeDatasetLink from 'lib/makeDatasetLink';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
@@ -59,6 +60,7 @@ const DatasetCardBody: React.FC<{
   description?: string;
   setEditModalIsOpen: (open: boolean) => void;
   duplicateDataset: (datasetId: string, title: string) => Promise<void>;
+  setDeleteConf: (deleting: boolean) => void;
 }> = ({
   datasetId,
   title,
@@ -66,13 +68,22 @@ const DatasetCardBody: React.FC<{
   description,
   setEditModalIsOpen,
   duplicateDataset,
+  setDeleteConf,
 }) => {
   const [contextMenuIsOpen, setContextMenuIsOpen] = useState(false);
 
   const OPTIONS = [
     {
+      label: 'Delete',
+      onClick: () => {
+        setDeleteConf(true);
+        setEditModalIsOpen(true);
+      },
+      icon: <i style={{ color: Styles.red400 }} className="fal fa-times-circle" />,
+    },
+    {
       label: 'Open in new tab',
-      onClick: () => undefined,
+      onClick: () => window.open(makeDatasetLink(datasetId)),
       icon: <i className="fad fa-external-link" />,
     },
     {
@@ -86,7 +97,7 @@ const DatasetCardBody: React.FC<{
     <Link
       className="no-hover"
       style={{ textDecoration: 'none' }}
-      to={`/dataset/${datasetId}`}
+      to={makeDatasetLink(datasetId, false)}
       onContextMenu={e => {
         e.preventDefault();
         setContextMenuIsOpen(true);
