@@ -1,12 +1,15 @@
-import moment from 'moment';
+import TimeAgo from 'javascript-time-ago';
 
-const humanizeTimeAgo = (timestamp: string) => {
-  if (!timestamp) return null;
-  const duration = moment.duration(moment.utc().diff(moment.utc(timestamp)));
-  if (Math.floor(duration.asSeconds()) < 60) {
-    return `${Math.floor(duration.asSeconds())} seconds ago`;
-  }
-  return `${duration.humanize()} ago`;
-};
+// English
+import en from 'javascript-time-ago/locale/en';
+
+TimeAgo.addLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo('en-US');
+
+timeAgo.format(new Date());
+
+const humanizeTimeAgo = (timestamp: string) => timeAgo.format(new Date(timestamp));
 
 export default humanizeTimeAgo;

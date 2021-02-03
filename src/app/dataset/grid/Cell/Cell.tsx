@@ -5,12 +5,12 @@ import Styles from 'styles/Styles';
 import * as R from 'ramda';
 import editCellsAndReturnBoard from 'app/dataset/lib/editCellsAndReturnBoard';
 import DropdownMenu from 'components/DropdownMenu';
-import { notification, DatePicker } from 'antd';
+import { notification } from 'antd';
 import parseDataType from 'app/dataset/lib/parseDataType';
 import GridContext from 'contexts/GridContext';
 import usePrevious from 'hooks/usePrevious';
-import moment from 'moment';
 import formatValue from 'app/dataset/lib/formatValue';
+import DatePicker from 'components/ui/DatePicker';
 import { ICell, IBoardState, DataTypes, NumberFormatSettings } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
@@ -282,7 +282,7 @@ const Cell: React.FC<ICellProps> = ({
                 ),
               )
             }
-            value={moment(value)}
+            value={value ? new Date(value) : undefined}
             bordered={false}
             format={colFormat ?? 'MM-DD-YYYY'}
           />
