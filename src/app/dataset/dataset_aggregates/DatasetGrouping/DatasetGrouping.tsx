@@ -1,4 +1,4 @@
-import { IGroupLayer, AggregateFunctions } from 'app/dataset/types';
+import { IGroupLayer, AggregateFunctions, DataTypes } from 'app/dataset/types';
 import Select from 'components/ui/Select';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useState } from 'react';
@@ -14,6 +14,7 @@ import {
 } from 'react-beautiful-dnd';
 import Styles from 'styles/Styles';
 import { Empty, Switch } from 'antd';
+import findColumnById from 'app/dataset/lib/findColumnById';
 import { OperatorBreak } from '../Styles';
 
 const reorder = (list: string[], startIndex: number, endIndex: number) => {
@@ -68,7 +69,7 @@ const GroupingContainer = styled.div<{ length: number }>`
   }
 
   .aggregate__container {
-    display: 'flex';
+    display: flex;
     flex-direction: column;
   }
 
@@ -96,24 +97,35 @@ const GroupingContainer = styled.div<{ length: number }>`
     }
   }
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1300px) {
     display: flex;
     flex-direction: column;
   }
 `;
 
-const aggregateFunctions: Array<{
+const DEFAULT_FUNCTIONS: Array<{
+  name: string;
+  value: AggregateFunctions;
+}> = [
+  { name: 'count distinct', value: 'countDistinct' },
+  { name: 'count', value: 'count' },
+];
+
+const NUMBER_FUNCTIONS: Array<{
   name: string;
   value: AggregateFunctions;
 }> = [
   { name: 'sum', value: 'sum' },
   { name: 'mean', value: 'mean' },
   { name: 'median', value: 'median' },
-  { name: 'count distinct', value: 'countDistinct' },
-  { name: 'count', value: 'count' },
   { name: 'maximum value', value: 'max' },
   { name: 'minimum value', value: 'min' },
   { name: 'standard deviation', value: 'stdev' },
+];
+
+const makeAggregateFunctionsArray = (dataType: DataTypes) => [
+  ...DEFAULT_FUNCTIONS,
+  ...(dataType === 'number' ? NUMBER_FUNCTIONS : []),
 ];
 
 const DatasetGrouping: React.FC = () => {
@@ -326,7 +338,9 @@ const DatasetGrouping: React.FC = () => {
                   <Select
                     value={columnAggregates[key]}
                     placeholder="column"
-                    options={aggregateFunctions}
+                    options={makeAggregateFunctionsArray(
+                      findColumnById(key as string, boardData)?.dataType ?? 'string',
+                    )}
                     onChange={e =>
                       setGroupingState(
                         R.assocPath(

@@ -121,8 +121,9 @@ const MyDatasets: React.FC = () => {
             <ButtonPrimary
               onClick={() => setNewDatasetModalIsOpen(true)}
               id="new_dataset"
+              iconRight={<i className="fad fa-plus-circle" />}
             >
-              New dataset <i className="fad fa-plus-circle" />
+              New dataset
             </ButtonPrimary>
           </>
         )}
