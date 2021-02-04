@@ -109,6 +109,8 @@ const DatasetToolbar: React.FC<{
   const columnAtIndex = boardData.columns?.[selectedColumn];
   const { formatSettings } = columnAtIndex ?? {};
 
+  console.log(formatSettings);
+
   return (
     <BoardActionsContainer>
       <div className="left">
@@ -124,10 +126,7 @@ const DatasetToolbar: React.FC<{
           {columnAtIndex?.dataType === 'number' && (
             <>
               <ButtonTertiary
-                disabled={
-                  !formatSettings?.decimalPoints ||
-                  formatSettings.decimalPoints === 0
-                }
+                disabled={formatSettings?.decimalPoints === 0}
                 onClick={
                   columnAtIndex
                     ? () =>
@@ -138,7 +137,7 @@ const DatasetToolbar: React.FC<{
                               formatSettings: {
                                 ...formatSettings,
                                 decimalPoints:
-                                  (formatSettings?.decimalPoints ?? 0) - 1,
+                                  (formatSettings?.decimalPoints ?? 2) - 1,
                               },
                             },
                             boardData,
@@ -167,7 +166,7 @@ const DatasetToolbar: React.FC<{
                               formatSettings: {
                                 ...formatSettings,
                                 decimalPoints:
-                                  (formatSettings?.decimalPoints ?? 0) + 1,
+                                  (formatSettings?.decimalPoints ?? 2) + 1,
                               },
                             },
                             boardData,

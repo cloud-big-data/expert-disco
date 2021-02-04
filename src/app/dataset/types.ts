@@ -15,6 +15,16 @@ export type FilterTypes =
   | 'greaterThanEqualTo'
   | 'dateBetween';
 
+export interface IJoinLayer {
+  joinType: 'full' | 'left' | 'right' | 'inner';
+  condition: {
+    colId: string;
+    on: Array<{
+      [key: string]: string; // colIdOfMainDataset === colIdOfJoinedDataset
+    }>;
+  };
+}
+
 export type LogicalOperators = 'AND' | 'OR';
 export type FilterCondition = {
   filterId: string;
@@ -158,7 +168,7 @@ export interface IBoardData {
   columns: IColumn[];
   rows: IRow[];
   layers: {
-    joins: any[];
+    joins: IJoinLayer;
     filters: IFilterLayer;
     groupings: IGroupLayer;
     sortings: ISortingLayer;
@@ -169,6 +179,7 @@ export interface IBoardData {
     filters: boolean;
     groupings: boolean;
     smartColumns: boolean;
+    joins: boolean;
   };
   errors?: Array<BoardError>;
 }

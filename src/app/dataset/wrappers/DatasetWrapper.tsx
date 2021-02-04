@@ -169,7 +169,7 @@ const DatasetWrapper: React.FC = () => {
   };
 
   const initial_layers = {
-    joins: [],
+    joins: {},
     filters: [],
     groupings: {},
     smartColumns: [],
