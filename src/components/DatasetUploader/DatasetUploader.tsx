@@ -32,11 +32,7 @@ const DatasetUploader: React.FC<{
         try {
           const formData = new FormData();
           formData.append('csv', file);
-          const res = await skyvueFetch(accessToken!).postFile(
-            '/datasets/upload',
-            formData,
-          );
-          console.log(res);
+          await skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
         } catch (e) {
           console.error(e);
           setError(true);

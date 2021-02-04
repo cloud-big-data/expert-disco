@@ -109,8 +109,6 @@ const DatasetToolbar: React.FC<{
   const columnAtIndex = boardData.columns?.[selectedColumn];
   const { formatSettings } = columnAtIndex ?? {};
 
-  console.log(formatSettings);
-
   return (
     <BoardActionsContainer>
       <div className="left">

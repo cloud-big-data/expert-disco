@@ -18,7 +18,7 @@ export type FilterTypes =
 export interface IJoinLayer {
   joinType: 'full' | 'left' | 'right' | 'inner';
   condition: {
-    colId: string;
+    datasetId: string;
     on: Array<{
       [key: string]: string; // colIdOfMainDataset === colIdOfJoinedDataset
     }>;
