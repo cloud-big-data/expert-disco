@@ -239,6 +239,8 @@ const Cell: React.FC<ICellProps> = ({
     }
   });
 
+  const associatedColumn = boardData.columns[colIndex];
+
   return (
     <CellContainer
       width={colWidth ?? defaults.COL_WIDTH}
@@ -266,7 +268,7 @@ const Cell: React.FC<ICellProps> = ({
         setBoardState(R.assocPath(['cellsState', 'activeCell'], _id, boardState))
       }
     >
-      {!readOnly && active ? (
+      {!readOnly && active && !associatedColumn?.isSmartColumn ? (
         colDataType === 'date' ? (
           <DatePicker
             onChange={(date, dateString) =>
