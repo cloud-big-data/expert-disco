@@ -15,6 +15,7 @@ const SmartColumnsContainer = styled.div`
     width: 100%;
     display: flex;
     z-index: 1;
+    margin-top: 2rem;
     button {
       margin-left: auto;
       padding: 0;

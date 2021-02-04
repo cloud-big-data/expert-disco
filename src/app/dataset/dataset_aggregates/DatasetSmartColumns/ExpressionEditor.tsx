@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import * as R from 'ramda';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import { DataTypes } from 'app/dataset/types';
+import findColumnById from 'app/dataset/lib/findColumnById';
 
 const ExpressionEditor: React.FC<{
   expression?: string;
@@ -14,6 +15,7 @@ const ExpressionEditor: React.FC<{
   setExpression: (exp: string) => void;
   validationError?: string;
   expressionRef: React.RefObject<HTMLInputElement>;
+  columnId?: string;
 }> = ({
   dataType,
   setDataType,
@@ -22,6 +24,7 @@ const ExpressionEditor: React.FC<{
   setExpression,
   validationError,
   expressionRef,
+  columnId,
 }) => {
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const { boardData } = useContext(DatasetContext)!;
@@ -66,10 +69,12 @@ const ExpressionEditor: React.FC<{
   return (
     <InputField
       inputRef={expressionRef}
-      options={columns.map(col => ({
-        label: col.value,
-        value: col._id,
-      }))}
+      options={columns
+        .filter(col => col._id !== columnId)
+        .map(col => ({
+          label: col.value,
+          value: col._id,
+        }))}
       setValue={value => {
         const expressionArr = expression?.split('');
         const cursorPosition = expressionRef.current?.selectionStart;
@@ -77,7 +82,11 @@ const ExpressionEditor: React.FC<{
         setExpression(
           R.insert(cursorPosition, value, expressionArr)
             .join('')
-            .replace(UUID_REGEX_W_COL_PREFIX, e => e.match(UUID_REGEX)?.[0] ?? e),
+            .replace(UUID_REGEX_W_COL_PREFIX, e => {
+              const colId = e.match(UUID_REGEX)?.[0] ?? e;
+              const column = findColumnById(colId, boardData);
+              return column?.dataType === 'string' ? `"${colId}"` : colId;
+            }),
         );
       }}
       dropdownOpen={autoCompleteOpen}

@@ -112,14 +112,19 @@ const EditSmartColumn: React.FC<{
         }
         setExpression={setExpression}
         setUnsavedChanges={setUnsavedChanges}
+        columnId={columnId}
       />
       <Label unBold>Data type:</Label>
       <Select
         options={[
           { value: 'string', name: 'string' },
           { value: 'number', name: 'number' },
+          { value: 'date', name: 'date' },
         ]}
-        onChange={e => setDataType(e as DataTypes)}
+        onChange={e => {
+          setUnsavedChanges(true);
+          setDataType(e as DataTypes);
+        }}
         value={dataType}
       />
       <Separator />
