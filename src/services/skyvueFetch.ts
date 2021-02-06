@@ -1,3 +1,15 @@
+const makeBaseUrl = () => {
+  if (process.env.REACT_APP_NETLIFY_CONTEXT) {
+    const lookup: { [key: string]: string | undefined } = {
+      preview: process.env.REACT_APP_SKYVUE_API_URL_PREVIEW,
+      production: process.env.REACT_APP_SKYVUE_API_URL_PRODUCTION,
+    };
+    return lookup[process.env.REACT_APP_NETLIFY_CONTEXT];
+  }
+
+  return process.env.REACT_APP_SKYVUE_API_URL;
+};
+
 const skyvueFetch = (
   accessToken?: string | null,
 ): {
@@ -7,7 +19,10 @@ const skyvueFetch = (
   patch: (url: string, body: { [key: string]: any }) => Promise<any>;
   delete: (url: string, body: { [key: string]: any }) => Promise<any>;
 } => {
-  const baseUrl = process.env.REACT_APP_SKYVUE_API_URL;
+  const baseUrl = makeBaseUrl();
+  console.log(
+    `selected ${baseUrl} because REAT_APP_NETLIFY_CONTEXT === ${process.env.REACT_APP_NETLIFY_CONTEXT}`,
+  );
 
   const headers = {
     Authorization: `Bearer ${accessToken}`,
