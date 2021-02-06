@@ -1,9 +1,8 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import './App.css';
 import 'antd/dist/antd.css';
 import { Login, SignUp } from 'app/userActions';
-import Home from 'app/home';
 import { AuthenticatedRoute } from 'app/routing';
 import Logout from 'app/userActions/Logout';
 import PublicRoute from 'app/routing/PublicRoute';
@@ -59,7 +58,7 @@ const Skyvue = () => {
         </Route>
         <Route path="/">
           <PublicRoute>
-            <Home />
+            <Redirect to="/login" />
           </PublicRoute>
         </Route>
       </Switch>
