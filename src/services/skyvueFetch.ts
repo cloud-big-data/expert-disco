@@ -20,9 +20,6 @@ const skyvueFetch = (
   delete: (url: string, body: { [key: string]: any }) => Promise<any>;
 } => {
   const baseUrl = makeBaseUrl();
-  console.log(
-    `selected ${baseUrl} because REAT_APP_NETLIFY_CONTEXT === ${process.env.REACT_APP_NETLIFY_CONTEXT}`,
-  );
 
   const headers = {
     Authorization: `Bearer ${accessToken}`,
