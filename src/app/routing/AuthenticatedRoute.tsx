@@ -4,6 +4,7 @@ import useTokenRefresh from 'hooks/useTokenRefresh';
 import parseJWT from 'lib/parseJWT';
 import { Redirect } from 'react-router-dom';
 import ErrorScreen from 'components/ErrorScreen';
+import LogRocket from 'logrocket';
 
 const AuthenticatedRoute: React.FC<{
   children: React.ReactNode;
@@ -19,6 +20,13 @@ const AuthenticatedRoute: React.FC<{
   });
   const [isLoaded, toggleIsLoaded] = useState(false);
   const { accessToken, error, disconnected } = useTokenRefresh();
+
+  useEffect(() => {
+    if (!userContext.userId || !userContext.email) return;
+    LogRocket.identify(userContext.userId, {
+      email: userContext.email,
+    });
+  }, [userContext.email, userContext.userId]);
 
   useEffect(() => {
     if (accessToken && !userContext.accessToken) {

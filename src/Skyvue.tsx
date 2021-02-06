@@ -11,15 +11,13 @@ import ForgotPassword from 'app/userActions/ForgotPassword';
 import PasswordReset from 'app/userActions/PasswordReset';
 import DatasetWrapper from 'app/dataset/wrappers/DatasetWrapper';
 
+import LogRocket from 'logrocket';
+import setupLogRocketReact from 'logrocket-react';
+
+LogRocket.init('n0q2ht/skyvue');
+setupLogRocketReact(LogRocket);
+
 const Skyvue = () => (
-  // useEffect(() => {
-  //   if (
-  //     process.env.NODE_ENV === 'production' &&
-  //     !window.location.host.includes('app.')
-  //   ) {
-  //     window.location.href = `https://app.skyvue.io${window.location.pathname}${window.location.search}`;
-  //   }
-  // });
   <Router>
     <Switch>
       <Route path="/signup">

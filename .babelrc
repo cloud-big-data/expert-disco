@@ -1,3 +1,4 @@
 {
-  "extends": "eslint-config-juni/.babelrc"
+  "extends": "eslint-config-juni/.babelrc",
+  "plugins": ["add-react-displayname"]
 }
