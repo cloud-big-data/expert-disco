@@ -34,7 +34,7 @@ const Logout: React.FC = () => {
       <Loading />
     </LoadingContainer>
   ) : (
-    <Redirect to="/" />
+    <Redirect to="/login" />
   );
 };
 
