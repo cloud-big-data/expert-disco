@@ -1,4 +1,4 @@
 [context.production.environment]
-  NETLIFY_CONTEXT="production"
+  REACT_APP_NETLIFY_CONTEXT="production"
 [context.deploy-preview.environment]
-  NETLIFY_CONTEXT="preview"
+  REACT_APP_NETLIFY_CONTEXT="preview"
