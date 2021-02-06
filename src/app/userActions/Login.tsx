@@ -46,6 +46,7 @@ const loginFormReducer = (
 };
 
 const Login: React.FC = () => {
+  console.log(process.env.CONTEXT, process.env.context);
   const history = useHistory();
   const UserContext = useContext(userContext);
   const [badLogin, toggleBadLogin] = useState(false);
