@@ -19,7 +19,7 @@ import { Helmet } from 'react-helmet';
 
 const Home: React.FC = () => (
   <Helmet>
-    <meta httpEquiv="refresh" content="0; url=https://live.skyvue.io" />
+    {/* <meta httpEquiv="refresh" content="0; url=https://live.skyvue.io" /> */}
   </Helmet>
 );
 
