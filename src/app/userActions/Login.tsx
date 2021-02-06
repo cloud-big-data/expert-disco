@@ -47,6 +47,7 @@ const loginFormReducer = (
 
 const Login: React.FC = () => {
   console.log(
+    process.env,
     process.env.NETLIFY_CONTEXT,
     process.env.CONTEXT,
     process.env.context,
