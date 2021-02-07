@@ -49,6 +49,7 @@ const Login: React.FC = () => {
   const history = useHistory();
   const UserContext = useContext(userContext);
   const [badLogin, toggleBadLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formState, dispatchFormEvent] = useReducer(loginFormReducer, {
     email: {
       value: '',
@@ -61,13 +62,15 @@ const Login: React.FC = () => {
   });
 
   const tryLogin = async () => {
+    setLoading(true);
     const { error, ...res } = await skyvueFetch().post('/auth/user/login', {
-      email: formState.email.value,
+      email: formState.email.value.toLowerCase(),
       password: formState.password.value,
     });
 
     if (error) {
       toggleBadLogin(true);
+      setLoading(false);
       return;
     }
 
@@ -79,6 +82,7 @@ const Login: React.FC = () => {
       });
     }
 
+    setLoading(false);
     localStorage.setItem('refreshToken', res.refreshToken);
     history.push('/home');
   };
@@ -159,7 +163,9 @@ const Login: React.FC = () => {
         </div>
 
         <div className="actions__container">
-          <ButtonPrimary id="complete_form">Login</ButtonPrimary>
+          <ButtonPrimary loading={loading} id="complete_form">
+            Login
+          </ButtonPrimary>
 
           <Helper>
             Not a user yet?{' '}
