@@ -14,8 +14,10 @@ import DatasetWrapper from 'app/dataset/wrappers/DatasetWrapper';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 
-LogRocket.init('n0q2ht/skyvue');
-setupLogRocketReact(LogRocket);
+if (process.env.NODE_ENV === 'production') {
+  LogRocket.init('n0q2ht/skyvue');
+  setupLogRocketReact(LogRocket);
+}
 
 const Skyvue = () => (
   <Router>

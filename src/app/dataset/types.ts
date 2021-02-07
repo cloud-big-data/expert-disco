@@ -19,8 +19,10 @@ export interface IJoinLayer {
   joinType: 'full' | 'left' | 'right' | 'inner';
   condition: {
     datasetId: string;
+    select: string[]; // columns from joined dataset to select
     on: Array<{
-      [key: string]: string; // colIdOfMainDataset === colIdOfJoinedDataset
+      mainColumnId: string;
+      joinedColumnId: string;
     }>;
   };
 }
@@ -101,6 +103,7 @@ export type IColumnFormatting = Array<{
 
 export interface ICell {
   _id: string;
+  columnId?: string;
   value?: string;
 }
 
@@ -122,6 +125,8 @@ export interface IColumn extends ICell {
   datetime?: boolean;
   formatSettings?: FormatSettings;
   isSmartColumn?: boolean;
+  foreignKeyId?: string;
+  isJoined?: boolean;
 }
 
 export interface ISmartColumn extends IColumn {

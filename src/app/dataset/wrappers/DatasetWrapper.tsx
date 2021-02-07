@@ -94,6 +94,10 @@ const DatasetWrapper: React.FC = () => {
     if (title && `${title} - Skyvue` !== document.title) {
       document.title = `${title} - Skyvue`;
     }
+
+    return () => {
+      document.title = 'Skyvue';
+    };
   }, [title]);
 
   const datasetHead = useMemo<IBoardHead>(
@@ -176,6 +180,8 @@ const DatasetWrapper: React.FC = () => {
     sortings: [],
     formatting: [],
   };
+
+  console.log(boardData);
 
   const alwaysEditableFields = R.omit(['sortings']);
   const readOnly =
