@@ -75,6 +75,7 @@ const ExpressionEditor: React.FC<{
           label: col.value,
           value: col._id,
         }))}
+      placeholder="Formula"
       setValue={value => {
         const expressionArr = expression?.split('');
         const cursorPosition = expressionRef.current?.selectionStart;

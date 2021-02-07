@@ -10,12 +10,13 @@ import { v4 as uuidv4 } from 'uuid';
 import * as R from 'ramda';
 import EditSmartColumn from './EditSmartColumn';
 
-const SmartColumnsContainer = styled.div`
+const SmartColumnsContainer = styled.div<{ selectedSmartColumn: boolean }>`
   .top {
     width: 100%;
     display: flex;
     z-index: 1;
-    margin-top: 2rem;
+    margin-top: ${props => (props.selectedSmartColumn ? '2rem' : 0)};
+    margin-bottom: ${props => (props.selectedSmartColumn ? '-2rem' : 0)};
     button {
       margin-left: auto;
       padding: 0;
@@ -48,7 +49,7 @@ const DatasetSmartColumns: React.FC = () => {
   }, [boardData.layers.smartColumns]);
 
   return (
-    <SmartColumnsContainer>
+    <SmartColumnsContainer selectedSmartColumn={!!selectedSmartColumn}>
       {selectedSmartColumn && (
         <ButtonTertiary
           onClick={() => setSelectedSmartColumn(undefined)}

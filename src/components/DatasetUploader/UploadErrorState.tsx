@@ -23,7 +23,9 @@ const UploadErrorState: React.FC<{
   returnToUpload: () => void;
 }> = ({ returnToUpload }) => (
   <ErrorContainer>
-    <div className="x__container">x</div>
+    <div className="x__container">
+      <i className="far fa-times" />
+    </div>
     <h3>There was a problem...</h3>
     <ButtonDanger
       onClick={e => {

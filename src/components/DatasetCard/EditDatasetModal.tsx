@@ -10,13 +10,14 @@ import { Text, DangerText } from 'components/ui/Typography';
 
 import React, { useState } from 'react';
 import styled from 'styled-components/macro';
+import Styles from 'styles/Styles';
 
 const EditModalContainer = styled.div`
   height: 100%;
   width: 100%;
   .delete_conf {
     align-items: center;
-    height: 80%;
+    height: 100%;
     justify-content: center;
     margin: auto;
     text-align: center;
@@ -69,13 +70,22 @@ const EditDatasetModal: React.FC<{
   return (
     <Modal closeModal={closeModal}>
       <EditModalContainer onClick={e => e.preventDefault()}>
-        <h4 style={{ margin: 0 }}>Editing {initialTitle}</h4>
+        {!deleteConf && <h4 style={{ margin: 0 }}>Editing {initialTitle}</h4>}
         <div
           className="delete_conf"
           style={{ display: deleteConf ? 'flex' : 'none' }}
         >
+          <i
+            style={{
+              color: Styles.red400,
+              fontSize: '10rem',
+              marginBottom: '2rem',
+            }}
+            className="far fa-exclamation-square"
+          />
           <Text size="lg" len="short">
-            Are you sure you want to delete <strong>{datasetTitle}</strong>?
+            Are you sure you want to delete <strong>{datasetTitle}</strong>? This
+            action cannot be reversed.
           </Text>
           <ButtonDanger onClick={deleteDataset}>Yes, I'm sure</ButtonDanger>
           <ButtonTertiary onClick={() => setDeleteConf(false)}>

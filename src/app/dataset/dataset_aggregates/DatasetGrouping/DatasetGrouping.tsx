@@ -279,6 +279,7 @@ const DatasetGrouping: React.FC = () => {
             </Empty>
           ) : (
             <OperatorBreak
+              style={{ marginTop: 0, marginBottom: '1rem' }}
               onClick={() =>
                 setGroupingState({
                   ...groupingState,
@@ -357,6 +358,7 @@ const DatasetGrouping: React.FC = () => {
           ))}
 
           <OperatorBreak
+            style={{ marginBottom: '1rem' }}
             onClick={() =>
               setGroupingState({
                 ...groupingState,

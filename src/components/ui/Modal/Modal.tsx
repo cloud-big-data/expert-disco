@@ -3,7 +3,7 @@ import usePushToFront from 'hooks/usePushToFront';
 import React, { useRef } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
-import { ButtonTertiary } from '../Buttons';
+import { IconButton } from '../Buttons';
 
 const ModalContainer = styled.div`
   position: fixed;
@@ -15,6 +15,8 @@ const ModalContainer = styled.div`
   background: rgba(0, 0, 0, 0.2);
 
   #x {
+    margin-top: 0.5rem;
+    margin-right: -0.2rem;
     margin-left: auto;
     position: absolute;
     top: 0;
@@ -27,7 +29,7 @@ const ModalContainer = styled.div`
   }
 
   .modal-body {
-    padding: 2rem;
+    padding: 2.5rem 2rem 2rem;
     position: absolute;
     background: white;
     top: 20%;
@@ -64,9 +66,9 @@ const Modal: React.FC<{
   return (
     <ModalContainer>
       <div ref={modalBodyRef} className="modal-body">
-        <ButtonTertiary onClick={closeModal} id="x">
-          x
-        </ButtonTertiary>
+        <IconButton onClick={closeModal} id="x">
+          <i className="far fa-times" />
+        </IconButton>
         {children}
       </div>
     </ModalContainer>

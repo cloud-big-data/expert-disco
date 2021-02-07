@@ -11,6 +11,7 @@ const Container = styled.div`
   align-items: center;
   border-radius: ${Styles.defaultBorderRadius};
   .icon__container {
+    align-self: flex-start;
     i {
       font-size: 3rem;
       color: rgba(88, 65, 20, 0.3);

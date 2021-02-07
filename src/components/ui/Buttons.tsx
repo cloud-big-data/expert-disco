@@ -90,8 +90,9 @@ const Button = styled.button<{
     color: ${Styles.dark400};
 
     &:hover {
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
       background: linear-gradient(115.8deg, #6e30f2 0%, #86e2ff 100%);
-      border-color: ${Styles.blue};
+      border-color: ${Styles.faintBorderColor};
       color: white;
     }
 

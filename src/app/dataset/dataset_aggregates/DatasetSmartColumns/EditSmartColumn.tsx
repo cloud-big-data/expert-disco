@@ -89,11 +89,12 @@ const EditSmartColumn: React.FC<{
 
   return (
     <EditingContainer>
-      <Label>Editing: {column?.value}</Label>
+      {!showDeleteConf && <Label>Editing {column?.value}</Label>}
       <InputField
         id="columnName"
         name="columnName"
         label="Column name"
+        placeholder="Column name"
         value={columnName}
         onChange={e => {
           setUnsavedChanges(true);
@@ -134,6 +135,7 @@ const EditSmartColumn: React.FC<{
             <ButtonTertiary
               onClick={() => {
                 setUnsavedChanges(false);
+                setSmartColumns(smartColumns.filter(col => col.value));
                 setSelectedSmartColumn();
               }}
             >

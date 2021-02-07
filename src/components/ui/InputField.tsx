@@ -73,6 +73,9 @@ const Input = styled.input<{
   &:disabled {
     background: rgba(239, 239, 239, 0.3);
   }
+  &::placeholder {
+    opacity: 0.5;
+  }
 `;
 
 const ErrorField = styled.div`
