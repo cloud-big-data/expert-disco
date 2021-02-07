@@ -124,7 +124,9 @@ const useDatasetsSockets = (
     });
 
     window.addEventListener('unload', () => socket.emit('unload'));
-    return () => window.removeEventListener('unload', () => socket.emit('unload'));
+    return () => {
+      window.removeEventListener('unload', () => socket.emit('unload'));
+    };
   }, [
     userId,
     datasetId,

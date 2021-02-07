@@ -48,6 +48,9 @@ const MenuOption = styled.div`
     color: red;
   }
 
+  label {
+    cursor: pointer;
+  }
   .icon__container {
     margin-right: 0.5rem;
     width: 1rem;

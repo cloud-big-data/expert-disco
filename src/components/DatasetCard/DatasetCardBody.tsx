@@ -82,6 +82,13 @@ const DatasetCardBody: React.FC<{
       icon: <i style={{ color: Styles.red400 }} className="fal fa-times-circle" />,
     },
     {
+      label: 'Rename',
+      onClick: () => {
+        setEditModalIsOpen(true);
+      },
+      icon: <i style={{ color: Styles.blue }} className="fad fa-edit" />,
+    },
+    {
       label: 'Open in new tab',
       onClick: () => window.open(makeDatasetLink(datasetId)),
       icon: <i className="fad fa-external-link" />,

@@ -181,8 +181,6 @@ const DatasetWrapper: React.FC = () => {
     formatting: [],
   };
 
-  console.log(boardData);
-
   const alwaysEditableFields = R.omit(['sortings']);
   const readOnly =
     ![DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType) &&
