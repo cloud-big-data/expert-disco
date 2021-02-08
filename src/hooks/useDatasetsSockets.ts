@@ -22,6 +22,16 @@ const useDatasetsSockets = (
     datasetHead: IBoardHead;
     boardState: IBoardState;
     setBoardState: (state: IBoardState) => void;
+    queriedDatasets: Pick<
+      IBoardData,
+      'columns' | 'visibilitySettings' | 'layers' | '_id'
+    >[];
+    setQueriedDatasets: (
+      queriedDatasets: Pick<
+        IBoardData,
+        'columns' | 'visibilitySettings' | 'layers' | '_id'
+      >[],
+    ) => void;
   },
   changeHistoryRef: React.MutableRefObject<Array<string>>,
   setFilesToDownload: (files: string[]) => void,
@@ -38,6 +48,8 @@ const useDatasetsSockets = (
     setBoardHead,
     boardState,
     setBoardState,
+    queriedDatasets,
+    setQueriedDatasets,
   } = board;
 
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
@@ -89,6 +101,23 @@ const useDatasetsSockets = (
         );
       }
     });
+
+    socket.on(
+      'returnQueryBoardHeaders',
+      (
+        res: Pick<IBoardData, 'columns' | 'visibilitySettings' | 'layers' | '_id'>,
+      ) => {
+        setQueriedDatasets(
+          queriedDatasets.find(
+            dataset => dataset.columns.length === res.columns.length,
+          )
+            ? queriedDatasets.map(dataset =>
+                dataset.columns.length === res.columns.length ? res : dataset,
+              )
+            : [...queriedDatasets, res],
+        );
+      },
+    );
 
     socket.on('slice', (res: IBoardData) => {
       setBoardData(res);
@@ -144,6 +173,8 @@ const useDatasetsSockets = (
     setLoading,
     boardState,
     setBoardState,
+    setQueriedDatasets,
+    queriedDatasets,
   ]);
 
   useEffect(() => {

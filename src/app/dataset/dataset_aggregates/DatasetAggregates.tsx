@@ -13,6 +13,7 @@ import DatasetGrouping from './DatasetGrouping';
 import DatasetExport from './DatasetExport';
 import DatasetSmartColumns from './DatasetSmartColumns';
 import DatasetSharing from './DatasetSharing';
+import DatasetJoins from './DatasetJoins';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
   display: flex;
@@ -68,6 +69,7 @@ const ViewLookup: {
 } = {
   summary: <DatasetSummary />,
   filter: <DatasetFilters />,
+  join: <DatasetJoins />,
   groupings: <DatasetGrouping />,
   export: <DatasetExport />,
   smartColumns: <DatasetSmartColumns />,
@@ -90,6 +92,11 @@ const DatasetAggregates: React.FC = () => {
       name: 'Dataset',
       value: 'summary',
       icon: <i className="fad fa-scroll" />,
+    },
+    {
+      name: 'Joins',
+      value: 'join',
+      icon: <i className="fad fa-code-merge" />,
     },
     {
       name: 'Filters',

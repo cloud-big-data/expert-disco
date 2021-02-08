@@ -66,6 +66,10 @@ const DatasetWrapper: React.FC = () => {
   const [boardHead, setBoardHead] = useState<{
     rowCount?: number;
   }>({});
+  const [queriedDatasets, setQueriedDatasets] = useState<
+    Pick<IBoardData, 'columns' | 'visibilitySettings' | 'layers' | '_id'>[]
+  >([]);
+
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
   const [clipboard, setClipboard] = useState<string | undefined>();
@@ -73,7 +77,6 @@ const DatasetWrapper: React.FC = () => {
   const { datasetId } = useParams<{ datasetId: string }>();
 
   const localStorageLookup = `${datasetId}-change-history`;
-
   if (datasetId && !localStorage.getItem(localStorageLookup)) {
     localStorage.setItem(localStorageLookup, JSON.stringify([]));
   }
@@ -132,6 +135,8 @@ const DatasetWrapper: React.FC = () => {
       datasetHead,
       boardState,
       setBoardState,
+      queriedDatasets,
+      setQueriedDatasets,
     },
     changeHistoryRef,
     setFilesToDownload,
@@ -216,6 +221,8 @@ const DatasetWrapper: React.FC = () => {
           await navigator.clipboard.writeText(val);
           setClipboard(val);
         },
+        queriedDatasets,
+        setQueriedDatasets,
       }}
     >
       {filesToDownload.map(file => (

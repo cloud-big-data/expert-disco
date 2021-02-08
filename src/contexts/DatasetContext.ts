@@ -15,6 +15,16 @@ interface IDatasetContext {
   setLoading: (isLoading: boolean) => void;
   clipboard?: string;
   setClipboard: (val?: string) => void;
+  queriedDatasets: Pick<
+    IBoardData,
+    'columns' | 'visibilitySettings' | 'layers' | '_id'
+  >[];
+  setQueriedDatasets: (
+    queriedDatasets: Pick<
+      IBoardData,
+      'columns' | 'visibilitySettings' | 'layers' | '_id'
+    >[],
+  ) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);

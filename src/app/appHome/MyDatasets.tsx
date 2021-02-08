@@ -101,9 +101,6 @@ const MyDatasets: React.FC = () => {
   };
 
   const { error } = data ?? {};
-  if (error) {
-    console.log(data);
-  }
   if (error) return <p>Error occurred!</p>;
 
   const datasets: Array<{

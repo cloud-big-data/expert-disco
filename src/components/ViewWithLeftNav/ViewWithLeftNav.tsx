@@ -100,6 +100,11 @@ const NavItem = styled.div<{ active?: boolean }>`
       color: ${Styles.red400};
     }
   }
+  &:nth-of-type(7) {
+    i {
+      color: ${Styles.dark300};
+    }
+  }
 `;
 
 const MainContainer = styled.div`

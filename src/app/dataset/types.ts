@@ -127,6 +127,7 @@ export interface IColumn extends ICell {
   isSmartColumn?: boolean;
   foreignKeyId?: string;
   isJoined?: boolean;
+  isUnique?: boolean;
 }
 
 export interface ISmartColumn extends IColumn {
@@ -165,6 +166,7 @@ export type Privileges = 'owner' | 'editor' | 'viewer';
 
 export interface IBoardData {
   [key: string]: any;
+  _id: string;
   visibilitySettings: {
     owner: UserId;
     editors: UserId[];
@@ -238,6 +240,19 @@ export interface IBoardState {
     active: boolean;
   };
   changeHistory: ChangeHistoryItem[];
+}
+
+export interface IServerDataset {
+  _id: string;
+  userId: string;
+  title: string;
+  visibilitySettings: {
+    owner: string;
+    editors: string[];
+    viewers: string[];
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 
 export type Destinations = 'csv' | 'sheets' | 'skyvue';

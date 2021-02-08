@@ -7,3 +7,5 @@ export interface FixedLengthArray<T extends any, L extends number> extends Array
   0: T;
   length: L;
 }
+
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
