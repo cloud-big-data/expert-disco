@@ -34,7 +34,7 @@ const ExpandWrapper = styled.div<{ expanded: boolean }>`
   .contracted_buttons {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(6, auto);
+    grid-template-columns: repeat(7, auto);
     button {
       align-self: center;
       justify-self: center;
@@ -89,7 +89,7 @@ const DatasetAggregates: React.FC = () => {
 
   const VIEWS = [
     {
-      name: 'Dataset',
+      name: 'Dataset Summary',
       value: 'summary',
       icon: <i className="fad fa-scroll" />,
     },

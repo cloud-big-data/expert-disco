@@ -52,7 +52,7 @@ const JoinEditor: FC<{
   const joiningDataset = queriedDatasets.find(
     dataset =>
       dataset._id === condition?.datasetId &&
-      dataset.layers?.joins.condition.datasetId !== datasetHead._id,
+      dataset.layers?.joins?.condition?.datasetId !== datasetHead?._id,
   );
 
   const joinableColumns = joiningDataset?.columns.filter(

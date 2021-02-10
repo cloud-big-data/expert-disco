@@ -107,6 +107,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   format,
   formatSettings,
   isSmartColumn,
+  isJoined,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
   const {
@@ -377,6 +378,11 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         {isSmartColumn && (
           <Tooltip color="white" title="Smart column">
             <i style={{ marginRight: '1rem' }} className="fad fa-network-wired" />
+          </Tooltip>
+        )}
+        {isJoined && (
+          <Tooltip color="white" title="Joined column">
+            <i style={{ marginRight: '1rem' }} className="fad fa-code-merge" />
           </Tooltip>
         )}
         {!readOnly && active ? (

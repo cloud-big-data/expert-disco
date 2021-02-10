@@ -6,12 +6,20 @@ import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import humanFileSize from 'utils/humanFileSize';
+import ColumnSummaries from './ColumnSummaries';
 
 const DatasetSummaryContainer = styled.div`
   display: grid;
-  grid-template-columns: auto 2fr auto;
+  grid-template-columns: auto 3fr;
   grid-column-gap: 1rem;
   overflow: hidden;
+
+  .left__container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-right: 2px solid ${Styles.faintBorderColor};
+  }
 
   .summary_metrics__container {
     padding-right: 1rem;
@@ -20,22 +28,10 @@ const DatasetSummaryContainer = styled.div`
     div:not(:nth-of-type(1)) {
       margin-top: 1rem;
     }
-    border-right: 2px solid ${Styles.faintBorderColor};
-  }
-
-  .fields__container {
-    display: flex;
-    flex-direction: column;
-    max-height: inherit;
-    overflow: auto;
-
-    .fields__table {
-      display: grid;
-      grid-template-columns: repeat(3, auto);
-    }
   }
 
   .fit__container {
+    margin-top: auto;
     display: flex;
     flex-direction: column;
     .row {
@@ -112,12 +108,10 @@ const OTHER_DATATOOLS: IOtherDatatools[] = [
 const validateSizeLimits = (
   currentSize: ISizeLimits,
   tool: IOtherDatatools['limits'],
-) => {
-  const commonLimits = R.intersection(R.keys(currentSize), R.keys(tool));
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return R.all((limit: string) => currentSize[limit]! <= tool[limit]!)(commonLimits);
-};
+) =>
+  R.all((limit: string) => currentSize[limit]! <= tool[limit]!)(
+    R.intersection(R.keys(currentSize), R.keys(tool)) as string[],
+  );
 
 const DatasetSummary: React.FC = () => {
   const { boardData, datasetHead } = useContext(DatasetContext)!;
@@ -133,63 +127,42 @@ const DatasetSummary: React.FC = () => {
 
   return (
     <DatasetSummaryContainer>
-      <div className="summary_metrics__container">
-        <Metric label="records" value={rowCount} commas />
-        <Metric label="columns" value={boardData.columns.length} />
-        <Metric
-          label="Skyvue file size"
-          value={skyvueFileSize ? humanFileSize(skyvueFileSize) : undefined}
-        />
-        <Metric
-          label="Est. CSV file size"
-          value={csvFileSize ? humanFileSize(csvFileSize) : undefined}
-        />
-      </div>
-      <div className="fields__container">
-        <h6>Fields</h6>
-        <div className="fields__table">
-          {boardData.columns.map((col, index) => (
-            <React.Fragment key={col._id}>
-              {index === 0 && (
-                <>
-                  <div className="field__name">
-                    <Label>Field</Label>
-                  </div>
-                  <div className="field__name">
-                    <Label>Data type</Label>
-                  </div>
-                  <div className="field__name">
-                    <Label>Format</Label>
-                  </div>
-                </>
+      <div className="left__container">
+        <div className="summary_metrics__container">
+          <Metric label="records" value={rowCount} commas />
+          <Metric label="columns" value={boardData.columns.length} />
+          <Metric
+            label="Skyvue file size"
+            value={skyvueFileSize ? humanFileSize(skyvueFileSize) : undefined}
+          />
+          <Metric
+            label="Est. CSV file size"
+            value={csvFileSize ? humanFileSize(csvFileSize) : undefined}
+          />
+        </div>
+        <div className="fit__container">
+          <h6>
+            Compatible with
+            <br />
+            other data tools?
+          </h6>
+          {OTHER_DATATOOLS.map(tool => (
+            <div key={tool.value} className="row">
+              {validateSizeLimits(sizeLimits, tool.limits) ? (
+                <i style={{ color: Styles.green }} className="fas fa-check-square" />
+              ) : (
+                <i
+                  style={{ color: Styles.red400 }}
+                  className="fad fa-times-square"
+                />
               )}
-              <div className="field">
-                <Label unBold>{col.value}</Label>
-              </div>
-              <div className="field">
-                <Label unBold>{col.dataType}</Label>
-              </div>
-              <div />
-            </React.Fragment>
+              <Label unBold>{tool.label}</Label>
+            </div>
           ))}
         </div>
       </div>
-      <div className="fit__container">
-        <h6>
-          Compatible with
-          <br />
-          other data tools?
-        </h6>
-        {OTHER_DATATOOLS.map(tool => (
-          <div key={tool.value} className="row">
-            {validateSizeLimits(sizeLimits, tool.limits) ? (
-              <i style={{ color: Styles.green }} className="fas fa-check-square" />
-            ) : (
-              <i style={{ color: Styles.red400 }} className="fad fa-times-square" />
-            )}
-            <Label unBold>{tool.label}</Label>
-          </div>
-        ))}
+      <div className="fields__container">
+        <ColumnSummaries />
       </div>
     </DatasetSummaryContainer>
   );
