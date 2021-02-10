@@ -120,6 +120,8 @@ const DatasetWrapper: React.FC = () => {
     datasetId: string;
   }>();
 
+  console.log(boardData?.columnSummary);
+
   const socket = useDatasetsSockets(
     {
       userId: user.userId,
@@ -207,14 +209,14 @@ const DatasetWrapper: React.FC = () => {
           setLoading(true);
           socket?.emit('getSlice', { first, last });
         },
+        loading,
+        setLoading,
         setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
           userType,
         )
           ? _setBoardData
           : null,
         setBoardState,
-        loading,
-        setLoading,
         clipboard,
         setClipboard: async val => {
           if (!val) return;

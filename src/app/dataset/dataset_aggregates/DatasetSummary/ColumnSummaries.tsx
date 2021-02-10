@@ -46,23 +46,26 @@ const ColumnSummariesContainer = styled.div``;
 
 const ColumnSummaries: FC = () => {
   const { boardData } = useContext(DatasetContext)!;
-  const { columns } = boardData;
+  const { columns, columnSummary } = boardData;
 
   return (
     <ColumnSummariesContainer>
       <Table
         columns={COLUMNS}
         pagination={false}
-        dataSource={columns.map((col, index) => ({
-          key: index,
-          name: <strong>{col.value}</strong>,
-          dataType: col.dataType,
-          uniqueValues: 3,
-          sum: 3,
-          mean: 3,
-          min: 3,
-          max: 3,
-        }))}
+        dataSource={columns.map((col, index) => {
+          const { uniqueValues, sum, mean, min, max } = columnSummary[col._id] ?? {};
+          return {
+            key: index,
+            name: <strong>{col.value}</strong>,
+            dataType: col.dataType,
+            uniqueValues,
+            sum,
+            mean,
+            min,
+            max,
+          };
+        })}
       />
     </ColumnSummariesContainer>
   );

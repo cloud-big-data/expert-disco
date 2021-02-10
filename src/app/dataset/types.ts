@@ -164,6 +164,17 @@ export interface BoardError {
 
 export type Privileges = 'owner' | 'editor' | 'viewer';
 
+export interface IColumnSummary {
+  [key: string]: {
+    columnId: string;
+    uniqueValues: number;
+    sum: number;
+    mean: number;
+    min: number;
+    max: number;
+  };
+}
+
 export interface IBoardData {
   [key: string]: any;
   _id: string;
@@ -189,6 +200,7 @@ export interface IBoardData {
     joins: boolean;
   };
   errors?: Array<BoardError>;
+  columnSummary: IColumnSummary;
 }
 
 export interface IBoardHead {
