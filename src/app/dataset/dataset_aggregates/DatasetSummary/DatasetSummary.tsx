@@ -23,6 +23,7 @@ const DatasetSummaryContainer = styled.div`
 
   .summary_metrics__container {
     padding-right: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
     div:not(:nth-of-type(1)) {
