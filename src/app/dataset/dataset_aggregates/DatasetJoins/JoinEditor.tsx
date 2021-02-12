@@ -59,7 +59,8 @@ const JoinEditor: FC<{
     col => col.isUnique === true,
   );
 
-  const updateJoinOn = (colId: string, key: string) =>
+  const updateJoinOn = (colId: string, key: string) => {
+    setUnsavedChanges(true);
     setJoinState(
       R.assocPath(
         ['condition', 'on'],
@@ -79,6 +80,7 @@ const JoinEditor: FC<{
         joinState,
       ),
     );
+  };
 
   useEffect(() => {
     if (condition && condition.datasetId && !joiningDataset) {
@@ -93,6 +95,11 @@ const JoinEditor: FC<{
         value={condition?.datasetId}
         placeholder="Select a dataset to join"
         onChange={e => {
+          if (e === 'none') {
+            setJoinState({});
+            socket?.emit('layer', { layerKey: 'joins', layerData: {} });
+            return;
+          }
           socket?.emit('queryBoardHeaders', e);
           setJoinState(R.assocPath(['condition', 'datasetId'], e, joinState));
           setUnsavedChanges(true);
@@ -100,14 +107,17 @@ const JoinEditor: FC<{
         options={
           isLoading
             ? []
-            : (
-                availableDatasets.data?.filter(
-                  dataset => dataset._id !== datasetHead._id,
-                ) ?? []
-              ).map(dataset => ({
-                name: dataset.title,
-                value: dataset._id,
-              }))
+            : [
+                { name: "Don't join this dataset", value: 'none' },
+                ...(
+                  availableDatasets.data?.filter(
+                    dataset => dataset._id !== datasetHead._id,
+                  ) ?? []
+                ).map(dataset => ({
+                  name: dataset.title,
+                  value: dataset._id,
+                })),
+              ]
         }
       />
       {selectedDataset && (

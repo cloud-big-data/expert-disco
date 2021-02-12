@@ -1,7 +1,8 @@
-import { Empty } from 'antd';
+import { Empty, Switch } from 'antd';
 import { IJoinLayer } from 'app/dataset/types';
 import Separator from 'components/Separator';
 import { ButtonPrimary } from 'components/ui/Buttons';
+import { Label } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import React, { FC, useContext, useState } from 'react';
 
@@ -10,6 +11,15 @@ import Styles from 'styles/Styles';
 import JoinEditor from './JoinEditor';
 
 const JoinsContainer = styled.div`
+  .top__container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .toggle__container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
   .title {
     display: flex;
     align-items: center;
@@ -33,7 +43,7 @@ const JoinsContainer = styled.div`
 `;
 
 const DatasetJoins: FC = () => {
-  const { boardData } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, socket } = useContext(DatasetContext)!;
 
   const [joinState, setJoinState] = useState<Partial<IJoinLayer> | undefined>(
     boardData.layers?.joins,
@@ -42,13 +52,34 @@ const DatasetJoins: FC = () => {
 
   return (
     <JoinsContainer>
-      <div className="title">
-        <div className="icon__container">
-          <i id="share_icon" className="fad fa-code-merge" />
+      <div className="top__container">
+        <div className="title">
+          <div className="icon__container">
+            <i id="share_icon" className="fad fa-code-merge" />
+          </div>
+          <h6 style={{ marginBottom: 0, marginLeft: '1rem' }}>
+            Join this dataset with another
+          </h6>
         </div>
-        <h6 style={{ marginBottom: 0, marginLeft: '1rem' }}>
-          Join this dataset with another
-        </h6>
+        <div className="toggle__container">
+          <Label>Apply layer</Label>
+          <Switch
+            onChange={e => {
+              setBoardData?.({
+                ...boardData,
+                layerToggles: {
+                  ...boardData.layerToggles,
+                  joins: e,
+                },
+              });
+              socket?.emit('toggleLayer', {
+                toggle: 'joins',
+                visible: e,
+              });
+            }}
+            checked={boardData.layerToggles.joins}
+          />
+        </div>
       </div>
       <Separator />
       {joinState && Object.keys(joinState ?? {}).length > 0 ? (

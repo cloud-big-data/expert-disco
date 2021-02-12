@@ -21,7 +21,7 @@ const makeHandleKeyPress = ({
   const rowLength = boardData.rows.length;
 
   const getCellId = (rowIndex: number, cellIndex: number) =>
-    boardData.rows[rowIndex].cells[cellIndex]._id;
+    boardData.rows[rowIndex]?.cells[cellIndex]?._id ?? '';
 
   const handleTab = () => {
     const getNextHorizontalCell = () => {

@@ -104,30 +104,52 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
           <Helper>{rowIndex}</Helper>
         </RowIndexContainer>
       </Dropdown>
-      {cells.map((cell, index) => (
-        <Cell
-          key={cell._id}
-          colIndex={index}
-          rowId={_id}
-          highlighted={
-            boardState.cellsState.highlightedCells.includes(cell._id) ||
-            boardState.rowsState.selectedRow === _id ||
-            boardState.columnsState.selectedColumn === index
-          }
-          selected={boardState.cellsState.selectedCell === cell._id}
-          active={boardState.cellsState.activeCell === cell._id}
-          position={{
-            lastRow: position.lastRow,
-            lastColumn: index === cells.length - 1,
-            firstColumn: index === 0,
-          }}
-          isCopying={boardState.cellsState.copyingCell === cell._id}
-          colWidth={boardData.columns[index].colWidth}
-          colFormat={boardData.columns[index].format}
-          formatSettings={boardData.columns[index].formatSettings}
-          {...cell}
-        />
-      ))}
+      {cells.map((cell, index) =>
+        cell ? (
+          <Cell
+            key={cell._id}
+            colIndex={index}
+            rowId={_id}
+            highlighted={
+              boardState.cellsState.highlightedCells.includes(cell._id) ||
+              boardState.rowsState.selectedRow === _id ||
+              boardState.columnsState.selectedColumn === index
+            }
+            selected={boardState.cellsState.selectedCell === cell._id}
+            active={boardState.cellsState.activeCell === cell._id}
+            position={{
+              lastRow: position.lastRow,
+              lastColumn: index === cells.length - 1,
+              firstColumn: index === 0,
+            }}
+            isCopying={boardState.cellsState.copyingCell === cell._id}
+            colWidth={boardData.columns[index].colWidth}
+            colFormat={boardData.columns[index].format}
+            formatSettings={boardData.columns[index].formatSettings}
+            {...cell}
+          />
+        ) : (
+          <Cell
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            colIndex={index}
+            rowId={_id}
+            highlighted={false}
+            selected={false}
+            active={false}
+            position={{
+              lastRow: position.lastRow,
+              lastColumn: index === cells.length - 1,
+              firstColumn: index === 0,
+            }}
+            isCopying={false}
+            colWidth={boardData.columns[index].colWidth}
+            colFormat={boardData.columns[index].format}
+            formatSettings={boardData.columns[index].formatSettings}
+            {...cell}
+          />
+        ),
+      )}
     </RowContainer>
   );
 };

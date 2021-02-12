@@ -11,6 +11,7 @@ import skyvueFetch from 'services/skyvueFetch';
 import { IBoardState, IBoardData, IBoardHead } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 import makeBoardDiff from '../lib/makeBoardDiff';
+import DatasetNotFound from '../DatasetNotFound';
 
 enum DatasetUserTypes {
   owner,
@@ -85,7 +86,7 @@ const DatasetWrapper: React.FC = () => {
     JSON.parse(localStorage.getItem(localStorageLookup) ?? '[]'),
   );
 
-  const { data } = useQuery(user.accessToken, () =>
+  const { data, isLoading } = useQuery(user.accessToken, () =>
     user.accessToken
       ? skyvueFetch(user.accessToken).get(`/datasets/${datasetId}`)
       : () => undefined,
@@ -120,8 +121,6 @@ const DatasetWrapper: React.FC = () => {
     datasetId: string;
   }>();
 
-  console.log(boardData?.columnSummary);
-
   const socket = useDatasetsSockets(
     {
       userId: user.userId,
@@ -154,6 +153,16 @@ const DatasetWrapper: React.FC = () => {
 
   if (!user.userId || !user.email) {
     return loader;
+  }
+
+  const datasetNotFound = !isLoading && R.keys(data).length === 0;
+  if (datasetNotFound) {
+    return (
+      <>
+        <CustomerNav email={user.email} />
+        <DatasetNotFound />
+      </>
+    );
   }
 
   if (!boardData) {
