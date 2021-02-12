@@ -13,6 +13,7 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
+import DatePicker from 'components/ui/DatePicker';
 import { FilterContext } from './DatasetFilters';
 
 const ConditionContainer = styled.div`
@@ -38,16 +39,20 @@ const BASE_OPTIONS: IFilterPredicateOption[] = [
 
 const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
   date: [
-    ...BASE_OPTIONS,
-
-    { name: 'is less than', value: 'lessThan' },
-    { name: 'is less than or equal to', value: 'lessThanEqualTo' },
-    { name: 'is greater than', value: 'greaterThan' },
+    { name: 'equals', value: 'equals_date' },
+    { name: 'does not equal', value: 'notEquals_date' },
+    { name: 'same day', value: 'sameDay' },
+    { name: 'same week', value: 'sameWeek' },
+    { name: 'same month', value: 'sameMonth' },
+    { name: 'same year', value: 'sameYear' },
+    { name: 'is before', value: 'lessThan_date' },
+    { name: 'is before or equal to', value: 'lessThanEqualTo_date' },
+    { name: 'is after', value: 'greaterThan_date' },
     {
-      name: 'is greater than or equal to',
-      value: 'greaterThanEqualTo',
+      name: 'is after or equal to',
+      value: 'greaterThanEqualTo_date',
     },
-    { name: 'is between (date)', value: 'dateBetween' },
+    { name: 'is between', value: 'dateBetween' },
   ],
   number: [
     ...BASE_OPTIONS,
@@ -85,6 +90,8 @@ const Condition: React.FC<{
 }> = ({ state, setFiltersState, updateNestedObject, boardData, path }) => {
   const { parentFilterState } = useContext(FilterContext);
   const [showDeleteConf, setShowDeleteConf] = useState(false);
+  const dataType =
+    boardData.columns.find(col => col._id === state.key)?.dataType ?? 'string';
   return (
     <ConditionContainer>
       {showDeleteConf ? (
@@ -128,12 +135,7 @@ const Condition: React.FC<{
           />
           <div className="select__container">
             <Select
-              options={
-                PREDICATE_OPTIONS[
-                  boardData.columns.find(col => col._id === state.key)?.dataType ??
-                    'string'
-                ]
-              }
+              options={PREDICATE_OPTIONS[dataType]}
               value={state.predicateType}
               onChange={value =>
                 setFiltersState(updateNestedObject('predicateType', value))
@@ -141,14 +143,25 @@ const Condition: React.FC<{
             />
           </div>
           <div className="input__container">
-            <InputField
-              unsetHeight
-              type="text"
-              value={state.value as string}
-              onChange={e =>
-                setFiltersState(updateNestedObject('value', e.target.value))
-              }
-            />
+            {dataType === 'date' ? (
+              <DatePicker
+                format="MM-DD-YYYY"
+                onChange={(_, dateString) => {
+                  console.log(dateString);
+                  setFiltersState(updateNestedObject('value', dateString));
+                }}
+                value={state.value ? new Date(state.value as number) : undefined}
+              />
+            ) : (
+              <InputField
+                unsetHeight
+                type="text"
+                value={state.value as string}
+                onChange={e =>
+                  setFiltersState(updateNestedObject('value', e.target.value))
+                }
+              />
+            )}
           </div>
         </>
       )}

@@ -257,6 +257,10 @@ a:not(.no-hover):hover {
   color: white !important;
 }
 
+#root .ant-picker {
+  border: 2px solid var(--faintBorderColor);
+  border-radius: var(--defaultBorderRadius);
+}
 
 
 @media only screen and (min-width: 1000px) {

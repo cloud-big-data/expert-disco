@@ -13,7 +13,19 @@ export type FilterTypes =
   | 'lessThanEqualTo'
   | 'greaterThan'
   | 'greaterThanEqualTo'
-  | 'dateBetween';
+  | 'lessThan_date'
+  | 'equals_date'
+  | 'notEquals_date'
+  | 'lessThanEqualTo_date'
+  | 'greaterThan_date'
+  | 'greaterThanEqualTo_date'
+  | 'dateBetween'
+  | 'isAfter'
+  | 'isBefore'
+  | 'sameDay'
+  | 'sameWeek'
+  | 'sameMonth'
+  | 'sameYear';
 
 export interface IJoinLayer {
   joinType: 'full' | 'left' | 'right' | 'inner';
