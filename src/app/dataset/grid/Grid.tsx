@@ -1,3 +1,4 @@
+import { Text } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import GridContext from 'contexts/GridContext';
 import React, { useContext } from 'react';
@@ -84,17 +85,27 @@ const Grid: React.FC<{
               ))}
             </ColumnsContainer>
             <RowsContainer>
-              {rows.map((row, index) => (
-                <Row
-                  key={row._id}
-                  {...row}
-                  rowIndex={row.index}
-                  position={{
-                    firstRow: index === 0,
-                    lastRow: index === rows.length - 1,
-                  }}
-                />
-              ))}
+              {rows.length > 0 ? (
+                rows.map((row, index) => (
+                  <Row
+                    key={row._id}
+                    {...row}
+                    rowIndex={row.index}
+                    position={{
+                      firstRow: index === 0,
+                      lastRow: index === rows.length - 1,
+                    }}
+                  />
+                ))
+              ) : (
+                <Text
+                  style={{ marginLeft: '32px', marginTop: '1rem' }}
+                  len="short"
+                  size="lg"
+                >
+                  Your query returned no results
+                </Text>
+              )}
             </RowsContainer>
           </HotkeysProvider>
         </EventsProvider>

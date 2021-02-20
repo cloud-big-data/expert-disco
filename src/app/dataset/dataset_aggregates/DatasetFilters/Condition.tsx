@@ -33,6 +33,8 @@ type IFilterPredicateOption = {
 };
 
 const BASE_OPTIONS: IFilterPredicateOption[] = [
+  { name: 'Is not null', value: 'notNull' },
+  { name: 'Is null', value: 'null' },
   { name: 'equals', value: 'equals' },
   { name: 'does not equal', value: 'notEquals' },
 ];
@@ -143,25 +145,26 @@ const Condition: React.FC<{
             />
           </div>
           <div className="input__container">
-            {dataType === 'date' ? (
-              <DatePicker
-                format="MM-DD-YYYY"
-                onChange={(_, dateString) => {
-                  console.log(dateString);
-                  setFiltersState(updateNestedObject('value', dateString));
-                }}
-                value={state.value ? new Date(state.value as number) : undefined}
-              />
-            ) : (
-              <InputField
-                unsetHeight
-                type="text"
-                value={state.value as string}
-                onChange={e =>
-                  setFiltersState(updateNestedObject('value', e.target.value))
-                }
-              />
-            )}
+            {!['null', 'notNull'].includes(state.predicateType) &&
+              (dataType === 'date' ? (
+                <DatePicker
+                  format="MM-DD-YYYY"
+                  onChange={(_, dateString) => {
+                    console.log(dateString);
+                    setFiltersState(updateNestedObject('value', dateString));
+                  }}
+                  value={state.value ? new Date(state.value as number) : undefined}
+                />
+              ) : (
+                <InputField
+                  unsetHeight
+                  type="text"
+                  value={state.value as string}
+                  onChange={e =>
+                    setFiltersState(updateNestedObject('value', e.target.value))
+                  }
+                />
+              ))}
           </div>
         </>
       )}

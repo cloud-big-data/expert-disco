@@ -6,6 +6,8 @@ export interface ValueSet {
 export type DataTypes = 'number' | 'string' | 'date';
 
 export type FilterTypes =
+  | 'null'
+  | 'notNull'
   | 'equals'
   | 'notEquals'
   | 'contains'
