@@ -33,22 +33,22 @@ type IFilterPredicateOption = {
 };
 
 const BASE_OPTIONS: IFilterPredicateOption[] = [
-  { name: 'Is not null', value: 'notNull' },
-  { name: 'Is null', value: 'null' },
+  { name: 'is not null', value: 'notNull' },
+  { name: 'is null', value: 'null' },
   { name: 'equals', value: 'equals' },
   { name: 'does not equal', value: 'notEquals' },
 ];
 
 const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
   date: [
-    { name: 'Is not null', value: 'notNull' },
-    { name: 'Is null', value: 'null' },
+    { name: 'is not null', value: 'notNull' },
+    { name: 'is null', value: 'null' },
     { name: 'equals', value: 'equals_date' },
     { name: 'does not equal', value: 'notEquals_date' },
-    { name: 'same day', value: 'sameDay' },
-    { name: 'same week', value: 'sameWeek' },
-    { name: 'same month', value: 'sameMonth' },
-    { name: 'same year', value: 'sameYear' },
+    { name: 'is the same day as', value: 'sameDay' },
+    { name: 'is the same week as', value: 'sameWeek' },
+    { name: 'is the same month as', value: 'sameMonth' },
+    { name: 'is the same year as', value: 'sameYear' },
     { name: 'is before', value: 'lessThan_date' },
     { name: 'is before or equal to', value: 'lessThanEqualTo_date' },
     { name: 'is after', value: 'greaterThan_date' },

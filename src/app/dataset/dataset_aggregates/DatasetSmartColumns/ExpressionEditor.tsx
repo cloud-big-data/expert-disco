@@ -86,7 +86,9 @@ const ExpressionEditor: React.FC<{
             .replace(UUID_REGEX_W_COL_PREFIX, e => {
               const colId = e.match(UUID_REGEX)?.[0] ?? e;
               const column = findColumnById(colId, boardData);
-              return column?.dataType === 'string' ? `"${colId}"` : colId;
+              return column?.dataType === 'string' || column?.dataType === 'date'
+                ? `"${colId}"`
+                : colId;
             }),
         );
       }}

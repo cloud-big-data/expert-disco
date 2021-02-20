@@ -94,6 +94,12 @@ const DatasetAggregates: React.FC = () => {
       icon: <i className="fad fa-scroll" />,
     },
     {
+      name: 'Smart columns',
+      value: 'smartColumns',
+      icon: <i style={{ color: Styles.dark300 }} className="fad fa-network-wired" />,
+      count: boardData.errors?.filter(err => err.section === 'smartColumns').length,
+    },
+    {
       name: 'Joins',
       value: 'join',
       icon: <i className="fad fa-code-merge" />,
@@ -102,12 +108,6 @@ const DatasetAggregates: React.FC = () => {
       name: 'Filters',
       value: 'filter',
       icon: <i className="far fa-filter" />,
-    },
-    {
-      name: 'Smart columns',
-      value: 'smartColumns',
-      icon: <i style={{ color: Styles.dark300 }} className="fad fa-network-wired" />,
-      count: boardData.errors?.filter(err => err.section === 'smartColumns').length,
     },
     {
       name: 'Grouping',

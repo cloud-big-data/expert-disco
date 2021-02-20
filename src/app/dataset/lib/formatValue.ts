@@ -14,7 +14,7 @@ const formatNumber = ({
   value,
   formatSettings,
 }: FormattingParams) => {
-  if (!value) return;
+  if (value === undefined || value === null) return;
   const parsed = parseFloat(value);
 
   if (desiredFormat === 'currency') {
@@ -41,7 +41,7 @@ const formatNumber = ({
 };
 
 const formatDate = ({ desiredFormat, value }: FormattingParams) => {
-  if (!value) return;
+  if (value === undefined || value === null) return;
   const date = new Date(value);
   switch (desiredFormat) {
     case 'iso string':
@@ -59,14 +59,18 @@ const formatDate = ({ desiredFormat, value }: FormattingParams) => {
 
 const formatValue = (params: FormattingParams) => {
   const { value, dataType } = params;
-  if (!value) return;
-  switch (dataType) {
-    case 'date':
-      return formatDate(params);
-    case 'number':
-      return formatNumber(params);
-    default:
-      return value;
+  if (value === undefined || value === null) return;
+  try {
+    switch (dataType) {
+      case 'date':
+        return formatDate(params);
+      case 'number':
+        return formatNumber(params);
+      default:
+        return value;
+    }
+  } catch (e) {
+    return value.toString();
   }
 };
 
