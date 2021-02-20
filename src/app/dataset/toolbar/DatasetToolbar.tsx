@@ -113,7 +113,13 @@ const DatasetToolbar: React.FC<{
     ? boardData.layers.smartColumns.find(col => col._id === columnAtIndex._id)
     : columnAtIndex;
 
-  const { formatSettings } = targetColumn ?? {};
+  const { formatSettings } = columnAtIndex?.isJoined
+    ? boardData.layers.joins.condition
+    : targetColumn ?? {};
+
+  const { format } = columnAtIndex?.isJoined
+    ? boardData.layers.joins.condition
+    : targetColumn ?? {};
 
   const updateSmartColumnById = (updatedData: Partial<IColumn>) =>
     R.assocPath(
@@ -134,6 +140,12 @@ const DatasetToolbar: React.FC<{
     setBoardData?.(
       columnAtIndex.isSmartColumn
         ? updateSmartColumnById(updateData)
+        : columnAtIndex.isJoined
+        ? R.assocPath(
+            ['layers', 'joins', 'condition', 'formatSettings'],
+            updateData.formatSettings,
+            boardData,
+          )
         : updateColumnById(columnAtIndex._id, updateData, boardData),
     );
   };
@@ -170,8 +182,7 @@ const DatasetToolbar: React.FC<{
               </ButtonTertiary>
               <ButtonTertiary
                 disabled={
-                  (columnAtIndex.format === 'currency' &&
-                    formatSettings?.decimalPoints === 1) ||
+                  (format === 'currency' && formatSettings?.decimalPoints === 1) ||
                   formatSettings?.decimalPoints === 20 // toFixed() method requires <= 20
                 }
                 onClick={() => {
@@ -187,7 +198,7 @@ const DatasetToolbar: React.FC<{
                 .00&nbsp;&nbsp;
                 <i className="fad fa-arrow-right" />
               </ButtonTertiary>
-              {columnAtIndex.format !== 'currency' && (
+              {format !== 'currency' && (
                 <div className="group">
                   <Label unBold>
                     commas

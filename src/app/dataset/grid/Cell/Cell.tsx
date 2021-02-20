@@ -190,6 +190,8 @@ const Cell: React.FC<ICellProps> = ({
 
   const columnSettings = associatedColumn?.isSmartColumn
     ? associatedSmartColumn
+    : associatedColumn?.isJoined
+    ? boardData.layers.joins.condition
     : associatedColumn;
 
   useEffect(() => {

@@ -119,6 +119,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     setBoardData,
     socket,
   } = useContext(DatasetContext)!;
+  const colFormat = isJoined ? boardData.layers.joins.condition.format : format;
   const { handleChange } = useContext(GridContext)!;
 
   const boardActions = makeBoardActions(boardData);
@@ -249,7 +250,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       <Menu.SubMenu title="Data type">
         {COLUMN_DATA_TYPES.map((type: DataTypes) => (
           <Menu.Item
-            disabled={!typesAreCompatible(dataType, type)}
+            disabled={!typesAreCompatible(dataType, type) || isJoined}
             onClick={() => {
               setBoardData?.(updateColumnById(_id, { dataType: type }, boardData));
             }}
@@ -281,6 +282,12 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
                       },
                       boardData,
                     )
+                  : isJoined
+                  ? R.assocPath(
+                      ['layers', 'joins', 'condition', 'format'],
+                      formatOpt,
+                      boardData,
+                    )
                   : updateColumnById(
                       _id,
                       {
@@ -292,7 +299,9 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               );
             }}
           >
-            <span style={{ fontWeight: format === formatOpt ? 'bold' : 'initial' }}>
+            <span
+              style={{ fontWeight: colFormat === formatOpt ? 'bold' : 'initial' }}
+            >
               {formatOpt}
             </span>
           </Menu.Item>

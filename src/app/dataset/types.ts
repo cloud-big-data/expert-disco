@@ -32,6 +32,8 @@ export type FilterTypes =
 export interface IJoinLayer {
   joinType: 'full' | 'left' | 'right' | 'inner';
   condition: {
+    format?: Formats;
+    formatSettings?: FormatSettings;
     datasetId: string;
     select: string[]; // columns from joined dataset to select
     on: Array<{
