@@ -13,7 +13,7 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
-import DatePicker from 'components/ui/DatePicker';
+import DatePicker, { RangePicker } from 'components/ui/DatePicker';
 import { FilterContext } from './DatasetFilters';
 
 const ConditionContainer = styled.div`
@@ -41,6 +41,8 @@ const BASE_OPTIONS: IFilterPredicateOption[] = [
 
 const PREDICATE_OPTIONS: { [key in DataTypes]: IFilterPredicateOption[] } = {
   date: [
+    { name: 'Is not null', value: 'notNull' },
+    { name: 'Is null', value: 'null' },
     { name: 'equals', value: 'equals_date' },
     { name: 'does not equal', value: 'notEquals_date' },
     { name: 'same day', value: 'sameDay' },
@@ -147,14 +149,34 @@ const Condition: React.FC<{
           <div className="input__container">
             {!['null', 'notNull'].includes(state.predicateType) &&
               (dataType === 'date' ? (
-                <DatePicker
-                  format="MM-DD-YYYY"
-                  onChange={(_, dateString) => {
-                    console.log(dateString);
-                    setFiltersState(updateNestedObject('value', dateString));
-                  }}
-                  value={state.value ? new Date(state.value as number) : undefined}
-                />
+                state.predicateType === 'dateBetween' ? (
+                  <RangePicker
+                    onChange={(_, dateStrings) => {
+                      setFiltersState(
+                        updateNestedObject('value', dateStrings.join(',')),
+                      );
+                    }}
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    defaultValue={
+                      typeof state.value === 'string'
+                        ? state.value.split(',').map(x => new Date(x))
+                        : undefined
+                    }
+                  />
+                ) : (
+                  <DatePicker
+                    format="MM-DD-YYYY"
+                    onChange={(_, dateString) => {
+                      setFiltersState(updateNestedObject('value', dateString));
+                    }}
+                    value={
+                      state.value && state.value.toString().split(',')?.length === 1
+                        ? new Date(state.value as number)
+                        : undefined
+                    }
+                  />
+                )
               ) : (
                 <InputField
                   unsetHeight

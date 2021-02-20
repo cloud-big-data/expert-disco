@@ -6,4 +6,5 @@ const DatePicker = generatePicker<Date>({
   ...dateFnsGenerateConfig,
 });
 
+export const { RangePicker } = DatePicker;
 export default DatePicker;
