@@ -13,6 +13,7 @@ import findColumnById from 'app/dataset/lib/findColumnById';
 import { DATE_FORMATS, NUMBER_FORMATS, CURRENCY_CODES } from 'app/dataset/constants';
 import updateColumnById from 'app/dataset/lib/updateColumnById';
 import updateLayers from 'app/dataset/lib/updateLayers';
+import updateSmartColumnById from 'app/dataset/lib/updateSmartColumnById';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 import { makeBoardActions } from '../../lib/makeBoardActions';
 import {
@@ -271,14 +272,23 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             key={formatOpt}
             onClick={() => {
               setBoardData?.(
-                updateColumnById(
-                  _id,
-                  {
-                    format: formatOpt as Formats,
-                    formatSettings,
-                  },
-                  boardData,
-                ),
+                isSmartColumn
+                  ? updateSmartColumnById(
+                      _id,
+                      {
+                        format: formatOpt as Formats,
+                        formatSettings,
+                      },
+                      boardData,
+                    )
+                  : updateColumnById(
+                      _id,
+                      {
+                        format: formatOpt as Formats,
+                        formatSettings,
+                      },
+                      boardData,
+                    ),
               );
             }}
           >

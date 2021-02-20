@@ -184,6 +184,8 @@ const DatasetWrapper: React.FC = () => {
         socket?.emit('diff', diff);
       }
 
+      socket?.emit('syncLayers', newBoardData.layers);
+
       return newBoardData;
     });
   };

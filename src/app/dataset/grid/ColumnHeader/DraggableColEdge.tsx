@@ -80,7 +80,7 @@ const DraggableColEdge: React.FC<{
             colId,
             { colWidth: updatedWidth },
             boardData,
-          ),
+          )?.layers?.smartColumns,
         });
       }
     };

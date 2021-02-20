@@ -161,6 +161,7 @@ const Cell: React.FC<ICellProps> = ({
   colWidth,
   colFormat,
   colIndex,
+  columnId,
   formatSettings,
 }) => {
   const {
@@ -182,6 +183,14 @@ const Cell: React.FC<ICellProps> = ({
   const initialValue = useRef(value);
 
   const prevActive = usePrevious(active);
+  const associatedColumn = boardData.columns[colIndex];
+  const associatedSmartColumn = boardData.layers.smartColumns.find(
+    col => col._id === columnId,
+  );
+
+  const columnSettings = associatedColumn?.isSmartColumn
+    ? associatedSmartColumn
+    : associatedColumn;
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -190,10 +199,10 @@ const Cell: React.FC<ICellProps> = ({
   const handleCopy = () => {
     setClipboard(
       formatValue({
-        desiredFormat: colFormat,
+        desiredFormat: columnSettings?.format,
         dataType: colDataType,
         value,
-        formatSettings,
+        formatSettings: columnSettings?.formatSettings,
       }),
     );
     setBoardState(R.set(R.lensPath(['cellsState', 'copyingCell']), _id, boardState));
@@ -238,8 +247,6 @@ const Cell: React.FC<ICellProps> = ({
       initialValue.current = localValue;
     }
   });
-
-  const associatedColumn = boardData.columns[colIndex];
 
   return (
     <CellContainer
@@ -344,10 +351,10 @@ const Cell: React.FC<ICellProps> = ({
       ) : (
         <span className="cell__value">
           {formatValue({
-            desiredFormat: colFormat,
+            desiredFormat: columnSettings?.format,
             dataType: colDataType,
             value,
-            formatSettings,
+            formatSettings: columnSettings?.formatSettings,
           })}
         </span>
       )}

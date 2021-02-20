@@ -6,9 +6,11 @@ import DatasetContext from 'contexts/DatasetContext';
 import { ButtonTertiary } from 'components/ui/Buttons';
 import InputField from 'components/ui/InputField';
 import { Switch } from 'antd';
+import * as R from 'ramda';
 import NewRows from './NewRows';
 import NewColumns from './NewColumns';
 import updateColumnById from '../lib/updateColumnById';
+import { IColumn } from '../types';
 
 const BoardActionsContainer = styled.div`
   display: flex;
@@ -107,7 +109,34 @@ const DatasetToolbar: React.FC<{
 
   const { selectedColumn } = boardState.columnsState;
   const columnAtIndex = boardData.columns?.[selectedColumn];
-  const { formatSettings } = columnAtIndex ?? {};
+  const targetColumn = columnAtIndex?.isSmartColumn
+    ? boardData.layers.smartColumns.find(col => col._id === columnAtIndex._id)
+    : columnAtIndex;
+
+  const { formatSettings } = targetColumn ?? {};
+
+  const updateSmartColumnById = (updatedData: Partial<IColumn>) =>
+    R.assocPath(
+      ['layers', 'smartColumns'],
+      boardData.layers.smartColumns?.map(col =>
+        col._id === targetColumn?._id
+          ? {
+              ...col,
+              ...updatedData,
+            }
+          : col,
+      ),
+      boardData,
+    );
+
+  const updateColumn = (updateData: Partial<IColumn>) => {
+    if (!columnAtIndex) return;
+    setBoardData?.(
+      columnAtIndex.isSmartColumn
+        ? updateSmartColumnById(updateData)
+        : updateColumnById(columnAtIndex._id, updateData, boardData),
+    );
+  };
 
   return (
     <BoardActionsContainer>
@@ -125,24 +154,15 @@ const DatasetToolbar: React.FC<{
             <>
               <ButtonTertiary
                 disabled={formatSettings?.decimalPoints === 0}
-                onClick={
-                  columnAtIndex
-                    ? () =>
-                        setBoardData?.(
-                          updateColumnById(
-                            columnAtIndex._id,
-                            {
-                              formatSettings: {
-                                ...formatSettings,
-                                decimalPoints:
-                                  (formatSettings?.decimalPoints ?? 2) - 1,
-                              },
-                            },
-                            boardData,
-                          ),
-                        )
-                    : undefined
-                }
+                onClick={() => {
+                  if (!columnAtIndex) return;
+                  const newFormatSettings = {
+                    ...formatSettings,
+                    decimalPoints: (formatSettings?.decimalPoints ?? 2) - 1,
+                  };
+
+                  updateColumn({ formatSettings: newFormatSettings });
+                }}
                 style={{ fontWeight: 400, padding: 0 }}
               >
                 .00&nbsp;&nbsp;
@@ -154,24 +174,14 @@ const DatasetToolbar: React.FC<{
                     formatSettings?.decimalPoints === 1) ||
                   formatSettings?.decimalPoints === 20 // toFixed() method requires <= 20
                 }
-                onClick={
-                  columnAtIndex
-                    ? () =>
-                        setBoardData?.(
-                          updateColumnById(
-                            columnAtIndex._id,
-                            {
-                              formatSettings: {
-                                ...formatSettings,
-                                decimalPoints:
-                                  (formatSettings?.decimalPoints ?? 2) + 1,
-                              },
-                            },
-                            boardData,
-                          ),
-                        )
-                    : undefined
-                }
+                onClick={() => {
+                  if (!columnAtIndex) return;
+                  const newFormatSettings = {
+                    ...formatSettings,
+                    decimalPoints: (formatSettings?.decimalPoints ?? 2) + 1,
+                  };
+                  updateColumn({ formatSettings: newFormatSettings });
+                }}
                 style={{ fontWeight: 400, padding: 0 }}
               >
                 .00&nbsp;&nbsp;
@@ -183,18 +193,12 @@ const DatasetToolbar: React.FC<{
                     commas
                     <Switch
                       onChange={checked =>
-                        setBoardData?.(
-                          updateColumnById(
-                            columnAtIndex._id,
-                            {
-                              formatSettings: {
-                                ...formatSettings,
-                                commas: checked,
-                              },
-                            },
-                            boardData,
-                          ),
-                        )
+                        updateColumn({
+                          formatSettings: {
+                            ...formatSettings,
+                            commas: checked,
+                          },
+                        })
                       }
                       checked={formatSettings?.commas ?? true}
                     />
