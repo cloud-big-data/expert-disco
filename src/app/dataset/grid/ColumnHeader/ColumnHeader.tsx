@@ -217,9 +217,25 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           Remove column
         </Menu.Item>
         <Menu.Item
-          onClick={() =>
-            setBoardData?.(updateColumnById(_id, { hidden: true }, boardData))
-          }
+          onClick={() => {
+            setBoardData?.(
+              R.pipe(
+                updateColumnById(_id, { hidden: true }),
+                R.ifElse(
+                  () => isSmartColumn === true,
+                  updateSmartColumnById(_id, { hidden: true }),
+                  R.identity,
+                ),
+                R.ifElse(
+                  () => isJoined === true,
+                  R.assocPath(['layers', 'joins', 'hidden'], true),
+                  R.identity,
+                ),
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+              )(boardData),
+            );
+          }}
         >
           <MenuIcon style={{ color: Styles.dark400 }} className="fad fa-eye-slash" />
           Hide column

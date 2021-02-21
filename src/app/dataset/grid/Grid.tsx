@@ -3,6 +3,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import GridContext from 'contexts/GridContext';
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
+import * as R from 'ramda';
 
 import Styles from 'styles/Styles';
 import { ChangeHistoryItem } from '../types';
@@ -12,6 +13,7 @@ import EventsProvider from './EventsProvider';
 import HotkeysProvider from './HotkeysProvider';
 import Row from './Row';
 import updateColumnById from '../lib/updateColumnById';
+import updateSmartColumnById from '../lib/updateSmartColumnById';
 
 const GridContainer = styled.div`
   display: flex;
@@ -79,11 +81,25 @@ const Grid: React.FC<{
                   <HiddenColumnIndicator
                     key={col._id}
                     value={col.value}
-                    onShow={() =>
+                    onShow={() => {
                       setBoardData?.(
-                        updateColumnById(col._id, { hidden: false }, boardData),
-                      )
-                    }
+                        R.pipe(
+                          updateColumnById(col._id, { hidden: false }),
+                          R.ifElse(
+                            () => col.isSmartColumn === true,
+                            updateSmartColumnById(col._id, { hidden: false }),
+                            R.identity,
+                          ),
+                          R.ifElse(
+                            () => col.isJoined === true,
+                            R.assocPath(['layers', 'joins', 'hidden'], false),
+                            R.identity,
+                          ),
+                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                          // @ts-ignore
+                        )(boardData),
+                      );
+                    }}
                   />
                 ) : (
                   <ColumnHeader

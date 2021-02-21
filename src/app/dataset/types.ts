@@ -31,6 +31,7 @@ export type FilterTypes =
 
 export interface IJoinLayer {
   joinType: 'full' | 'left' | 'right' | 'inner';
+  hidden?: boolean;
   condition: {
     format?: Formats;
     formatSettings?: FormatSettings;
