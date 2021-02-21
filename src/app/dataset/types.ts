@@ -144,6 +144,7 @@ export interface IColumn extends ICell {
   foreignKeyId?: string;
   isJoined?: boolean;
   isUnique?: boolean;
+  hidden?: boolean;
 }
 
 export interface ISmartColumn extends IColumn {

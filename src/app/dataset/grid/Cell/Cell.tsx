@@ -162,7 +162,6 @@ const Cell: React.FC<ICellProps> = ({
   colFormat,
   colIndex,
   columnId,
-  formatSettings,
 }) => {
   const {
     readOnly,

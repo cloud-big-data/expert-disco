@@ -109,6 +109,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   formatSettings,
   isSmartColumn,
   isJoined,
+  hidden,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
   const {
@@ -214,6 +215,14 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             className="fal fa-times-circle"
           />
           Remove column
+        </Menu.Item>
+        <Menu.Item
+          onClick={() =>
+            setBoardData?.(updateColumnById(_id, { hidden: true }, boardData))
+          }
+        >
+          <MenuIcon style={{ color: Styles.dark400 }} className="fad fa-eye-slash" />
+          Hide column
         </Menu.Item>
       </Menu.ItemGroup>
       <Menu.SubMenu title="Sort">

@@ -7,9 +7,11 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import { ChangeHistoryItem } from '../types';
 import ColumnHeader from './ColumnHeader';
+import HiddenColumnIndicator from './ColumnHeader/HiddenColumnIndicator';
 import EventsProvider from './EventsProvider';
 import HotkeysProvider from './HotkeysProvider';
 import Row from './Row';
+import updateColumnById from '../lib/updateColumnById';
 
 const GridContainer = styled.div`
   display: flex;
@@ -53,7 +55,7 @@ const Grid: React.FC<{
   redo: () => void;
   handleChange: (changeHistoryItem: ChangeHistoryItem) => void;
 }> = ({ gridRef, visibleRows, undo, redo, handleChange }) => {
-  const { boardData, readOnly } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, readOnly } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
   const [firstVisibleRow, lastVisibleRow] = visibleRows;
 
@@ -72,17 +74,29 @@ const Grid: React.FC<{
             redo={!readOnly ? redo : () => undefined}
           >
             <ColumnsContainer>
-              {columns.map((col, index) => (
-                <ColumnHeader
-                  key={col._id}
-                  {...col}
-                  columnIndex={index}
-                  position={{
-                    firstColumn: index === 0,
-                    lastColumn: index === columns.length - 1,
-                  }}
-                />
-              ))}
+              {columns.map((col, index) =>
+                col.hidden ? (
+                  <HiddenColumnIndicator
+                    key={col._id}
+                    value={col.value}
+                    onShow={() =>
+                      setBoardData?.(
+                        updateColumnById(col._id, { hidden: false }, boardData),
+                      )
+                    }
+                  />
+                ) : (
+                  <ColumnHeader
+                    key={col._id}
+                    {...col}
+                    columnIndex={index}
+                    position={{
+                      firstColumn: index === 0,
+                      lastColumn: index === columns.length - 1,
+                    }}
+                  />
+                ),
+              )}
             </ColumnsContainer>
             <RowsContainer>
               {rows.length > 0 ? (

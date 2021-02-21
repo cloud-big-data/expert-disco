@@ -12,6 +12,7 @@ import Cell from './Cell';
 import { defaults } from './constants';
 import { makeBoardActions } from '../lib/makeBoardActions';
 import findRowById from '../lib/findRowById';
+import findColumnById from '../lib/findColumnById';
 
 const RowContainer = styled.div`
   display: flex;
@@ -104,8 +105,32 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
           <Helper>{rowIndex}</Helper>
         </RowIndexContainer>
       </Dropdown>
-      {cells.map((cell, index) =>
-        cell ? (
+      {cells.map((cell, index) => {
+        const column = findColumnById(cell?.columnId ?? '', boardData);
+        if (!cell) {
+          return (
+            <Cell
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              colIndex={index}
+              rowId={_id}
+              highlighted={false}
+              selected={false}
+              active={false}
+              position={{
+                lastRow: position.lastRow,
+                lastColumn: index === cells.length - 1,
+                firstColumn: index === 0,
+              }}
+              isCopying={false}
+              colWidth={boardData.columns[index].colWidth}
+              colFormat={boardData.columns[index].format}
+              formatSettings={boardData.columns[index].formatSettings}
+              {...cell}
+            />
+          );
+        }
+        return !column?.hidden ? (
           <Cell
             key={cell._id}
             colIndex={index}
@@ -129,27 +154,9 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
             {...cell}
           />
         ) : (
-          <Cell
-            // eslint-disable-next-line react/no-array-index-key
-            key={index}
-            colIndex={index}
-            rowId={_id}
-            highlighted={false}
-            selected={false}
-            active={false}
-            position={{
-              lastRow: position.lastRow,
-              lastColumn: index === cells.length - 1,
-              firstColumn: index === 0,
-            }}
-            isCopying={false}
-            colWidth={boardData.columns[index].colWidth}
-            colFormat={boardData.columns[index].format}
-            formatSettings={boardData.columns[index].formatSettings}
-            {...cell}
-          />
-        ),
-      )}
+          <div key={cell._id} style={{ border: '16px solid transparent' }} />
+        );
+      })}
     </RowContainer>
   );
 };
