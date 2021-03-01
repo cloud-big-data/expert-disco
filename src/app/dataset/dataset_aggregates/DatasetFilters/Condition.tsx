@@ -96,6 +96,7 @@ const Condition: React.FC<{
   const [showDeleteConf, setShowDeleteConf] = useState(false);
   const dataType =
     boardData.columns.find(col => col._id === state.key)?.dataType ?? 'string';
+
   return (
     <ConditionContainer>
       {showDeleteConf ? (
@@ -159,7 +160,9 @@ const Condition: React.FC<{
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     defaultValue={
-                      typeof state.value === 'string'
+                      typeof state.value === 'string' &&
+                      state.value &&
+                      state.value.toString().split(',')?.length > 1
                         ? state.value.split(',').map(x => new Date(x))
                         : undefined
                     }

@@ -123,9 +123,9 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
                 firstColumn: index === 0,
               }}
               isCopying={false}
-              colWidth={boardData.columns[index].colWidth}
-              colFormat={boardData.columns[index].format}
-              formatSettings={boardData.columns[index].formatSettings}
+              colWidth={boardData.columns[index]?.colWidth}
+              colFormat={boardData.columns[index]?.format}
+              formatSettings={boardData.columns[index]?.formatSettings}
               {...cell}
             />
           );
@@ -148,9 +148,9 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
               firstColumn: index === 0,
             }}
             isCopying={boardState.cellsState.copyingCell === cell._id}
-            colWidth={boardData.columns[index].colWidth}
-            colFormat={boardData.columns[index].format}
-            formatSettings={boardData.columns[index].formatSettings}
+            colWidth={boardData.columns[index]?.colWidth}
+            colFormat={boardData.columns[index]?.format}
+            formatSettings={boardData.columns[index]?.formatSettings}
             {...cell}
           />
         ) : (
