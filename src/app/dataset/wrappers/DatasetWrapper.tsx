@@ -12,6 +12,7 @@ import { IBoardState, IBoardData, IBoardHead } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 import makeBoardDiff from '../lib/makeBoardDiff';
 import DatasetNotFound from '../DatasetNotFound';
+// import DatasetDisconnected from '../DatasetDisconnected';
 
 enum DatasetUserTypes {
   owner,
@@ -121,7 +122,7 @@ const DatasetWrapper: React.FC = () => {
     datasetId: string;
   }>();
 
-  const socket = useDatasetsSockets(
+  const { socket } = useDatasetsSockets(
     {
       userId: user.userId,
       datasetId: params.datasetId,
@@ -154,6 +155,15 @@ const DatasetWrapper: React.FC = () => {
   if (!user.userId || !user.email) {
     return loader;
   }
+
+  // if (socketIsDisconnected) {
+  //   return (
+  //     <>
+  //       <CustomerNav email={user.email} />
+  //       <DatasetDisconnected />
+  //     </>
+  //   );
+  // }
 
   const datasetNotFound = !isLoading && R.keys(data).length === 0;
   if (datasetNotFound) {
