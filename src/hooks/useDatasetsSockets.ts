@@ -126,6 +126,7 @@ const useDatasetsSockets = (
 
     socket.on('downloadReady', (objectUrls: string[]) => {
       setFilesToDownload(objectUrls);
+      console.log(objectUrls);
 
       setTimeout(() => {
         setFilesToDownload([]);
