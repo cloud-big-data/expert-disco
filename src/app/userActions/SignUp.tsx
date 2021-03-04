@@ -126,7 +126,7 @@ const SignUp: React.FC = () => {
       toggleAccountExists(true);
       return;
     }
-    if (error && res.status >= 400 && res.status <= 499) {
+    if (error && res.status >= 400) {
       toggleError(true);
       return;
     }

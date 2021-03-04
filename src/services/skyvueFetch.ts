@@ -43,6 +43,12 @@ const skyvueFetch = (
 
       try {
         const json = await res.json();
+        if (res.status >= 400) {
+          return {
+            error: json.error,
+            status: res.status,
+          };
+        }
         return json;
       } catch (e) {
         return {
