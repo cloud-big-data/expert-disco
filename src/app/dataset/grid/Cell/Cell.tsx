@@ -170,6 +170,7 @@ const Cell: React.FC<ICellProps> = ({
     boardData,
     setBoardData,
     setClipboard,
+    loading,
   } = useContext(DatasetContext)!;
   const { handleChange } = useContext(GridContext)!;
 
@@ -257,7 +258,7 @@ const Cell: React.FC<ICellProps> = ({
       highlighted={highlighted}
       position={position}
       selected={selected}
-      isLoading={false} // Add a smoother loading experience later
+      isLoading={loading}
       onContextMenu={e => {
         e.preventDefault();
         setShowContextMenu(!showContextMenu);

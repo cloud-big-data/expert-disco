@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as R from 'ramda';
 
-const useFindVisibleRows = (
+const useHandleInfiniteScroll = (
   gridRef: React.RefObject<HTMLDivElement>,
   {
     first,
@@ -10,9 +10,11 @@ const useFindVisibleRows = (
     first: number;
     last: number;
   },
+  getRowSlice: (start: number, end: number) => void,
 ): [number, number, boolean] => {
   const [visibleRows, setVisibleRows] = useState<[number, number]>([first, last]);
   const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeout = useRef(-1);
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -31,18 +33,24 @@ const useFindVisibleRows = (
       );
 
       const rowNodeList = [...grid.querySelectorAll('div.row__index')];
+      const newVisibleRows = getVisibleIndeces(rowNodeList);
       setIsScrolling(true);
-      setVisibleRows(getVisibleIndeces(rowNodeList));
+      setVisibleRows(newVisibleRows);
       setTimeout(() => {
         setIsScrolling(false);
       });
+
+      clearTimeout(scrollTimeout.current);
+      scrollTimeout.current = setTimeout(() => {
+        getRowSlice(...newVisibleRows);
+      }, 100);
     };
 
     grid.addEventListener('scroll', handleScroll);
     return () => grid.removeEventListener('scroll', handleScroll);
-  }, [gridRef, visibleRows]);
+  }, [getRowSlice, gridRef, visibleRows]);
 
   return [...visibleRows, isScrolling];
 };
 
-export default useFindVisibleRows;
+export default useHandleInfiniteScroll;

@@ -60,6 +60,15 @@ export const initialBoardState = {
   changeHistory: [],
 };
 
+const initial_layers = {
+  joins: {},
+  filters: [],
+  groupings: {},
+  smartColumns: [],
+  sortings: [],
+  formatting: [],
+};
+
 const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [loading, setLoading] = useState(false);
@@ -200,15 +209,6 @@ const DatasetWrapper: React.FC = () => {
     });
   };
 
-  const initial_layers = {
-    joins: {},
-    filters: [],
-    groupings: {},
-    smartColumns: [],
-    sortings: [],
-    formatting: [],
-  };
-
   const alwaysEditableFields = R.omit(['sortings']);
   const readOnly =
     ![DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType) &&
@@ -227,7 +227,6 @@ const DatasetWrapper: React.FC = () => {
         boardState,
         changeHistoryRef,
         getRowSlice: (first: number, last: number) => {
-          setLoading(true);
           socket?.emit('getSlice', { first, last });
         },
         loading,

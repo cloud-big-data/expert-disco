@@ -6,7 +6,7 @@ import humanizeTimeAgo from 'utils/humanizeTimeAgo';
 import Styles from 'styles/Styles';
 import { IconButton } from 'components/ui/Buttons';
 import * as R from 'ramda';
-import useFindVisibleRows from 'hooks/useFindVisibleRows';
+import useHandleInfiniteScroll from 'hooks/useHandleInfiniteScroll';
 import { v4 as uuidv4 } from 'uuid';
 import Grid from './grid';
 import DatasetToolbar from './toolbar';
@@ -82,19 +82,14 @@ const Dataset: React.FC<{
   }, [currentVersion, changeHistoryRef]);
 
   const { boardData, getRowSlice } = useContext(DatasetContext)!;
-  const [firstVisibleRow, lastVisibleRow, isScrolling] = useFindVisibleRows(
+  const [firstVisibleRow, lastVisibleRow] = useHandleInfiniteScroll(
     gridRef,
     {
       first: boardData.rows[0]?.index ?? 0,
       last: R.last(boardData.rows)?.index ?? 100,
     },
+    getRowSlice,
   );
-
-  useEffect(() => {
-    if (isScrolling) {
-      getRowSlice(firstVisibleRow, lastVisibleRow);
-    }
-  }, [firstVisibleRow, getRowSlice, isScrolling, lastVisibleRow]);
 
   const undo = () => {
     const currentIndex = changeHistoryRef.current?.findIndex(
