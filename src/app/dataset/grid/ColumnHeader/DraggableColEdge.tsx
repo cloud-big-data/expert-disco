@@ -17,6 +17,7 @@ const ColEdgeContainer = styled.div<{
   margin-right: -2rem;
   border-left: 3px solid ${props => (props.hovering ? Styles.blue : 'transparent')};
   cursor: ew-resize;
+  z-index: 2;
 `;
 
 const WidthIndicator = styled.div`

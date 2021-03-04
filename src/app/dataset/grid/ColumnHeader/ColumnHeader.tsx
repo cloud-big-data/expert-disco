@@ -460,7 +460,16 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             }}
           />
         ) : (
-          <Label>{value}</Label>
+          <Label
+            style={{
+              textOverflow: 'ellipsis',
+              maxWidth: colWidth ? colWidth - 20 : undefined,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+          >
+            {value}
+          </Label>
         )}
         <i
           style={{ marginLeft: 'auto' }}
