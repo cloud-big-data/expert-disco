@@ -240,7 +240,9 @@ const DatasetToolbar: React.FC<{
             onChange={e => setSelectedRow(parseInt(e.target.value, 10))}
             onConfirm={
               selectedRow
-                ? () => socket?.emit('getSlice', selectedRow)
+                ? () => {
+                    socket?.emit('getSlice', { first: selectedRow });
+                  }
                 : () => undefined
             }
             confirmText="Go"
