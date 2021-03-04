@@ -29,7 +29,7 @@ const useHandleInfiniteScroll = (
         R.pathOr('0', ['dataset', 'rowIndex']),
         parseInt,
         item => (item - 50 < 0 ? 0 : item - 50),
-        item => [item, item + 100] as [number, number],
+        item => [item, item + 200] as [number, number],
       );
 
       const rowNodeList = [...grid.querySelectorAll('div.row__index')];
