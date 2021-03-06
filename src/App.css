@@ -226,6 +226,11 @@ a:not(.no-hover):hover {
   background-color: var(--purple);
 }
 
+#root .ant-table-column-sorter-up.active,
+#root .ant-table-column-sorter-down.active {
+  color: var(--blue);
+}
+
 .ant-dropdown-menu,
 .ant-picker-panel-container {
   padding: var(--defaultPadding);
@@ -260,6 +265,10 @@ a:not(.no-hover):hover {
 #root .ant-picker {
   border: 2px solid var(--faintBorderColor);
   border-radius: var(--defaultBorderRadius);
+}
+
+#root .ant-tabs-ink-bar {
+  background: var(--text-color);
 }
 
 

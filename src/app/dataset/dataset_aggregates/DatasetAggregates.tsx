@@ -127,7 +127,7 @@ const DatasetAggregates: React.FC = () => {
   ];
 
   return (
-    <ExpandWrapper id="test" expanded={expanded}>
+    <ExpandWrapper expanded={expanded}>
       <ButtonTertiary onClick={() => setExpanded(!expanded)} id="expand_toggle">
         Dataset actions
         {expanded ? (

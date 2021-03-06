@@ -19,6 +19,10 @@ const DatasetSummaryContainer = styled.div`
     flex-direction: column;
     padding: 1rem;
     border-right: 2px solid ${Styles.faintBorderColor};
+
+    @media (max-width: 700px) {
+      border-right: none;
+    }
   }
 
   .summary_metrics__container {
