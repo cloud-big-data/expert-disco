@@ -28,7 +28,7 @@ const useHandleInfiniteScroll = (
         ),
         R.pathOr('0', ['dataset', 'rowIndex']),
         parseInt,
-        item => (item - 50 < 0 ? 0 : item - 50),
+        item => (item - 100 < 0 ? 0 : item - 100),
         item => [item, item + 200] as [number, number],
       );
 
