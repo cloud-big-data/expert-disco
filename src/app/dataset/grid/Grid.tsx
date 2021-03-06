@@ -21,7 +21,7 @@ const GridContainer = styled.div`
   width: 100%;
   flex-direction: column;
   margin-top: 1rem;
-  padding: 0 0.25rem;
+  padding: 0 0.25rem 0 0;
   max-width: 100%;
   overflow: auto;
   height: 75vh;
@@ -31,6 +31,7 @@ const GridContainer = styled.div`
 const ColumnsContainer = styled.div`
   width: 100%;
   flex: 0 1 100%;
+  z-index: 2;
   display: flex;
   align-items: center;
   background: ${Styles.defaultBgColor};
@@ -42,6 +43,11 @@ const ColumnsContainer = styled.div`
     width: 32px;
     max-width: 32px;
     flex: 1 0 auto;
+    z-index: 3;
+    position: sticky;
+    left: 0;
+    height: 2rem;
+    background: ${Styles.defaultBgColor};
   }
 `;
 const RowsContainer = styled.div`

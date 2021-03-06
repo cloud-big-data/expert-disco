@@ -21,6 +21,11 @@ const RowContainer = styled.div`
 `;
 
 const RowIndexContainer = styled.div`
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: ${Styles.defaultBgColor};
+  height: ${defaults.ROW_HEIGHT}rem;
   width: 32px;
   max-width: 32px;
   display: flex;
