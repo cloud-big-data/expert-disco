@@ -24,8 +24,8 @@ const GridContainer = styled.div`
   padding: 0 0.25rem 0 0;
   max-width: 100%;
   overflow: auto;
-  height: 75vh;
-  max-height: 75vh;
+  height: 90vh;
+  max-height: 90vh;
   overscroll-behavior: contain;
 `;
 const ColumnsContainer = styled.div`

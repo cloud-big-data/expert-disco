@@ -18,7 +18,6 @@ const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   position: sticky;
   flex-direction: column;
   padding: 1rem;
-  ${props => (props.fullScreen ? 'height: calc(100% - 4rem);' : '')};
   background: ${Styles.defaultBgColor};
 `;
 
