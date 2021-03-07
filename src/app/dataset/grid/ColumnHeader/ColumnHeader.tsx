@@ -256,7 +256,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               color:
                 columnSorting?.direction === 'asc' ? Styles.orange : Styles.dark400,
             }}
-            className="fas fa-sort-down"
+            className="fas fa-sort-up"
           />
           A-Z
         </Menu.Item>
@@ -266,7 +266,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               color:
                 columnSorting?.direction === 'desc' ? Styles.orange : Styles.dark400,
             }}
-            className="fas fa-sort-up"
+            className="fas fa-sort-down"
           />
           Z-A
         </Menu.Item>
@@ -476,8 +476,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             !columnSorting?.direction
               ? ''
               : columnSorting?.direction === 'asc'
-              ? `fad fa-sort-down`
-              : `fad fa-sort-up`
+              ? `fad fa-sort-up`
+              : `fad fa-sort-down`
           }
         />
         <Dropdown disabled={showContextMenu} trigger={['click']} overlay={menu}>
