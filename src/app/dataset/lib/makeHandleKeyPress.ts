@@ -46,7 +46,7 @@ const makeHandleKeyPress = ({
   };
 
   const handleEnter = () => {
-    if (activeCell === '') {
+    if (['', -1].includes(activeCell)) {
       setBoardState({
         ...boardState,
         cellsState: {

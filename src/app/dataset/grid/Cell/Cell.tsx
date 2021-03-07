@@ -1,5 +1,5 @@
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
@@ -14,6 +14,7 @@ import DatePicker from 'components/ui/DatePicker';
 import { ICell, IBoardState, DataTypes, NumberFormatSettings } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
+import CellDisplay from './CellDisplay';
 
 interface ICellProps extends ICell {
   rowId: string;
@@ -34,7 +35,7 @@ interface ICellProps extends ICell {
 }
 
 const CELL_BORDER_COLOR = Styles.faintBorderColor;
-const CellContainer = styled.div<{
+const CellContainer = React.memo(styled.div<{
   highlighted?: boolean;
   active?: boolean;
   selected?: boolean;
@@ -141,7 +142,7 @@ const CellContainer = styled.div<{
       
       `
       : ''}
-`;
+`);
 
 const showTypeError = (colDataType: DataTypes, attemptedType: DataTypes) => {
   notification.error({
@@ -250,6 +251,29 @@ const Cell: React.FC<ICellProps> = ({
     }
   });
 
+  const onContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setShowContextMenu(!showContextMenu);
+    },
+    [showContextMenu],
+  );
+
+  const handleClick = useCallback(() => {
+    if (boardState.cellsState.selectedCell === _id) return;
+    setBoardState(
+      R.pipe(
+        R.assocPath(['columnsState', 'selectedColumn'], -1),
+        R.assocPath(['cellsState', 'activeCell'], -1),
+        R.assocPath(['cellsState', 'selectedCell'], _id),
+      )(boardState) as IBoardState,
+    );
+  }, [_id, boardState, setBoardState]);
+
+  const onDoubleClick = useCallback(() => {
+    setBoardState(R.assocPath(['cellsState', 'activeCell'], _id, boardState));
+  }, [_id, boardState, setBoardState]);
+
   return (
     <CellContainer
       width={colWidth ?? defaults.COL_WIDTH}
@@ -259,23 +283,9 @@ const Cell: React.FC<ICellProps> = ({
       position={position}
       selected={selected}
       isLoading={loading}
-      onContextMenu={e => {
-        e.preventDefault();
-        setShowContextMenu(!showContextMenu);
-      }}
-      onClick={() => {
-        if (boardState.cellsState.selectedCell === _id) return;
-        setBoardState(
-          R.pipe(
-            R.assocPath(['columnsState', 'selectedColumn'], -1),
-            R.assocPath(['cellsState', 'activeCell'], -1),
-            R.assocPath(['cellsState', 'selectedCell'], _id),
-          )(boardState) as IBoardState,
-        );
-      }}
-      onDoubleClick={() =>
-        setBoardState(R.assocPath(['cellsState', 'activeCell'], _id, boardState))
-      }
+      onContextMenu={onContextMenu}
+      onClick={handleClick}
+      onDoubleClick={onDoubleClick}
     >
       {!readOnly && active && !associatedColumn?.isSmartColumn ? (
         colDataType === 'date' ? (
@@ -351,14 +361,12 @@ const Cell: React.FC<ICellProps> = ({
           />
         )
       ) : (
-        <span className="cell__value">
-          {formatValue({
-            desiredFormat: columnSettings?.format,
-            dataType: colDataType,
-            value,
-            formatSettings: columnSettings?.formatSettings,
-          })}
-        </span>
+        <CellDisplay
+          format={columnSettings?.format}
+          formatSettings={columnSettings?.formatSettings}
+          colDataType={colDataType}
+          value={value}
+        />
       )}
       {showContextMenu && (
         <DropdownMenu

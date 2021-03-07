@@ -3,7 +3,7 @@ import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
 import updateSmartColumnById from 'app/dataset/lib/updateSmartColumnById';
 import DatasetContext from 'contexts/DatasetContext';
 import GridContext from 'contexts/GridContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
@@ -41,8 +41,8 @@ const DraggableColEdge: React.FC<{
 
   const boardActions = makeBoardActions(boardData);
 
-  useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
+  const handleMouseDown = useCallback(
+    (e: MouseEvent) => {
       if (
         !gridRef.current?.contains(e.target as Node) &&
         e.target !== edgeRef.current
@@ -58,12 +58,17 @@ const DraggableColEdge: React.FC<{
       if (xRef.current) {
         xRef.current.style.left = `${e.pageX - 20}px`;
       }
-    };
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!xRef.current) return;
-      xRef.current.style.left = `${e.pageX - 20}px`;
-    };
-    const handleMouseUp = (e: MouseEvent) => {
+    },
+    [gridRef, hovering],
+  );
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!xRef.current) return;
+    xRef.current.style.left = `${e.pageX - 20}px`;
+  }, []);
+
+  const handleMouseUp = useCallback(
+    (e: MouseEvent) => {
       if (!mouseIsDown) return;
       toggleMouseIsDown(false);
       document.querySelector('body')!.style.cursor = 'unset';
@@ -84,8 +89,11 @@ const DraggableColEdge: React.FC<{
           )?.layers?.smartColumns,
         });
       }
-    };
+    },
+    [boardActions, boardData, colId, colWidth, mouseIsDown, setBoardData, socket],
+  );
 
+  useEffect(() => {
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
@@ -95,17 +103,7 @@ const DraggableColEdge: React.FC<{
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [
-    boardActions,
-    boardData,
-    colId,
-    colWidth,
-    gridRef,
-    hovering,
-    mouseIsDown,
-    setBoardData,
-    socket,
-  ]);
+  }, [handleMouseDown, handleMouseMove, handleMouseUp]);
 
   return (
     <ColEdgeContainer

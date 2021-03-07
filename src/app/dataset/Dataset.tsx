@@ -1,5 +1,5 @@
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Helper } from 'components/ui/Typography';
 import humanizeTimeAgo from 'utils/humanizeTimeAgo';
@@ -91,7 +91,7 @@ const Dataset: React.FC<{
     getRowSlice,
   );
 
-  const undo = () => {
+  const undo = useCallback(() => {
     const currentIndex = changeHistoryRef.current?.findIndex(
       id => id === currentVersion,
     );
@@ -107,9 +107,9 @@ const Dataset: React.FC<{
     });
 
     setCurrentVersion(changeHistoryRef.current[currentIndex - 1]);
-  };
+  }, [changeHistoryRef, currentVersion, firstVisibleRow, lastVisibleRow, socket]);
 
-  const redo = () => {
+  const redo = useCallback(() => {
     const currentIndex = changeHistoryRef.current?.findIndex(
       id => id === currentVersion,
     );
@@ -128,39 +128,42 @@ const Dataset: React.FC<{
     });
 
     setCurrentVersion(nextId);
-  };
+  }, [changeHistoryRef, currentVersion, firstVisibleRow, lastVisibleRow, socket]);
 
-  const handleChange = (changeHistoryItem: ChangeHistoryItem) => {
-    if (R.equals(changeHistoryItem.newValue, changeHistoryItem.prevValue)) return;
+  const handleChange = useCallback(
+    (changeHistoryItem: ChangeHistoryItem) => {
+      if (R.equals(changeHistoryItem.newValue, changeHistoryItem.prevValue)) return;
 
-    const revisionId = uuidv4();
-    const currentIndex = changeHistoryRef.current?.findIndex(
-      id => id === currentVersion,
-    );
+      const revisionId = uuidv4();
+      const currentIndex = changeHistoryRef.current?.findIndex(
+        id => id === currentVersion,
+      );
 
-    const shouldRevert = currentIndex !== changeHistoryRef.current?.length - 1;
+      const shouldRevert = currentIndex !== changeHistoryRef.current?.length - 1;
 
-    if (shouldRevert && changeHistoryRef.current) {
-      changeHistoryRef.current = [
-        ...changeHistoryRef.current.slice(0, currentIndex + 1),
+      if (shouldRevert && changeHistoryRef.current) {
+        changeHistoryRef.current = [
+          ...changeHistoryRef.current.slice(0, currentIndex + 1),
+          revisionId,
+        ];
+      } else {
+        changeHistoryRef.current = [...changeHistoryRef.current, revisionId];
+      }
+
+      localStorage.setItem(
+        `${datasetHead._id}-change-history`,
+        JSON.stringify(changeHistoryRef.current),
+      );
+      socket?.emit('saveToHistory', {
+        ...changeHistoryItem,
         revisionId,
-      ];
-    } else {
-      changeHistoryRef.current = [...changeHistoryRef.current, revisionId];
-    }
-
-    localStorage.setItem(
-      `${datasetHead._id}-change-history`,
-      JSON.stringify(changeHistoryRef.current),
-    );
-    socket?.emit('saveToHistory', {
-      ...changeHistoryItem,
-      revisionId,
-      revert: shouldRevert,
-      timestamp: Date.now(),
-    });
-    setCurrentVersion(revisionId);
-  };
+        revert: shouldRevert,
+        timestamp: Date.now(),
+      });
+      setCurrentVersion(revisionId);
+    },
+    [changeHistoryRef, currentVersion, datasetHead._id, socket],
+  );
 
   return (
     <DatasetContainer fullScreen={fullScreen} ref={datasetRef}>
