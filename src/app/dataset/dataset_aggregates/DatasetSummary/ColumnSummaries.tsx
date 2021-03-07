@@ -75,7 +75,7 @@ const returnMakeTableFromDataType = (columnSummary: IColumnSummary) => (
 ) => (
   <Table
     showSorterTooltip={false}
-    columns={columns[0]?.dataType === 'string' ? BASE_COLUMNS : COLUMNS}
+    columns={columns[0]?.dataType === 'number' ? COLUMNS : BASE_COLUMNS}
     pagination={false}
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
