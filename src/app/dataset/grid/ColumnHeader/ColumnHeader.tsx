@@ -118,6 +118,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     boardData,
     setBoardData,
     socket,
+    setLoading,
   } = useContext(DatasetContext)!;
   const colFormat = isJoined ? boardData.layers.joins.condition.format : format;
   const { handleChange } = useContext(GridContext)!;
@@ -156,10 +157,9 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       sortingLayer = [...sortingLayer, { key: _id, direction }];
     }
 
-    socket?.emit('layer', {
-      layerKey: 'sortings',
-      layerData: sortingLayer,
-    });
+    updateLayers({ layerKey: 'sortings', layerData: sortingLayer }, socket, () =>
+      setLoading(true),
+    );
   };
 
   useEffect(() => {

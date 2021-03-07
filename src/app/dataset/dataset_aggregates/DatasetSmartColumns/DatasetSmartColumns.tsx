@@ -8,6 +8,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { v4 as uuidv4 } from 'uuid';
 import * as R from 'ramda';
+import updateLayers from 'app/dataset/lib/updateLayers';
 import EditSmartColumn from './EditSmartColumn';
 
 const SmartColumnsContainer = styled.div<{ selectedSmartColumn: boolean }>`
@@ -33,7 +34,9 @@ const SmartColumnsContainer = styled.div<{ selectedSmartColumn: boolean }>`
 `;
 
 const DatasetSmartColumns: React.FC = () => {
-  const { boardData, setBoardData, socket } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, socket, setLoading } = useContext(
+    DatasetContext,
+  )!;
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [selectedSmartColumn, setSelectedSmartColumn] = useState<
     string | undefined
@@ -76,6 +79,7 @@ const DatasetSmartColumns: React.FC = () => {
                 toggle: 'smartColumns',
                 visible: e,
               });
+              setLoading(true);
             }}
             checked={boardData.layerToggles.smartColumns}
           />
@@ -95,10 +99,11 @@ const DatasetSmartColumns: React.FC = () => {
                 : [...smartColumns, col];
 
               setSmartColumns(updatedSmartColumns);
-              socket?.emit('layer', {
-                layerKey: 'smartColumns',
-                layerData: updatedSmartColumns,
-              });
+              updateLayers(
+                { layerKey: 'smartColumns', layerData: updatedSmartColumns },
+                socket,
+                () => setLoading(true),
+              );
             }}
             unsavedChanges={unsavedChanges}
             setUnsavedChanges={setUnsavedChanges}

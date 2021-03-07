@@ -18,13 +18,17 @@ const updateLayers = (
       | IGroupLayer
       | ISortingLayer
       | ISmartColumn[]
-      | IColumnFormatting;
+      | IColumnFormatting
+      | Record<string, unknown>;
   },
   socket?: SocketIOClient.Socket,
-) =>
+  setLoading?: () => void,
+) => {
+  setLoading?.();
   socket?.emit('layer', {
     layerKey,
     layerData,
   });
+};
 
 export default updateLayers;

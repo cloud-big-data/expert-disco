@@ -125,7 +125,9 @@ const useDatasetsSockets = (
 
     socket.on('slice', (res: IBoardData) => {
       setBoardData(res);
-      setLoading(false);
+      if (loading) {
+        setLoading(false);
+      }
     });
 
     socket.on('downloadReady', (objectUrls: string[]) => {

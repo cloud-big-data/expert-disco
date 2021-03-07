@@ -11,6 +11,7 @@ import WarningBlock from 'components/WarningBlock';
 import { UUID_REGEX } from 'app/dataset/constants';
 import findColumnById from 'app/dataset/lib/findColumnById';
 import Select from 'components/ui/Select';
+import updateLayers from 'app/dataset/lib/updateLayers';
 import ExpressionEditor from './ExpressionEditor';
 
 const EditingContainer = styled.div`
@@ -50,7 +51,7 @@ const EditSmartColumn: React.FC<{
   setUnsavedChanges,
   setSelectedSmartColumn,
 }) => {
-  const { socket, boardData } = useContext(DatasetContext)!;
+  const { socket, boardData, setLoading } = useContext(DatasetContext)!;
   const [showDeleteConf, setShowDeleteConf] = useState(false);
   const column = smartColumns.find(x => x._id === columnId);
   const [expression, setExpression] = useState(column?.expression);
@@ -171,10 +172,12 @@ const EditSmartColumn: React.FC<{
               <ButtonDanger
                 onClick={() => {
                   const updated = smartColumns.filter(x => x._id !== columnId);
-                  socket?.emit('layer', {
-                    layerKey: 'smartColumns',
-                    layerData: updated,
-                  });
+
+                  updateLayers(
+                    { layerKey: 'smartColumns', layerData: updated },
+                    socket,
+                    () => setLoading(true),
+                  );
                   setSmartColumns(updated);
                   setSelectedSmartColumn();
                 }}

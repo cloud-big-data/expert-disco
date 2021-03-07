@@ -14,6 +14,7 @@ import styled from 'styled-components/macro';
 import { Label } from 'components/ui/Typography';
 import Separator from 'components/Separator';
 import { Checkbox } from 'antd';
+import updateLayers from 'app/dataset/lib/updateLayers';
 
 const EditorContainer = styled.div`
   .conditions__container {
@@ -36,7 +37,7 @@ const JoinEditor: FC<{
 }> = ({ unsavedChanges, setUnsavedChanges, joinState, setJoinState }) => {
   const { condition } = joinState;
 
-  const { datasetHead, boardData, socket, queriedDatasets } = useContext(
+  const { datasetHead, boardData, socket, queriedDatasets, setLoading } = useContext(
     DatasetContext,
   )!;
   const { accessToken } = useContext(UserContext)!;
@@ -97,7 +98,9 @@ const JoinEditor: FC<{
         onChange={e => {
           if (e === 'none') {
             setJoinState({});
-            socket?.emit('layer', { layerKey: 'joins', layerData: {} });
+            updateLayers({ layerKey: 'joins', layerData: {} }, socket, () =>
+              setLoading(true),
+            );
             return;
           }
           socket?.emit('queryBoardHeaders', e);
@@ -197,7 +200,9 @@ const JoinEditor: FC<{
         <ButtonPrimary
           onClick={() => {
             setUnsavedChanges(false);
-            socket?.emit('layer', { layerKey: 'joins', layerData: joinState });
+            updateLayers({ layerKey: 'joins', layerData: joinState }, socket, () =>
+              setLoading(true),
+            );
           }}
           disabled={
             !unsavedChanges ||

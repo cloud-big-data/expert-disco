@@ -7,6 +7,7 @@ import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
 import * as R from 'ramda';
 import { Label } from 'components/ui/Typography';
 import { Switch } from 'antd';
+import updateLayers from 'app/dataset/lib/updateLayers';
 import FilterRow from './FilterRow';
 
 const FiltersContainer = styled.div`
@@ -48,7 +49,9 @@ export const FilterContext = createContext<{
 }>({ parentFilterState: undefined });
 
 const DatasetFilters: React.FC = () => {
-  const { boardData, setBoardData, socket } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, socket, setLoading } = useContext(
+    DatasetContext,
+  )!;
   const initialFiltersState = useRef<IFilterLayer>(boardData.layers?.filters ?? []);
   const [filtersState, setFiltersState] = useState<IFilterLayer>(
     boardData.layers?.filters ?? [],
@@ -84,6 +87,7 @@ const DatasetFilters: React.FC = () => {
                 toggle: 'filters',
                 visible: e,
               });
+              setLoading(true);
             }}
             checked={boardData.layerToggles.filters}
           />
@@ -119,10 +123,11 @@ const DatasetFilters: React.FC = () => {
           <ButtonPrimary
             onClick={() => {
               setUnsavedChanges(false);
-              socket?.emit('layer', {
-                layerKey: 'filters',
-                layerData: sortedFiltersState,
-              });
+              updateLayers(
+                { layerKey: 'filters', layerData: sortedFiltersState },
+                socket,
+                () => setLoading(true),
+              );
               initialFiltersState.current = sortedFiltersState;
             }}
           >

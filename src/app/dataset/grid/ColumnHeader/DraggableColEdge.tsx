@@ -1,5 +1,6 @@
 import findColumnById from 'app/dataset/lib/findColumnById';
 import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
+import updateLayers from 'app/dataset/lib/updateLayers';
 import updateSmartColumnById from 'app/dataset/lib/updateSmartColumnById';
 import DatasetContext from 'contexts/DatasetContext';
 import GridContext from 'contexts/GridContext';
@@ -30,7 +31,9 @@ const DraggableColEdge: React.FC<{
   colWidth: number;
   colId: string;
 }> = ({ colWidth, colId }) => {
-  const { boardData, setBoardData, socket } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, socket, setLoading } = useContext(
+    DatasetContext,
+  )!;
   const { gridRef } = useContext(GridContext)!;
   const [hovering, toggleHovering] = useState(false);
   const [mouseIsDown, toggleMouseIsDown] = useState(false);
@@ -80,17 +83,30 @@ const DraggableColEdge: React.FC<{
       setBoardData?.(boardActions.changeColWidth(colId, updatedWidth));
 
       if (findColumnById(colId, boardData)?.isSmartColumn) {
-        socket?.emit('layer', {
-          layerKey: 'smartColumns',
-          layerData: updateSmartColumnById(
-            colId,
-            { colWidth: updatedWidth },
-            boardData,
-          )?.layers?.smartColumns,
-        });
+        updateLayers(
+          {
+            layerKey: 'smartColumns',
+            layerData: updateSmartColumnById(
+              colId,
+              { colWidth: updatedWidth },
+              boardData,
+            )?.layers?.smartColumns,
+          },
+          socket,
+          () => setLoading(true),
+        );
       }
     },
-    [boardActions, boardData, colId, colWidth, mouseIsDown, setBoardData, socket],
+    [
+      boardActions,
+      boardData,
+      colId,
+      colWidth,
+      mouseIsDown,
+      setBoardData,
+      setLoading,
+      socket,
+    ],
   );
 
   useEffect(() => {

@@ -15,6 +15,7 @@ import {
 import Styles from 'styles/Styles';
 import { Empty, Switch } from 'antd';
 import findColumnById from 'app/dataset/lib/findColumnById';
+import updateLayers from 'app/dataset/lib/updateLayers';
 import { OperatorBreak } from '../Styles';
 
 const reorder = (list: string[], startIndex: number, endIndex: number) => {
@@ -129,7 +130,9 @@ const makeAggregateFunctionsArray = (dataType: DataTypes) => [
 ];
 
 const DatasetGrouping: React.FC = () => {
-  const { boardData, setBoardData, socket } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, socket, setLoading } = useContext(
+    DatasetContext,
+  )!;
   const [groupingState, _setGroupingState] = useState<IGroupLayer>(
     boardData.layers?.groupings.columnAggregates
       ? boardData.layers?.groupings
@@ -187,6 +190,7 @@ const DatasetGrouping: React.FC = () => {
                 toggle: 'groupings',
                 visible: e,
               });
+              setLoading(true);
             }}
             checked={layerToggles.groupings}
           />
@@ -379,10 +383,11 @@ const DatasetGrouping: React.FC = () => {
           <ButtonPrimary
             onClick={() => {
               setUnsavedChanges(false);
-              socket?.emit('layer', {
-                layerKey: 'groupings',
-                layerData: groupingState,
-              });
+              updateLayers(
+                { layerKey: 'groupings', layerData: groupingState },
+                socket,
+                () => setLoading(true),
+              );
             }}
           >
             Save changes

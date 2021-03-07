@@ -43,7 +43,9 @@ const JoinsContainer = styled.div`
 `;
 
 const DatasetJoins: FC = () => {
-  const { boardData, setBoardData, socket } = useContext(DatasetContext)!;
+  const { boardData, setBoardData, socket, setLoading } = useContext(
+    DatasetContext,
+  )!;
 
   const [joinState, setJoinState] = useState<Partial<IJoinLayer> | undefined>(
     boardData.layers?.joins,
@@ -76,6 +78,7 @@ const DatasetJoins: FC = () => {
                 toggle: 'joins',
                 visible: e,
               });
+              setLoading(true);
             }}
             checked={boardData.layerToggles.joins}
           />
