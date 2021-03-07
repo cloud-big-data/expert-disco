@@ -2,7 +2,14 @@ import CustomerNav from 'components/nav';
 import Loading from 'components/ui/Loading';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import * as R from 'ramda';
 import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
@@ -12,7 +19,7 @@ import { IBoardState, IBoardData, IBoardHead } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 import makeBoardDiff from '../lib/makeBoardDiff';
 import DatasetNotFound from '../DatasetNotFound';
-// import DatasetDisconnected from '../DatasetDisconnected';
+import DatasetDisconnected from '../DatasetDisconnected';
 
 enum DatasetUserTypes {
   owner,
@@ -69,6 +76,14 @@ const initial_layers = {
   formatting: [],
 };
 
+const loader = (
+  <div className="absolute__center">
+    <Loading />
+  </div>
+);
+
+const alwaysEditableFields = R.omit(['sortings']);
+
 const DatasetWrapper: React.FC = () => {
   const user = useContext(UserContext);
   const [loading, setLoading] = useState(false);
@@ -84,6 +99,11 @@ const DatasetWrapper: React.FC = () => {
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
   const [clipboard, setClipboard] = useState<string | undefined>();
+  const [socketTimeoutMet, setSocketTimeoutMet] = useState(false);
+
+  useEffect(() => {
+    setInterval(() => setSocketTimeoutMet(true), 5000);
+  }, []);
 
   const { datasetId } = useParams<{ datasetId: string }>();
 
@@ -131,7 +151,7 @@ const DatasetWrapper: React.FC = () => {
     datasetId: string;
   }>();
 
-  const { socket } = useDatasetsSockets(
+  const { socket, socketLoading } = useDatasetsSockets(
     {
       userId: user.userId,
       datasetId: params.datasetId,
@@ -155,24 +175,26 @@ const DatasetWrapper: React.FC = () => {
     setLoading,
   );
 
-  const loader = (
-    <div className="absolute__center">
-      <Loading />
-    </div>
+  const _setBoardData = useCallback(
+    (newBoardData: IBoardData) => {
+      setBoardData(prevBoardData => {
+        if (!prevBoardData) return newBoardData;
+        const diff = makeBoardDiff(prevBoardData, newBoardData);
+        if (diff.colDiff || diff.rowDiff) {
+          socket?.emit('diff', diff);
+        }
+
+        socket?.emit('syncLayers', newBoardData.layers);
+
+        return newBoardData;
+      });
+    },
+    [socket],
   );
 
   if (!user.userId || !user.email) {
     return loader;
   }
-
-  // if (socketIsDisconnected) {
-  //   return (
-  //     <>
-  //       <CustomerNav email={user.email} />
-  //       <DatasetDisconnected />
-  //     </>
-  //   );
-  // }
 
   const datasetNotFound = !isLoading && R.keys(data).length === 0;
   if (datasetNotFound) {
@@ -180,6 +202,15 @@ const DatasetWrapper: React.FC = () => {
       <>
         <CustomerNav email={user.email} />
         <DatasetNotFound />
+      </>
+    );
+  }
+
+  if (socketTimeoutMet && !socketLoading && socket?.disconnected) {
+    return (
+      <>
+        <CustomerNav email={user.email} />
+        <DatasetDisconnected />
       </>
     );
   }
@@ -194,22 +225,6 @@ const DatasetWrapper: React.FC = () => {
   }
 
   const userType = getUserType(user.userId, boardData.visibilitySettings);
-
-  const _setBoardData = (newBoardData: IBoardData) => {
-    setBoardData(prevBoardData => {
-      if (!prevBoardData) return newBoardData;
-      const diff = makeBoardDiff(prevBoardData, newBoardData);
-      if (diff.colDiff || diff.rowDiff) {
-        socket?.emit('diff', diff);
-      }
-
-      socket?.emit('syncLayers', newBoardData.layers);
-
-      return newBoardData;
-    });
-  };
-
-  const alwaysEditableFields = R.omit(['sortings']);
   const readOnly =
     ![DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType) &&
     (!boardData ||

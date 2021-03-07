@@ -37,7 +37,7 @@ const useDatasetsSockets = (
   setFilesToDownload: (files: string[]) => void,
   loading: boolean,
   setLoading: (isLoading: boolean) => void,
-): { socket: SocketIOClient.Socket | undefined; socketIsDisconnected: boolean } => {
+): { socket: SocketIOClient.Socket | undefined; socketLoading: boolean } => {
   const { userId, datasetId } = query;
   const {
     boardData,
@@ -55,7 +55,7 @@ const useDatasetsSockets = (
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
     undefined,
   );
-  const [socketIsDisconnected, setDisconnected] = useState(false);
+  const [socketLoading, setSocketLoading] = useState(true);
 
   const { skyvueFileSize } = datasetHead;
 
@@ -71,9 +71,8 @@ const useDatasetsSockets = (
       reconnectionDelayMax: 5000,
       reconnectionAttempts: Infinity,
     });
-    if (socketIsDisconnected) {
-      setDisconnected(false);
-    }
+    setSocket(socket);
+    setSocketLoading(false);
 
     socket.on('connect', () => {
       setSocket(socket);
@@ -181,7 +180,6 @@ const useDatasetsSockets = (
     setBoardState,
     setQueriedDatasets,
     queriedDatasets,
-    socketIsDisconnected,
   ]);
 
   useEffect(() => {
@@ -194,7 +192,7 @@ const useDatasetsSockets = (
 
   return {
     socket: socketObj,
-    socketIsDisconnected,
+    socketLoading,
   };
 };
 
