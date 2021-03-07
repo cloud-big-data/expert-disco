@@ -57,6 +57,7 @@ const CellContainer = React.memo(styled.div<{
   flex: 1 0 auto;
   border-top: 1px solid ${CELL_BORDER_COLOR};
   border-left: 1px solid ${CELL_BORDER_COLOR};
+
   ${props =>
     props.position.lastRow
       ? `
