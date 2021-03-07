@@ -123,10 +123,10 @@ const useDatasetsSockets = (
     );
 
     socket.on('slice', (res: IBoardData) => {
-      setBoardData(res);
       if (loading) {
         setLoading(false);
       }
+      setBoardData(res);
     });
 
     socket.on('downloadReady', (objectUrls: string[]) => {
