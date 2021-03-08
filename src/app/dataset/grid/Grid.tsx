@@ -18,11 +18,9 @@ import updateSmartColumnById from '../lib/updateSmartColumnById';
 const GridContainer = styled.div`
   display: flex;
   flex: 0 1 auto;
-  width: 100%;
   flex-direction: column;
   margin-top: 1rem;
   padding: 0 0.25rem 0 0;
-  max-width: 100%;
   overflow: auto;
   height: 90vh;
   max-height: 90vh;
@@ -31,30 +29,26 @@ const GridContainer = styled.div`
 const ColumnsContainer = styled.div`
   width: 100%;
   flex: 0 1 100%;
-  z-index: 2;
+  z-index: 0;
   display: flex;
   align-items: center;
   background: ${Styles.defaultBgColor};
   position: sticky;
   top: 0;
-  &:before {
+  margin-left: 32px;
+  .columns__padding {
     content: '';
     display: flex;
     width: 32px;
     max-width: 32px;
     flex: 1 0 auto;
     z-index: 3;
-    position: sticky;
-    left: 0;
-    height: 2rem;
+    margin-left: -32px;
+    margin-top: -64px;
+    position: fixed;
+    height: 100%;
     background: ${Styles.defaultBgColor};
   }
-`;
-const RowsContainer = styled.div`
-  width: 100%;
-  flex: 1 0 100%;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Grid: React.FC<{
@@ -83,6 +77,7 @@ const Grid: React.FC<{
             redo={!readOnly ? redo : () => undefined}
           >
             <ColumnsContainer>
+              <div className="columns__padding" />
               {columns.map((col, index) =>
                 col.hidden ? (
                   <HiddenColumnIndicator
@@ -121,29 +116,27 @@ const Grid: React.FC<{
                 ),
               )}
             </ColumnsContainer>
-            <RowsContainer>
-              {rows.length > 0 ? (
-                rows.map((row, index) => (
-                  <Row
-                    key={row._id}
-                    {...row}
-                    rowIndex={row.index}
-                    position={{
-                      firstRow: index === 0,
-                      lastRow: index === rows.length - 1,
-                    }}
-                  />
-                ))
-              ) : (
-                <Text
-                  style={{ marginLeft: '32px', marginTop: '1rem' }}
-                  len="short"
-                  size="lg"
-                >
-                  Your query returned no results
-                </Text>
-              )}
-            </RowsContainer>
+            {rows.length > 0 ? (
+              rows.map((row, index) => (
+                <Row
+                  key={row._id}
+                  {...row}
+                  rowIndex={row.index}
+                  position={{
+                    firstRow: index === 0,
+                    lastRow: index === rows.length - 1,
+                  }}
+                />
+              ))
+            ) : (
+              <Text
+                style={{ marginLeft: '32px', marginTop: '1rem' }}
+                len="short"
+                size="lg"
+              >
+                Your query returned no results
+              </Text>
+            )}
           </HotkeysProvider>
         </EventsProvider>
       </GridContainer>
