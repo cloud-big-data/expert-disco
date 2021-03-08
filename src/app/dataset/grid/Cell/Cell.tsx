@@ -11,7 +11,13 @@ import GridContext from 'contexts/GridContext';
 import usePrevious from 'hooks/usePrevious';
 import formatValue from 'app/dataset/lib/formatValue';
 import DatePicker from 'components/ui/DatePicker';
-import { ICell, IBoardState, DataTypes, NumberFormatSettings } from '../../types';
+import {
+  ICell,
+  IBoardState,
+  DataTypes,
+  NumberFormatSettings,
+  IColumn,
+} from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
 import CellDisplay from './CellDisplay';
@@ -19,7 +25,7 @@ import CellDisplay from './CellDisplay';
 interface ICellProps extends ICell {
   rowId: string;
   highlighted: boolean;
-  colIndex: number;
+  associatedColumn: IColumn;
   active: boolean;
   selected: boolean;
   position: {
@@ -164,8 +170,8 @@ const Cell: React.FC<ICellProps> = ({
   isCopying,
   colWidth,
   colFormat,
-  colIndex,
   columnId,
+  associatedColumn,
 }) => {
   const {
     readOnly,
@@ -179,6 +185,7 @@ const Cell: React.FC<ICellProps> = ({
   const { handleChange } = useContext(GridContext)!;
 
   const [errorNotificationIsOpen, setErrorNotification] = useState(false);
+  const [isSelected, setSelected] = useState(selected);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -187,20 +194,15 @@ const Cell: React.FC<ICellProps> = ({
   const initialValue = useRef(value);
 
   const prevActive = usePrevious(active);
-  const associatedColumn = boardData.columns[colIndex];
-  const associatedSmartColumn = boardData.layers.smartColumns.find(
-    col => col._id === columnId,
-  );
+  const associatedSmartColumn = associatedColumn.isSmartColumn
+    ? boardData.layers.smartColumns.find(col => col._id === columnId)
+    : undefined;
 
   const columnSettings = associatedColumn?.isSmartColumn
     ? associatedSmartColumn
     : associatedColumn?.isJoined
     ? boardData.layers.joins.condition
     : associatedColumn;
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [active]);
 
   const handleCopy = () => {
     setClipboard(
@@ -214,8 +216,7 @@ const Cell: React.FC<ICellProps> = ({
     setBoardState(R.set(R.lensPath(['cellsState', 'copyingCell']), _id, boardState));
   };
 
-  const colDataType = boardData.columns.find((col, index) => index === colIndex)
-    ?.dataType;
+  const colDataType = associatedColumn?.dataType;
 
   const MENU_OPTIONS = [
     {
@@ -254,6 +255,17 @@ const Cell: React.FC<ICellProps> = ({
     }
   });
 
+  useEffect(() => {
+    if (!selected && isSelected) {
+      setSelected(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [active]);
+
   const onContextMenu = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
@@ -264,13 +276,17 @@ const Cell: React.FC<ICellProps> = ({
 
   const handleClick = useCallback(() => {
     if (boardState.cellsState.selectedCell === _id) return;
-    setBoardState(
-      R.pipe(
-        R.assocPath(['columnsState', 'selectedColumn'], -1),
-        R.assocPath(['cellsState', 'activeCell'], -1),
-        R.assocPath(['cellsState', 'selectedCell'], _id),
-      )(boardState) as IBoardState,
-    );
+    setSelected(true);
+
+    setTimeout(() => {
+      setBoardState(
+        R.pipe(
+          R.assocPath(['columnsState', 'selectedColumn'], -1),
+          R.assocPath(['cellsState', 'activeCell'], -1),
+          R.assocPath(['cellsState', 'selectedCell'], _id),
+        )(boardState) as IBoardState,
+      );
+    });
   }, [_id, boardState, setBoardState]);
 
   const onDoubleClick = useCallback(() => {
@@ -284,7 +300,7 @@ const Cell: React.FC<ICellProps> = ({
       active={active}
       highlighted={highlighted}
       position={position}
-      selected={selected}
+      selected={isSelected}
       isLoading={loading}
       onContextMenu={onContextMenu}
       onClick={handleClick}

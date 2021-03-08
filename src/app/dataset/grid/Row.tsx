@@ -7,12 +7,11 @@ import { Menu, Dropdown } from 'antd';
 import GridContext from 'contexts/GridContext';
 import Styles from 'styles/Styles';
 import usePrevious from 'hooks/usePrevious';
-import { IBoardState, IRow } from '../types';
+import { IBoardState, IColumn, IRow } from '../types';
 import Cell from './Cell';
 import { defaults } from './constants';
 import { makeBoardActions } from '../lib/makeBoardActions';
 import findRowById from '../lib/findRowById';
-import findColumnById from '../lib/findColumnById';
 
 const RowContainer = styled.div`
   display: flex;
@@ -55,6 +54,9 @@ interface IRowProps extends IRow {
     lastRow: boolean;
   };
   rowIndex: number;
+  columnLookup: {
+    [x: string]: IColumn;
+  };
 }
 
 const MenuIcon = styled.i`
@@ -63,7 +65,13 @@ const MenuIcon = styled.i`
   height: 1rem;
 `;
 
-const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
+const Row: React.FC<IRowProps> = ({
+  _id,
+  cells,
+  position,
+  rowIndex,
+  columnLookup,
+}) => {
   const { boardState, setBoardState, boardData, setBoardData } = useContext(
     DatasetContext,
   )!;
@@ -118,7 +126,7 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
       </Dropdown>
       <div className="cells__container">
         {cells.map((cell, index) => {
-          const column = findColumnById(cell?.columnId ?? '', boardData);
+          const column = columnLookup[cell.columnId ?? ''];
           if (!cell) {
             return (
               <Cell
@@ -135,9 +143,9 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
                   firstColumn: index === 0,
                 }}
                 isCopying={false}
-                colWidth={boardData.columns[index]?.colWidth}
-                colFormat={boardData.columns[index]?.format}
-                formatSettings={boardData.columns[index]?.formatSettings}
+                colWidth={column?.colWidth}
+                colFormat={column?.format}
+                formatSettings={column?.formatSettings}
                 {...cell}
               />
             );
@@ -145,7 +153,7 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
           return !column?.hidden ? (
             <Cell
               key={cell._id}
-              colIndex={index}
+              associatedColumn={column}
               rowId={_id}
               highlighted={
                 boardState.cellsState.highlightedCells.includes(cell._id) ||
@@ -160,9 +168,9 @@ const Row: React.FC<IRowProps> = ({ _id, cells, position, rowIndex }) => {
                 firstColumn: index === 0,
               }}
               isCopying={boardState.cellsState.copyingCell === cell._id}
-              colWidth={boardData.columns[index]?.colWidth}
-              colFormat={boardData.columns[index]?.format}
-              formatSettings={boardData.columns[index]?.formatSettings}
+              colWidth={column?.colWidth}
+              colFormat={column?.format}
+              formatSettings={column?.formatSettings}
               {...cell}
             />
           ) : (

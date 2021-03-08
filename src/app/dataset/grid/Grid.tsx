@@ -46,7 +46,8 @@ const ColumnsContainer = styled.div`
     margin-left: -32px;
     margin-top: -64px;
     position: fixed;
-    height: 100%;
+    max-height: 90vh;
+    overflow: hidden;
     background: ${Styles.defaultBgColor};
   }
 `;
@@ -61,6 +62,7 @@ const Grid: React.FC<{
   const { boardData, setBoardData, readOnly } = useContext(DatasetContext)!;
   const { rows, columns } = boardData;
   const [firstVisibleRow, lastVisibleRow] = visibleRows;
+  const columnLookup = R.indexBy(R.prop('_id'), boardData.columns);
 
   return (
     <GridContext.Provider
@@ -121,6 +123,7 @@ const Grid: React.FC<{
                 <Row
                   key={row._id}
                   {...row}
+                  columnLookup={columnLookup}
                   rowIndex={row.index}
                   position={{
                     firstRow: index === 0,
