@@ -116,7 +116,7 @@ const DatasetWrapper: React.FC = () => {
     JSON.parse(localStorage.getItem(localStorageLookup) ?? '[]'),
   );
 
-  const { data, isLoading } = useQuery(user.accessToken, () =>
+  const { data, isLoading, refetch } = useQuery(user.accessToken, () =>
     user.accessToken
       ? skyvueFetch(user.accessToken).get(`/datasets/${datasetId}`)
       : () => undefined,
@@ -260,6 +260,7 @@ const DatasetWrapper: React.FC = () => {
         },
         queriedDatasets,
         setQueriedDatasets,
+        refetch,
       }}
     >
       {filesToDownload.map(file => (

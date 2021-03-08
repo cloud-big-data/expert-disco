@@ -1,5 +1,6 @@
 import { IBoardState, IBoardData, IBoardHead } from 'app/dataset/types';
 import { createContext } from 'react';
+import { RefetchOptions } from 'react-query/types/core/query';
 
 interface IDatasetContext {
   readOnly: boolean;
@@ -25,6 +26,7 @@ interface IDatasetContext {
       'columns' | 'visibilitySettings' | 'layers' | '_id'
     >[],
   ) => void;
+  refetch: (options?: RefetchOptions) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);

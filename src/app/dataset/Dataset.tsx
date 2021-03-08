@@ -8,10 +8,12 @@ import { IconButton } from 'components/ui/Buttons';
 import * as R from 'ramda';
 import useHandleInfiniteScroll from 'hooks/useHandleInfiniteScroll';
 import { v4 as uuidv4 } from 'uuid';
+import Modal from 'components/ui/Modal';
 import Grid from './grid';
 import DatasetToolbar from './toolbar';
 import DatasetAggregates from './dataset_aggregates';
 import { ChangeHistoryItem } from './types';
+import DatasetMetaEditor from './toolbar/DatasetMetaEditor';
 
 const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   display: flex;
@@ -31,8 +33,13 @@ const MetaContainer = styled.div<{ fullScreen: boolean }>`
     display: flex;
     width: 100%;
     align-items: flex-end;
-    h5 {
-      margin-bottom: 0;
+    .title__container {
+      display: flex;
+      align-items: center;
+      h5 {
+        margin-bottom: 0;
+        margin-right: 0.5rem;
+      }
     }
     button {
       margin-left: auto;
@@ -66,6 +73,7 @@ const Dataset: React.FC<{
 }> = ({ readOnly }) => {
   const { datasetHead, socket, changeHistoryRef } = useContext(DatasetContext)!;
 
+  const [metaEditorOpen, setMetaEditorOpen] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const [currentVersion, setCurrentVersion] = useState<string | undefined>(
     changeHistoryRef.current?.[changeHistoryRef.current.length - 1],
@@ -172,9 +180,19 @@ const Dataset: React.FC<{
         </AggregatesContainer>
       )}
 
+      {metaEditorOpen && (
+        <Modal closeModal={() => setMetaEditorOpen(false)}>
+          <DatasetMetaEditor datasetHead={datasetHead} />
+        </Modal>
+      )}
       <MetaContainer fullScreen={fullScreen}>
         <div className="title__row">
-          <h5>{datasetHead.title}</h5>
+          <div className="title__container">
+            <h5>{datasetHead.title}</h5>
+            <IconButton onClick={() => setMetaEditorOpen(true)}>
+              <i className="fad fa-edit" />
+            </IconButton>
+          </div>
           <IconButton onClick={() => setFullScreen(!fullScreen)}>
             {fullScreen ? (
               <i className="fas fa-compress-wide" />
