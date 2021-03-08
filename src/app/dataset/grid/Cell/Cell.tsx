@@ -35,6 +35,8 @@ interface ICellProps extends ICell {
 }
 
 const CELL_BORDER_COLOR = Styles.faintBorderColor;
+const CELL_BORDER_RADIUS = '.2rem';
+
 const CellContainer = React.memo(styled.div<{
   highlighted?: boolean;
   active?: boolean;
@@ -74,7 +76,7 @@ const CellContainer = React.memo(styled.div<{
   ${props =>
     props.position.lastRow && props.position.lastColumn
       ? `
-      border-radius: 0 0 ${Styles.defaultBorderRadius} 0;
+      border-radius: 0 0 ${CELL_BORDER_RADIUS} 0;
     `
       : ''}
 
@@ -87,7 +89,7 @@ const CellContainer = React.memo(styled.div<{
   ${props =>
     props.position.lastRow && props.position.firstColumn
       ? `
-      border-radius: 0 0 0 ${Styles.defaultBorderRadius};
+      border-radius: 0 0 0 ${CELL_BORDER_RADIUS};
     `
       : ''}
 
@@ -95,7 +97,7 @@ const CellContainer = React.memo(styled.div<{
     props.selected
       ? `
     border: 2px solid ${Styles.purple400};
-    border-radius: ${Styles.defaultBorderRadius}; 
+    border-radius: ${CELL_BORDER_RADIUS}; 
     box-shadow: ${Styles.smBoxShadow};
   `
       : ''}
@@ -118,7 +120,7 @@ const CellContainer = React.memo(styled.div<{
     props.isCopying
       ? `
     border: 2px dashed ${Styles.purple400};
-    border-radius: ${Styles.defaultBorderRadius};
+    border-radius: ${CELL_BORDER_RADIUS};
   `
       : ''}
 
