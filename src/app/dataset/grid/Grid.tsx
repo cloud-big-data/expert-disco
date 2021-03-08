@@ -52,6 +52,11 @@ const ColumnsContainer = styled.div`
   }
 `;
 
+const RowsContainer = styled.div`
+  display: grid;
+  grid-template-columns: '32px' auto;
+`;
+
 const Grid: React.FC<{
   gridRef: React.RefObject<HTMLDivElement>;
   visibleRows: [number, number];
@@ -118,28 +123,30 @@ const Grid: React.FC<{
                 ),
               )}
             </ColumnsContainer>
-            {rows.length > 0 ? (
-              rows.map((row, index) => (
-                <Row
-                  key={row._id}
-                  {...row}
-                  columnLookup={columnLookup}
-                  rowIndex={row.index}
-                  position={{
-                    firstRow: index === 0,
-                    lastRow: index === rows.length - 1,
-                  }}
-                />
-              ))
-            ) : (
-              <Text
-                style={{ marginLeft: '32px', marginTop: '1rem' }}
-                len="short"
-                size="lg"
-              >
-                Your query returned no results
-              </Text>
-            )}
+            <RowsContainer>
+              {rows.length > 0 ? (
+                rows.map((row, index) => (
+                  <Row
+                    key={row._id}
+                    {...row}
+                    columnLookup={columnLookup}
+                    rowIndex={row.index}
+                    position={{
+                      firstRow: index === 0,
+                      lastRow: index === rows.length - 1,
+                    }}
+                  />
+                ))
+              ) : (
+                <Text
+                  style={{ marginLeft: '32px', marginTop: '1rem' }}
+                  len="short"
+                  size="lg"
+                >
+                  Your query returned no results
+                </Text>
+              )}
+            </RowsContainer>
           </HotkeysProvider>
         </EventsProvider>
       </GridContainer>
