@@ -70,19 +70,16 @@ const ToolbarContainer = styled.div`
 const Dataset: React.FC<{
   readOnly?: boolean;
 }> = ({ readOnly }) => {
-  const { datasetHead, socket, changeHistoryRef } = useContext(DatasetContext)!;
+  const { datasetHead, socket, changeHistoryRef, visibleRows } = useContext(
+    DatasetContext,
+  )!;
 
+  const [firstVisibleRow, lastVisibleRow] = visibleRows;
   const [metaEditorOpen, setMetaEditorOpen] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const [currentVersion, setCurrentVersion] = useState<string | undefined>(
     changeHistoryRef.current?.[changeHistoryRef.current.length - 1],
   );
-
-  const { boardData } = useContext(DatasetContext)!;
-  const [[firstVisibleRow, lastVisibleRow], setVisibleRows] = useState([
-    boardData.rows[0]?.index ?? 0,
-    R.last(boardData.rows)?.index ?? 100,
-  ]);
 
   const datasetRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -211,8 +208,6 @@ const Dataset: React.FC<{
           undo={undo}
           redo={redo}
           gridRef={gridRef}
-          setVisibleRows={setVisibleRows}
-          visibleRows={[firstVisibleRow, lastVisibleRow]}
           handleChange={handleChange}
         />
       </ParentGridContainer>

@@ -100,6 +100,10 @@ const DatasetWrapper: React.FC = () => {
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
   const [clipboard, setClipboard] = useState<string | undefined>();
   const [socketTimeoutMet, setSocketTimeoutMet] = useState(false);
+  const [visibleRows, setVisibleRows] = useState([
+    boardData?.rows[0]?.index ?? 0,
+    boardData?.rows ? R.last(boardData?.rows)?.index ?? 100 : 100,
+  ] as [number, number]);
 
   useEffect(() => {
     setInterval(() => setSocketTimeoutMet(true), 5000);
@@ -232,6 +236,8 @@ const DatasetWrapper: React.FC = () => {
       queriedDatasets,
       setQueriedDatasets,
       refetch,
+      visibleRows,
+      setVisibleRows,
     }),
     [
       _setBoardData,
@@ -245,6 +251,7 @@ const DatasetWrapper: React.FC = () => {
       refetch,
       socket,
       userType,
+      visibleRows,
     ],
   );
 

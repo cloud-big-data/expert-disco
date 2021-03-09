@@ -7,6 +7,7 @@ import * as R from 'ramda';
 
 import Styles from 'styles/Styles';
 import { VariableSizeList as VirtualizedList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 import { ChangeHistoryItem } from '../types';
 import ColumnHeader from './ColumnHeader';
 import HiddenColumnIndicator from './ColumnHeader/HiddenColumnIndicator';
@@ -56,15 +57,18 @@ const ColumnsContainer = styled.div`
 
 const Grid: React.FC<{
   gridRef: React.RefObject<HTMLDivElement>;
-  visibleRows: [number, number];
-  setVisibleRows: (visibleRows: [number, number]) => void;
   undo: () => void;
   redo: () => void;
   handleChange: (changeHistoryItem: ChangeHistoryItem) => void;
-}> = ({ gridRef, visibleRows, setVisibleRows, undo, redo, handleChange }) => {
-  const { boardData, setBoardData, readOnly, getRowSlice } = useContext(
-    DatasetContext,
-  )!;
+}> = ({ gridRef, undo, redo, handleChange }) => {
+  const {
+    boardData,
+    setBoardData,
+    readOnly,
+    getRowSlice,
+    visibleRows,
+    setVisibleRows,
+  } = useContext(DatasetContext)!;
   const listRef = useRef<VirtualizedList>(null);
   const { rows, columns } = boardData;
   const [firstVisibleRow, lastVisibleRow] = visibleRows;
@@ -99,6 +103,33 @@ const Grid: React.FC<{
       </div>
     );
   });
+
+  const onScroll = () => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const firstVisibleIndex = R.pipe(
+      R.find(
+        (node: any) =>
+          node.getBoundingClientRect().top > grid.getBoundingClientRect().top,
+      ),
+      R.pathOr('0', ['dataset', 'rowIndex']),
+      parseInt,
+    )([...grid.querySelectorAll('div.row__index')]);
+
+    const newVisibleRows = R.pipe(
+      (item: number) => (item - 50 < 0 ? 0 : item - 50),
+      item => [item, item + 100] as [number, number],
+    )(firstVisibleIndex);
+
+    clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(() => {
+      if (firstVisibleRow !== newVisibleRows[0]) {
+        getRowSlice(...newVisibleRows);
+        setVisibleRows(newVisibleRows);
+      }
+    }, 200);
+  };
 
   return (
     <GridContext.Provider
@@ -161,33 +192,7 @@ const Grid: React.FC<{
               itemCount={boardData.rows?.length ?? 0}
               itemSize={() => defaults.ROW_HEIGHT * 16}
               width={gridRef.current?.scrollWidth ?? 1000}
-              onScroll={() => {
-                const grid = gridRef.current;
-                if (!grid) return;
-
-                const firstVisibleIndex = R.pipe(
-                  R.find(
-                    (node: any) =>
-                      node.getBoundingClientRect().top >
-                      grid.getBoundingClientRect().top,
-                  ),
-                  R.pathOr('0', ['dataset', 'rowIndex']),
-                  parseInt,
-                )([...grid.querySelectorAll('div.row__index')]);
-
-                const newVisibleRows = R.pipe(
-                  (item: number) => (item - 50 < 0 ? 0 : item - 50),
-                  item => [item, item + 100] as [number, number],
-                )(firstVisibleIndex);
-
-                clearTimeout(scrollTimeout.current);
-                scrollTimeout.current = setTimeout(() => {
-                  if (firstVisibleRow !== newVisibleRows[0]) {
-                    getRowSlice(...newVisibleRows);
-                    setVisibleRows(newVisibleRows);
-                  }
-                }, 200);
-              }}
+              onScroll={onScroll}
             >
               {makeRow}
             </VirtualizedList>

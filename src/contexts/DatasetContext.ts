@@ -16,6 +16,8 @@ interface IDatasetContext {
   setLoading: (isLoading: boolean) => void;
   clipboard?: string;
   setClipboard: (val?: string) => void;
+  visibleRows: [number, number];
+  setVisibleRows: (rows: [number, number]) => void;
   queriedDatasets: Pick<
     IBoardData,
     'columns' | 'visibilitySettings' | 'layers' | '_id'
