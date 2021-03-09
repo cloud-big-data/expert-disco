@@ -102,8 +102,21 @@ const DatasetWrapper: React.FC = () => {
   const [socketTimeoutMet, setSocketTimeoutMet] = useState(false);
   const [visibleRows, setVisibleRows] = useState([
     boardData?.rows[0]?.index ?? 0,
-    boardData?.rows ? R.last(boardData?.rows)?.index ?? 100 : 100,
+    boardData?.rows ? R.last(boardData?.rows)?.index ?? 0 : 0,
   ] as [number, number]);
+
+  const rowsInitialized = useRef(false);
+
+  useEffect(() => {
+    if (rowsInitialized.current) return;
+    if (boardData?.rows && R.last(boardData?.rows)?.index !== visibleRows[1]) {
+      rowsInitialized.current = true;
+      setVisibleRows([
+        boardData?.rows[0]?.index ?? 0,
+        boardData?.rows ? R.last(boardData?.rows)?.index ?? 0 : 0,
+      ] as [number, number]);
+    }
+  }, [boardData, visibleRows]);
 
   useEffect(() => {
     setInterval(() => setSocketTimeoutMet(true), 5000);

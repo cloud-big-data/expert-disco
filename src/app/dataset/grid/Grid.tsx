@@ -7,7 +7,7 @@ import * as R from 'ramda';
 
 import Styles from 'styles/Styles';
 import { VariableSizeList as VirtualizedList } from 'react-window';
-import InfiniteLoader from 'react-window-infinite-loader';
+import useWindowSize from 'hooks/useWindowSize';
 import { ChangeHistoryItem } from '../types';
 import ColumnHeader from './ColumnHeader';
 import HiddenColumnIndicator from './ColumnHeader/HiddenColumnIndicator';
@@ -76,6 +76,8 @@ const Grid: React.FC<{
 
   const scrollTimeout = useRef(-1);
 
+  const { height } = useWindowSize();
+
   const makeRow = React.memo(({ index, style }: any) => {
     const row = rows[index];
     return (
@@ -117,16 +119,12 @@ const Grid: React.FC<{
       parseInt,
     )([...grid.querySelectorAll('div.row__index')]);
 
-    const newVisibleRows = R.pipe(
-      (item: number) => (item - 50 < 0 ? 0 : item - 50),
-      item => [item, item + 100] as [number, number],
-    )(firstVisibleIndex);
-
     clearTimeout(scrollTimeout.current);
     scrollTimeout.current = setTimeout(() => {
-      if (firstVisibleRow !== newVisibleRows[0]) {
-        getRowSlice(...newVisibleRows);
-        setVisibleRows(newVisibleRows);
+      const ROW_SLICE_INTERVAL = 200;
+      if (lastVisibleRow !== firstVisibleIndex + ROW_SLICE_INTERVAL) {
+        getRowSlice(firstVisibleIndex, firstVisibleIndex + ROW_SLICE_INTERVAL);
+        setVisibleRows([firstVisibleIndex, firstVisibleIndex + ROW_SLICE_INTERVAL]);
       }
     }, 200);
   };
@@ -188,7 +186,7 @@ const Grid: React.FC<{
 
             <VirtualizedList
               ref={listRef}
-              height={gridRef.current?.scrollHeight ?? 900}
+              height={height ? height * 0.7 : 1000}
               itemCount={boardData.rows?.length ?? 0}
               itemSize={() => defaults.ROW_HEIGHT * 16}
               width={gridRef.current?.scrollWidth ?? 1000}

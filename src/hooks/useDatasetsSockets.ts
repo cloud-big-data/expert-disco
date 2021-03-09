@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { BoardError, IBoardData, IBoardHead, IBoardState } from 'app/dataset/types';
+import {
+  BoardError,
+  IBoardData,
+  IBoardHead,
+  IBoardState,
+  IRow,
+} from 'app/dataset/types';
 import { v4 as uuidv4 } from 'uuid';
+
+import * as R from 'ramda';
 
 const getDatasetsWSUrl = (skyvueFileSize: number) => {
   const prefix = skyvueFileSize ? 'xs' : 'xs';
@@ -135,22 +143,6 @@ const useDatasetsSockets = (
       }, 5000);
     });
 
-    socket.on('clearErrors', () => {
-      if (!boardData) return;
-      setBoardData?.({
-        ...boardData,
-        errors: [],
-      });
-    });
-
-    socket.on('boardError', (err: BoardError) => {
-      if (!boardData) return;
-      setBoardData?.({
-        ...boardData,
-        errors: [...(boardData.errors ?? []), err],
-      });
-    });
-
     socket.on('duplicateReady', ({ _id }: { _id: string }) => {
       window.open(`${window.location.host}/dataset/${_id}`);
     });
@@ -179,6 +171,46 @@ const useDatasetsSockets = (
     setQueriedDatasets,
     queriedDatasets,
   ]);
+
+  useEffect(() => {
+    if (!socketObj || !boardData) return;
+    const socket = socketObj;
+    socket.on('appendRows', (rows: IRow[]) => {
+      if (!rows || !boardData) return;
+      setBoardData({
+        ...boardData,
+        rows: R.unionWith<IRow>(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          R.eqBy(R.prop('index')),
+          boardData?.rows ?? [],
+          rows,
+        ),
+      });
+    });
+
+    socket.on('clearErrors', () => {
+      if (!boardData) return;
+      setBoardData?.({
+        ...boardData,
+        errors: [],
+      });
+    });
+
+    socket.on('boardError', (err: BoardError) => {
+      if (!boardData) return;
+      setBoardData?.({
+        ...boardData,
+        errors: [...(boardData.errors ?? []), err],
+      });
+    });
+
+    return () => {
+      socket.removeListener('appendRows');
+      socket.removeListener('clearErrors');
+      socket.removeListener('boardError');
+    };
+  }, [boardData, setBoardData, socketObj]);
 
   useEffect(() => {
     window.addEventListener('unload', () => socketObj?.emit('unload'));

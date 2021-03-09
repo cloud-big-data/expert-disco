@@ -42,7 +42,6 @@ const useHandleInfiniteScroll = (
       });
       clearTimeout(scrollTimeout.current);
       scrollTimeout.current = setTimeout(() => {
-        console.log('getting a row slice');
         getRowSlice(...newVisibleRows);
       }, 100);
     };
