@@ -124,7 +124,6 @@ const useDatasetsSockets = (
 
     socket.on('slice', (res: IBoardData) => {
       setLoading(false);
-      console.log('setting loading...');
       setBoardData(res);
     });
 

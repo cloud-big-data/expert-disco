@@ -6,7 +6,6 @@ import humanizeTimeAgo from 'utils/humanizeTimeAgo';
 import Styles from 'styles/Styles';
 import { IconButton } from 'components/ui/Buttons';
 import * as R from 'ramda';
-import useHandleInfiniteScroll from 'hooks/useHandleInfiniteScroll';
 import { v4 as uuidv4 } from 'uuid';
 import Modal from 'components/ui/Modal';
 import Grid from './grid';
@@ -79,6 +78,12 @@ const Dataset: React.FC<{
     changeHistoryRef.current?.[changeHistoryRef.current.length - 1],
   );
 
+  const { boardData } = useContext(DatasetContext)!;
+  const [[firstVisibleRow, lastVisibleRow], setVisibleRows] = useState([
+    boardData.rows[0]?.index ?? 0,
+    R.last(boardData.rows)?.index ?? 100,
+  ]);
+
   const datasetRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -87,16 +92,6 @@ const Dataset: React.FC<{
       setCurrentVersion(changeHistoryRef.current[0]);
     }
   }, [currentVersion, changeHistoryRef]);
-
-  const { boardData, getRowSlice } = useContext(DatasetContext)!;
-  const [firstVisibleRow, lastVisibleRow] = useHandleInfiniteScroll(
-    gridRef,
-    {
-      first: boardData.rows[0]?.index ?? 0,
-      last: R.last(boardData.rows)?.index ?? 100,
-    },
-    getRowSlice,
-  );
 
   const undo = useCallback(() => {
     const currentIndex = changeHistoryRef.current?.findIndex(
@@ -216,6 +211,7 @@ const Dataset: React.FC<{
           undo={undo}
           redo={redo}
           gridRef={gridRef}
+          setVisibleRows={setVisibleRows}
           visibleRows={[firstVisibleRow, lastVisibleRow]}
           handleChange={handleChange}
         />

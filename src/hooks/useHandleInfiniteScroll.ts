@@ -34,14 +34,15 @@ const useHandleInfiniteScroll = (
 
       const rowNodeList = [...grid.querySelectorAll('div.row__index')];
       const newVisibleRows = getVisibleIndeces(rowNodeList);
+
       setIsScrolling(true);
       setVisibleRows(newVisibleRows);
       setTimeout(() => {
         setIsScrolling(false);
       });
-
       clearTimeout(scrollTimeout.current);
       scrollTimeout.current = setTimeout(() => {
+        console.log('getting a row slice');
         getRowSlice(...newVisibleRows);
       }, 100);
     };

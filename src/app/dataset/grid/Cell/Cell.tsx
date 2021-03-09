@@ -194,7 +194,7 @@ const Cell: React.FC<ICellProps> = ({
   const initialValue = useRef(value);
 
   const prevActive = usePrevious(active);
-  const associatedSmartColumn = associatedColumn.isSmartColumn
+  const associatedSmartColumn = associatedColumn?.isSmartColumn
     ? boardData.layers.smartColumns.find(col => col._id === columnId)
     : undefined;
 

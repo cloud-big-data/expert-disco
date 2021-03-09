@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import React from 'react';
 import './App.css';
 import 'antd/dist/antd.css';
-import { Login, SignUp } from 'app/userActions';
+import { Login } from 'app/userActions';
 import { AuthenticatedRoute } from 'app/routing';
 import Logout from 'app/userActions/Logout';
 import PublicRoute from 'app/routing/PublicRoute';
@@ -22,11 +22,11 @@ if (process.env.NODE_ENV === 'production') {
 const Skyvue = () => (
   <Router>
     <Switch>
-      <Route path="/signup">
+      {/* <Route path="/signup">
         <PublicRoute>
           <SignUp />
         </PublicRoute>
-      </Route>
+      </Route> */}
       <Route path="/login">
         <PublicRoute>
           <Login />

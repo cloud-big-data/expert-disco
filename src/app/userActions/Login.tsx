@@ -166,13 +166,13 @@ const Login: React.FC = () => {
           <ButtonPrimary loading={loading} id="complete_form">
             Login
           </ButtonPrimary>
-
+          {/* 
           <Helper>
             Not a user yet?{' '}
             <strong>
               <Link to="/signup">Create Account</Link>
             </strong>
-          </Helper>
+          </Helper> */}
           <Helper>
             <strong>
               <Link to="/forgot_password">I forgot my password</Link>

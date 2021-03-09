@@ -192,6 +192,62 @@ const DatasetWrapper: React.FC = () => {
     [socket],
   );
 
+  const userType =
+    user?.userId && boardData
+      ? getUserType(user.userId, boardData.visibilitySettings)
+      : DatasetUserTypes.viewer;
+
+  const readOnly =
+    ![DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType) &&
+    (!boardData ||
+      !R.whereEq(alwaysEditableFields(boardData.layers))(
+        alwaysEditableFields(initial_layers),
+      ));
+
+  const datasetContextValue = useMemo(
+    () => ({
+      readOnly,
+      socket,
+      datasetHead,
+      boardData: boardData!,
+      boardState,
+      changeHistoryRef,
+      getRowSlice: (first: number, last: number) => {
+        socket?.emit('getSlice', { first, last });
+      },
+      loading,
+      setLoading,
+      setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
+        userType,
+      )
+        ? _setBoardData
+        : null,
+      setBoardState,
+      clipboard,
+      setClipboard: async (val?: string) => {
+        if (!val) return;
+        await navigator.clipboard.writeText(val);
+        setClipboard(val);
+      },
+      queriedDatasets,
+      setQueriedDatasets,
+      refetch,
+    }),
+    [
+      _setBoardData,
+      boardData,
+      boardState,
+      clipboard,
+      datasetHead,
+      loading,
+      queriedDatasets,
+      readOnly,
+      refetch,
+      socket,
+      userType,
+    ],
+  );
+
   if (!user.userId || !user.email) {
     return loader;
   }
@@ -224,45 +280,8 @@ const DatasetWrapper: React.FC = () => {
     );
   }
 
-  const userType = getUserType(user.userId, boardData.visibilitySettings);
-  const readOnly =
-    ![DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType) &&
-    (!boardData ||
-      !R.whereEq(alwaysEditableFields(boardData.layers))(
-        alwaysEditableFields(initial_layers),
-      ));
-
   return (
-    <DatasetContext.Provider
-      value={{
-        readOnly,
-        socket,
-        datasetHead,
-        boardData,
-        boardState,
-        changeHistoryRef,
-        getRowSlice: (first: number, last: number) => {
-          socket?.emit('getSlice', { first, last });
-        },
-        loading,
-        setLoading,
-        setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
-          userType,
-        )
-          ? _setBoardData
-          : null,
-        setBoardState,
-        clipboard,
-        setClipboard: async val => {
-          if (!val) return;
-          await navigator.clipboard.writeText(val);
-          setClipboard(val);
-        },
-        queriedDatasets,
-        setQueriedDatasets,
-        refetch,
-      }}
-    >
+    <DatasetContext.Provider value={datasetContextValue}>
       {filesToDownload.map(file => (
         <iframe key={file} title="file" src={file} style={{ display: 'none' }} />
       ))}
