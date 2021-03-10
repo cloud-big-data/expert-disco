@@ -230,7 +230,7 @@ const DatasetWrapper: React.FC = () => {
       boardState,
       changeHistoryRef,
       getRowSlice: (first: number, last: number) => {
-        socket?.emit('getSlice', { first, last });
+        socket?.emit('getRowSlice', { first, last });
       },
       loading,
       setLoading,

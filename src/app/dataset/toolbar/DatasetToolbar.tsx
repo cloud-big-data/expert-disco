@@ -241,7 +241,7 @@ const DatasetToolbar: React.FC<{
             onConfirm={
               selectedRow
                 ? () => {
-                    socket?.emit('getSlice', { first: selectedRow });
+                    socket?.emit('getBoardDataFromIndex', { first: selectedRow });
                   }
                 : () => undefined
             }

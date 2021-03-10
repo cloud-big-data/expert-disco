@@ -132,6 +132,7 @@ const useDatasetsSockets = (
 
     socket.on('setBoardData', (res: IBoardData) => {
       setLoading(false);
+      console.log(res);
       setBoardData(res);
     });
 
