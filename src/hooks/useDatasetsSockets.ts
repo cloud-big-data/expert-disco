@@ -130,7 +130,7 @@ const useDatasetsSockets = (
       },
     );
 
-    socket.on('slice', (res: IBoardData) => {
+    socket.on('setBoardData', (res: IBoardData) => {
       setLoading(false);
       setBoardData(res);
     });
