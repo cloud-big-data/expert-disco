@@ -130,58 +130,60 @@ const Row: React.FC<IRowProps> = ({
         </Dropdown>
         <RowContainer>
           <div className="cells__container">
-            {cells.map((cell, index) => {
-              const column = columnLookup[cell.columnId ?? ''];
-              if (!cell) {
-                return (
+            {cells
+              .filter(cell => !!columnLookup[cell.columnId ?? ''])
+              .map((cell, index) => {
+                const column = columnLookup[cell.columnId ?? ''];
+                if (!cell) {
+                  return (
+                    <Cell
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
+                      colIndex={index}
+                      rowId={_id}
+                      highlighted={false}
+                      selected={false}
+                      active={false}
+                      position={{
+                        lastRow: position.lastRow,
+                        lastColumn: index === cells.length - 1,
+                        firstColumn: index === 0,
+                      }}
+                      isCopying={false}
+                      colWidth={column?.colWidth}
+                      colFormat={column?.format}
+                      formatSettings={column?.formatSettings}
+                      {...cell}
+                    />
+                  );
+                }
+                return !column?.hidden ? (
                   <Cell
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={index}
-                    colIndex={index}
+                    key={cell._id}
+                    associatedColumn={column}
                     rowId={_id}
-                    highlighted={false}
-                    selected={false}
-                    active={false}
+                    highlighted={
+                      boardState.cellsState.highlightedCells.includes(cell._id) ||
+                      boardState.rowsState.selectedRow === _id ||
+                      boardState.columnsState.selectedColumn === index
+                    }
+                    selected={boardState.cellsState.selectedCell === cell._id}
+                    active={boardState.cellsState.activeCell === cell._id}
                     position={{
                       lastRow: position.lastRow,
                       lastColumn: index === cells.length - 1,
                       firstColumn: index === 0,
                     }}
-                    isCopying={false}
+                    isCopying={boardState.cellsState.copyingCell === cell._id}
                     colWidth={column?.colWidth}
                     colFormat={column?.format}
                     formatSettings={column?.formatSettings}
                     {...cell}
                   />
+                ) : (
+                  <div key={cell._id} style={{ border: '16px solid transparent' }} />
                 );
-              }
-              return !column?.hidden ? (
-                <Cell
-                  key={cell._id}
-                  associatedColumn={column}
-                  rowId={_id}
-                  highlighted={
-                    boardState.cellsState.highlightedCells.includes(cell._id) ||
-                    boardState.rowsState.selectedRow === _id ||
-                    boardState.columnsState.selectedColumn === index
-                  }
-                  selected={boardState.cellsState.selectedCell === cell._id}
-                  active={boardState.cellsState.activeCell === cell._id}
-                  position={{
-                    lastRow: position.lastRow,
-                    lastColumn: index === cells.length - 1,
-                    firstColumn: index === 0,
-                  }}
-                  isCopying={boardState.cellsState.copyingCell === cell._id}
-                  colWidth={column?.colWidth}
-                  colFormat={column?.format}
-                  formatSettings={column?.formatSettings}
-                  {...cell}
-                />
-              ) : (
-                <div key={cell._id} style={{ border: '16px solid transparent' }} />
-              );
-            })}
+              })}
           </div>
         </RowContainer>
       </div>
