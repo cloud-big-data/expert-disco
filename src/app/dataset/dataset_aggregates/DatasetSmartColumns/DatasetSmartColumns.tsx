@@ -42,7 +42,6 @@ const DatasetSmartColumns: React.FC = () => {
     string | undefined
   >();
   const [smartColumns, setSmartColumns] = useState(boardData.layers.smartColumns);
-
   useEffect(() => {
     if (!R.equals(boardData.layers.smartColumns, smartColumns)) {
       setSmartColumns(boardData.layers.smartColumns);
