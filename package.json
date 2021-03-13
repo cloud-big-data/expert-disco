@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
+    "@craco/craco": "^6.1.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -50,9 +51,9 @@
     "uuid": "^8.3.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -75,6 +76,7 @@
     "@babel/eslint-plugin": "^7.12.1",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
+    "@tailwindcss/postcss7-compat": "^2.0.3",
     "@types/classnames": "^2.2.11",
     "@types/javascript-time-ago": "^2.0.1",
     "@types/jwt-decode": "^2.2.1",
@@ -90,6 +92,7 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
+    "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.2.0",
     "eslint-config-airbnb": "^18.0.0",
@@ -100,7 +103,9 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "postcss": "^7.0.35",
     "prettier": "^2.0.0",
-    "styled-components.macro": "^1.0.0"
+    "styled-components.macro": "^1.0.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.3"
   }
 }

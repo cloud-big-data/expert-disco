@@ -194,11 +194,6 @@ a:not(.no-hover):hover {
   }
 }
 
-
-/* #root .ant-checkbox::after,
-#root .ant-checkbox-inner {
-  border-color: #eaf5f7;
-} */
 #root .ant-checkbox-checked .ant-checkbox-inner {
   background-color: var(--blue);
   border-color: #eaf5f7;
