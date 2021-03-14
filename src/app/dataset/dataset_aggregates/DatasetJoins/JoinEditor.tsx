@@ -11,10 +11,11 @@ import skyvueFetch from 'services/skyvueFetch';
 import * as R from 'ramda';
 
 import styled from 'styled-components/macro';
-import { Label } from 'components/ui/Typography';
+import { DangerText, Label } from 'components/ui/Typography';
 import Separator from 'components/Separator';
 import { Checkbox } from 'antd';
 import updateLayers from 'app/dataset/lib/updateLayers';
+import keyLength from 'utils/keyLength';
 
 const EditorContainer = styled.div`
   .conditions__container {
@@ -36,6 +37,7 @@ const JoinEditor: FC<{
   setJoinState: (state: Partial<IJoinLayer>) => void;
 }> = ({ unsavedChanges, setUnsavedChanges, joinState, setJoinState }) => {
   const [newJoinState, setNewJoinState] = useState(joinState);
+
   const { condition } = newJoinState;
   const { datasetHead, boardData, socket, queriedDatasets, setLoading } = useContext(
     DatasetContext,
@@ -51,10 +53,10 @@ const JoinEditor: FC<{
   );
 
   const joiningDataset = queriedDatasets.find(
-    dataset =>
-      dataset._id === condition?.datasetId &&
-      dataset.layers?.joins?.condition?.datasetId !== datasetHead?._id,
+    dataset => dataset._id === condition?.datasetId,
   );
+
+  const isNestedJoin = keyLength(joiningDataset?.layers.joins) > 0;
 
   const joinableColumns = joiningDataset?.columns.filter(
     col => col.isUnique === true,
@@ -91,6 +93,14 @@ const JoinEditor: FC<{
 
   return (
     <EditorContainer>
+      {isNestedJoin && (
+        <DangerText size="lg" len="short">
+          In order to join a dataset, the joining dataset must not have any
+          preexisting joins. If you would like to join a dataset that is already
+          joined on another dataset, duplicate that dataset to create a saved,
+          compiled version, then join that new version.
+        </DangerText>
+      )}
       <Label>Select a dataset to join</Label>
       <Select
         value={condition?.datasetId}
@@ -123,14 +133,14 @@ const JoinEditor: FC<{
               ]
         }
       />
-      {selectedDataset && (
+      {selectedDataset && !isNestedJoin && (
         <>
           <Separator />
           <div className="conditions__container">
             <div>
               <Label>Join where this column from {datasetHead.title}</Label>
               <Select
-                value={condition?.on[0]?.mainColumnId}
+                value={condition?.on?.[0]?.mainColumnId}
                 onChange={e => updateJoinOn(e, 'mainColumnId')}
                 options={
                   boardData.columns.map(col => ({
@@ -146,7 +156,7 @@ const JoinEditor: FC<{
                 {selectedDataset?.title ?? 'the joined dataset'}
               </Label>
               <Select
-                value={condition?.on[0]?.joinedColumnId}
+                value={condition?.on?.[0]?.joinedColumnId}
                 onChange={e => updateJoinOn(e, 'joinedColumnId')}
                 options={
                   joinableColumns?.map(col => ({
@@ -159,7 +169,7 @@ const JoinEditor: FC<{
           </div>
         </>
       )}
-      {condition?.on && condition?.on.length > 0 && (
+      {!isNestedJoin && condition?.on && condition?.on.length > 0 && (
         <>
           <Separator />
           <Label>
@@ -215,6 +225,7 @@ const JoinEditor: FC<{
             );
           }}
           disabled={
+            isNestedJoin ||
             !unsavedChanges ||
             !condition ||
             (condition.on && condition.on.length === 0)

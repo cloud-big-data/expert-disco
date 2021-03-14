@@ -14,7 +14,7 @@ const TextContainer = styled.p<{
   len: string;
   danger?: boolean;
 }>`
-  ${props => (props.danger ? `color: ${Styles.red400};` : '')}
+  ${props => (props.danger ? `color: ${Styles.red400} !important;` : '')}
   ${props =>
     props.size === 'sm' && props.len === 'short'
       ? `
