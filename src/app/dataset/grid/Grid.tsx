@@ -26,7 +26,6 @@ const GridContainer = styled.div`
   padding: 0 0.25rem 0 0;
   overflow-x: auto;
   overflow-y: hidden;
-  overscroll-behavior: contain;
 `;
 const ColumnsContainer = styled.div`
   width: 100%;
