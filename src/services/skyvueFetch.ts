@@ -1,6 +1,7 @@
 const makeBaseUrl = () => {
   if (process.env.REACT_APP_NETLIFY_CONTEXT) {
     const lookup: { [key: string]: string | undefined } = {
+      development: process.env.REACT_APP_SKYVUE_API_URL_DEVELOPMENT,
       preview: process.env.REACT_APP_SKYVUE_API_URL_PREVIEW,
       production: process.env.REACT_APP_SKYVUE_API_URL_PRODUCTION,
     };
