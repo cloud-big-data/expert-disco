@@ -20,7 +20,7 @@ const DatasetContainer = styled.div<{ fullScreen: boolean }>`
   flex-direction: column;
   padding: 1rem;
   background: ${Styles.defaultBgColor};
-  height: ${props => (props.fullScreen ? '90vh' : 'unset')};
+  height: ${props => (props.fullScreen ? '90vh' : '100vh')};
 `;
 
 const MetaContainer = styled.div<{ fullScreen: boolean }>`

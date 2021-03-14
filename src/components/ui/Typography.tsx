@@ -4,6 +4,7 @@ import Styles from 'styles/Styles';
 
 interface IText {
   id?: string;
+  className?: string;
   size: 'sm' | 'lg';
   len: 'long' | 'short';
   style?: React.CSSProperties;
@@ -51,7 +52,13 @@ const TextContainer = styled.p<{
 `;
 
 const Text: React.FC<IText> = props => (
-  <TextContainer style={props.style} id={props.id} size={props.size} len={props.len}>
+  <TextContainer
+    className={props.className}
+    style={props.style}
+    id={props.id}
+    size={props.size}
+    len={props.len}
+  >
     {props.children}
   </TextContainer>
 );

@@ -29,8 +29,10 @@ export type FilterTypes =
   | 'sameMonth'
   | 'sameYear';
 
+export type JoinTypes = 'full' | 'left' | 'right' | 'inner';
+
 export interface IJoinLayer {
-  joinType: 'full' | 'left' | 'right' | 'inner';
+  joinType: JoinTypes;
   hidden?: boolean;
   condition: {
     format?: Formats;

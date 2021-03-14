@@ -105,6 +105,7 @@ const DatasetJoins: FC = () => {
             onClick={() =>
               setJoinState({
                 ...joinState,
+                joinType: 'left',
                 condition: {
                   datasetId: '',
                   select: [],

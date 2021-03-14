@@ -15,7 +15,7 @@ const returnUpdatedCells = <IterableType extends { _id: string; value?: string }
   cellUpdates,
 }: ICellUpdates<IterableType>): IterableType[] => {
   const existingUpdate = (cell: IterableType) =>
-    cellUpdates.find(update => update.cellId === cell._id);
+    cellUpdates.find(update => update.cellId === cell?._id);
 
   return iterable.map((cell: IterableType) =>
     existingUpdate(cell)

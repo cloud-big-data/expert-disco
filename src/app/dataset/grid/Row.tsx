@@ -131,9 +131,9 @@ const Row: React.FC<IRowProps> = ({
         <RowContainer>
           <div className="cells__container">
             {cells
-              .filter(cell => !!columnLookup[cell.columnId ?? ''])
+              .filter(cell => !cell || !!columnLookup[cell.columnId ?? ''])
               .map((cell, index) => {
-                const column = columnLookup[cell.columnId ?? ''];
+                const column = columnLookup[cell?.columnId ?? ''];
                 if (!cell) {
                   return (
                     <Cell
@@ -159,29 +159,32 @@ const Row: React.FC<IRowProps> = ({
                 }
                 return !column?.hidden ? (
                   <Cell
-                    key={cell._id}
+                    key={cell?._id}
                     associatedColumn={column}
                     rowId={_id}
                     highlighted={
-                      boardState.cellsState.highlightedCells.includes(cell._id) ||
+                      boardState.cellsState.highlightedCells.includes(cell?._id) ||
                       boardState.rowsState.selectedRow === _id ||
                       boardState.columnsState.selectedColumn === index
                     }
-                    selected={boardState.cellsState.selectedCell === cell._id}
-                    active={boardState.cellsState.activeCell === cell._id}
+                    selected={boardState.cellsState.selectedCell === cell?._id}
+                    active={boardState.cellsState.activeCell === cell?._id}
                     position={{
                       lastRow: position.lastRow,
                       lastColumn: index === cells.length - 1,
                       firstColumn: index === 0,
                     }}
-                    isCopying={boardState.cellsState.copyingCell === cell._id}
+                    isCopying={boardState.cellsState.copyingCell === cell?._id}
                     colWidth={column?.colWidth}
                     colFormat={column?.format}
                     formatSettings={column?.formatSettings}
                     {...cell}
                   />
                 ) : (
-                  <div key={cell._id} style={{ border: '16px solid transparent' }} />
+                  <div
+                    key={cell?._id}
+                    style={{ border: '16px solid transparent' }}
+                  />
                 );
               })}
           </div>

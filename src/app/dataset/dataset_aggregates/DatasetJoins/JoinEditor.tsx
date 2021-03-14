@@ -1,4 +1,4 @@
-import { IJoinLayer, IServerDataset } from 'app/dataset/types';
+import { IJoinLayer, IServerDataset, JoinTypes } from 'app/dataset/types';
 import ConfirmationContainer from 'components/ConfirmationButtons';
 import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
 import Select from 'components/ui/Select';
@@ -11,11 +11,13 @@ import skyvueFetch from 'services/skyvueFetch';
 import * as R from 'ramda';
 
 import styled from 'styled-components/macro';
-import { DangerText, Label } from 'components/ui/Typography';
+import { DangerText, Label, Text } from 'components/ui/Typography';
 import Separator from 'components/Separator';
-import { Checkbox } from 'antd';
+import { Checkbox, Tabs } from 'antd';
 import updateLayers from 'app/dataset/lib/updateLayers';
 import keyLength from 'utils/keyLength';
+
+const { TabPane } = Tabs;
 
 const EditorContainer = styled.div`
   .conditions__container {
@@ -29,6 +31,34 @@ const EditorContainer = styled.div`
     grid-template-areas: 'a a';
   }
 `;
+
+const ERROR_TEXT = `In order to join a dataset, the joining dataset must not have any
+preexisting joins. If you would like to join a dataset that is already
+joined on another dataset, duplicate that dataset to create a saved,
+compiled version, then join that new version.`;
+
+const JOIN_VIEW_COPY = {
+  errors: {
+    nestedJoin: ERROR_TEXT,
+  },
+  joinTypes: {
+    left: (
+      <Text className="max-w-2xl" size="sm" len="short">
+        Joins to a new dataset, and then enhances your records by{' '}
+        <span className="underline">matching and adding new fields</span> to your
+        dataset. Use this when you want to add more information to your existing
+        list. (i.e. making your dataset WIDER).
+      </Text>
+    ),
+    inner: (
+      <Text className="max-w-2xl" size="sm" len="short">
+        Joins to a new dataset, and then filters & returns ONLY records that appear
+        in both datasets. Think of this as filtering your dataset based on another
+        list.
+      </Text>
+    ),
+  },
+};
 
 const JoinEditor: FC<{
   unsavedChanges: boolean;
@@ -59,7 +89,7 @@ const JoinEditor: FC<{
   const isNestedJoin = keyLength(joiningDataset?.layers.joins) > 0;
 
   const joinableColumns = joiningDataset?.columns.filter(
-    col => col.isUnique === true,
+    col => !col.isSmartColumn && (col.isUnique === true || col._id),
   );
 
   const updateJoinOn = (colId: string, key: string) => {
@@ -91,16 +121,45 @@ const JoinEditor: FC<{
     }
   }, [condition, joiningDataset, socket]);
 
+  const makeJoinOptions = () =>
+    isLoading
+      ? []
+      : [
+          { name: "Don't join this dataset", value: 'none' },
+          ...(
+            availableDatasets.data?.filter(
+              dataset => dataset._id !== datasetHead._id,
+            ) ?? []
+          ).map(dataset => ({
+            name: dataset.title,
+            value: dataset._id,
+          })),
+        ];
+
   return (
     <EditorContainer>
       {isNestedJoin && (
         <DangerText size="lg" len="short">
-          In order to join a dataset, the joining dataset must not have any
-          preexisting joins. If you would like to join a dataset that is already
-          joined on another dataset, duplicate that dataset to create a saved,
-          compiled version, then join that new version.
+          {ERROR_TEXT}
         </DangerText>
       )}
+      <Tabs
+        defaultActiveKey={joinState.joinType ?? 'left'}
+        onChange={e => {
+          setNewJoinState({ ...newJoinState, joinType: e as JoinTypes });
+          setUnsavedChanges(true);
+        }}
+      >
+        <TabPane tab="Enhance records (Left join)" key="left">
+          {JOIN_VIEW_COPY.joinTypes.left}
+        </TabPane>
+        <TabPane tab="Keep only matches (inner join)" key="inner">
+          {JOIN_VIEW_COPY.joinTypes.inner}
+        </TabPane>
+      </Tabs>
+
+      <Separator />
+
       <Label>Select a dataset to join</Label>
       <Select
         value={condition?.datasetId}
@@ -117,21 +176,7 @@ const JoinEditor: FC<{
           setNewJoinState(R.assocPath(['condition', 'datasetId'], e, newJoinState));
           setUnsavedChanges(true);
         }}
-        options={
-          isLoading
-            ? []
-            : [
-                { name: "Don't join this dataset", value: 'none' },
-                ...(
-                  availableDatasets.data?.filter(
-                    dataset => dataset._id !== datasetHead._id,
-                  ) ?? []
-                ).map(dataset => ({
-                  name: dataset.title,
-                  value: dataset._id,
-                })),
-              ]
-        }
+        options={makeJoinOptions()}
       />
       {selectedDataset && !isNestedJoin && (
         <>
@@ -208,7 +253,6 @@ const JoinEditor: FC<{
       <ConfirmationContainer>
         <ButtonTertiary
           onClick={() => {
-            console.log(joinState, newJoinState);
             setNewJoinState(joinState);
           }}
         >

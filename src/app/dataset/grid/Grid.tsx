@@ -37,20 +37,6 @@ const ColumnsContainer = styled.div`
   position: sticky;
   top: 0;
   margin-left: 32px;
-  .columns__padding {
-    content: '';
-    display: flex;
-    width: 32px;
-    max-width: 32px;
-    flex: 1 0 auto;
-    z-index: 3;
-    margin-left: -32px;
-    margin-top: -64px;
-    position: fixed;
-    max-height: 90vh;
-    overflow: hidden;
-    background: ${Styles.defaultBgColor};
-  }
 `;
 
 const Grid: React.FC<{
@@ -79,27 +65,22 @@ const Grid: React.FC<{
   const makeRow = React.memo(({ index, style }: any) => {
     const row = rows[index];
     return (
-      <div style={style}>
-        {rows.length > 0 ? (
-          <Row
-            key={row._id}
-            {...row}
-            columnLookup={columnLookup}
-            rowIndex={row.index}
-            position={{
-              firstRow: index === 0,
-              lastRow: index === rows.length - 1,
-            }}
-          />
-        ) : (
-          <Text
-            style={{ marginLeft: '32px', marginTop: '1rem' }}
-            len="short"
-            size="lg"
-          >
-            Your query returned no results
-          </Text>
-        )}
+      <div
+        style={{
+          ...style,
+          overflowX: 'hidden',
+        }}
+      >
+        <Row
+          key={row._id}
+          {...row}
+          columnLookup={columnLookup}
+          rowIndex={row.index}
+          position={{
+            firstRow: index === 0,
+            lastRow: index === rows.length - 1,
+          }}
+        />
       </div>
     );
   });
@@ -142,7 +123,6 @@ const Grid: React.FC<{
             redo={!readOnly ? redo : () => undefined}
           >
             <ColumnsContainer>
-              <div className="columns__padding" />
               {columns.map((col, index) =>
                 col.hidden ? (
                   <HiddenColumnIndicator
@@ -181,17 +161,26 @@ const Grid: React.FC<{
                 ),
               )}
             </ColumnsContainer>
-
-            <VirtualizedList
-              ref={listRef}
-              height={height ? height * 0.7 : 1000}
-              itemCount={boardData.rows?.length ?? 0}
-              itemSize={() => defaults.ROW_HEIGHT * 16}
-              width={gridRef.current?.scrollWidth ?? 1000}
-              onScroll={onScroll}
-            >
-              {makeRow}
-            </VirtualizedList>
+            {rows.length > 0 ? (
+              <VirtualizedList
+                ref={listRef}
+                height={height ? height * 0.7 : 1000}
+                itemCount={boardData.rows?.length ?? 0}
+                itemSize={() => defaults.ROW_HEIGHT * 16}
+                width={gridRef.current?.scrollWidth ?? 1000}
+                onScroll={onScroll}
+              >
+                {makeRow}
+              </VirtualizedList>
+            ) : (
+              <Text
+                style={{ marginLeft: '32px', marginTop: '1rem' }}
+                len="short"
+                size="lg"
+              >
+                Your query returned no results
+              </Text>
+            )}
           </HotkeysProvider>
         </EventsProvider>
       </GridContainer>
