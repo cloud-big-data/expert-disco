@@ -4,7 +4,7 @@ import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
 import Select from 'components/ui/Select';
 import DatasetContext from 'contexts/DatasetContext';
 import UserContext from 'contexts/userContext';
-import React, { FC, useContext, useEffect } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import skyvueFetch from 'services/skyvueFetch';
 
@@ -35,14 +35,14 @@ const JoinEditor: FC<{
   joinState: Partial<IJoinLayer>;
   setJoinState: (state: Partial<IJoinLayer>) => void;
 }> = ({ unsavedChanges, setUnsavedChanges, joinState, setJoinState }) => {
-  const { condition } = joinState;
-
+  const [newJoinState, setNewJoinState] = useState(joinState);
+  const { condition } = newJoinState;
   const { datasetHead, boardData, socket, queriedDatasets, setLoading } = useContext(
     DatasetContext,
   )!;
   const { accessToken } = useContext(UserContext)!;
   const { error, isLoading, ...availableDatasets } = useQuery<IServerDataset[]>(
-    joinState.condition?.datasetId,
+    newJoinState.condition?.datasetId,
     () => skyvueFetch(accessToken).get(`/datasets`),
   );
 
@@ -62,7 +62,7 @@ const JoinEditor: FC<{
 
   const updateJoinOn = (colId: string, key: string) => {
     setUnsavedChanges(true);
-    setJoinState(
+    setNewJoinState(
       R.assocPath(
         ['condition', 'on'],
         key === 'mainColumnId'
@@ -78,7 +78,7 @@ const JoinEditor: FC<{
                 joinedColumnId: colId,
               },
             ],
-        joinState,
+        newJoinState,
       ),
     );
   };
@@ -97,14 +97,14 @@ const JoinEditor: FC<{
         placeholder="Select a dataset to join"
         onChange={e => {
           if (e === 'none') {
-            setJoinState({});
+            setNewJoinState({});
             updateLayers({ layerKey: 'joins', layerData: {} }, socket, () =>
               setLoading(true),
             );
             return;
           }
           socket?.emit('queryBoardHeaders', e);
-          setJoinState(R.assocPath(['condition', 'datasetId'], e, joinState));
+          setNewJoinState(R.assocPath(['condition', 'datasetId'], e, newJoinState));
           setUnsavedChanges(true);
         }}
         options={
@@ -175,13 +175,13 @@ const JoinEditor: FC<{
                     checked={condition.select.includes(col._id)}
                     onChange={() => {
                       setUnsavedChanges(true);
-                      setJoinState(
+                      setNewJoinState(
                         R.assocPath(
                           ['condition', 'select'],
                           condition.select.includes(col._id)
                             ? condition.select.filter(cond => cond !== col._id)
                             : [...(condition.select ?? []), col._id],
-                          joinState,
+                          newJoinState,
                         ),
                       );
                     }}
@@ -196,12 +196,22 @@ const JoinEditor: FC<{
 
       <Separator />
       <ConfirmationContainer>
-        <ButtonTertiary onClick={() => setJoinState({})}>Cancel</ButtonTertiary>
+        <ButtonTertiary
+          onClick={() => {
+            console.log(joinState, newJoinState);
+            setNewJoinState(joinState);
+          }}
+        >
+          Cancel
+        </ButtonTertiary>
         <ButtonPrimary
           onClick={() => {
             setUnsavedChanges(false);
-            updateLayers({ layerKey: 'joins', layerData: joinState }, socket, () =>
-              setLoading(true),
+            setJoinState(newJoinState);
+            updateLayers(
+              { layerKey: 'joins', layerData: newJoinState },
+              socket,
+              () => setLoading(true),
             );
           }}
           disabled={
