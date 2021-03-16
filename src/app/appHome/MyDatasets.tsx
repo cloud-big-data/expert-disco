@@ -84,8 +84,6 @@ const MyDatasets: React.FC = () => {
     fetcher.get('/datasets'),
   );
 
-  console.log(accessToken);
-
   const duplicateDataset = async (datasetId: string, title: string) => {
     setLoadingState(true);
     const duplicatedDataset = await fetcher.post(
