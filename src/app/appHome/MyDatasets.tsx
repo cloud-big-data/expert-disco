@@ -83,6 +83,9 @@ const MyDatasets: React.FC = () => {
   const { isLoading, data, refetch } = useQuery(newDatasetModalIsOpen, () =>
     fetcher.get('/datasets'),
   );
+
+  console.log(accessToken);
+
   const duplicateDataset = async (datasetId: string, title: string) => {
     setLoadingState(true);
     const duplicatedDataset = await fetcher.post(
