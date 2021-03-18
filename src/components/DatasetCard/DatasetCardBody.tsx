@@ -1,11 +1,15 @@
-import DropdownMenu from 'components/DropdownMenu';
-import { Helper, Label, Text } from 'components/ui/Typography';
-import makeDatasetLink from 'lib/makeDatasetLink';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 import styled from 'styled-components/macro';
-import Styles from 'styles/Styles';
+
+import DropdownMenu from 'components/DropdownMenu';
+import { Helper, Label, Text } from 'components/ui/Typography';
+
+import makeDatasetLink from 'lib/makeDatasetLink';
 import humanizeTimeAgo from 'utils/humanizeTimeAgo';
+
+import Styles from 'styles/Styles';
 
 const DatasetCardContainer = styled.div`
   display: flex;
@@ -58,6 +62,7 @@ const DatasetCardBody: React.FC<{
   title: string;
   timestamp: string;
   description?: string;
+  isProcessing?: boolean;
   setEditModalIsOpen: (open: boolean) => void;
   duplicateDataset: (datasetId: string, title: string) => Promise<void>;
   setDeleteConf: (deleting: boolean) => void;
@@ -66,6 +71,7 @@ const DatasetCardBody: React.FC<{
   title,
   timestamp,
   description,
+  isProcessing,
   setEditModalIsOpen,
   duplicateDataset,
   setDeleteConf,
@@ -104,13 +110,19 @@ const DatasetCardBody: React.FC<{
     <Link
       className="no-hover"
       style={{ textDecoration: 'none' }}
-      to={makeDatasetLink(datasetId, false)}
+      to={
+        isProcessing ? window.location.pathname : makeDatasetLink(datasetId, false)
+      }
       onContextMenu={e => {
         e.preventDefault();
         setContextMenuIsOpen(true);
       }}
     >
-      <DatasetCardContainer>
+      <DatasetCardContainer
+        className={classNames({
+          'opacity-50': isProcessing,
+        })}
+      >
         <div className="background" />
         <div className="main">
           <div className="meta__bar">
@@ -134,6 +146,11 @@ const DatasetCardBody: React.FC<{
             <Label style={{ margin: 0 }}>{title}</Label>
           </div>
 
+          {isProcessing && (
+            <Text size="sm" len="short">
+              Processing...
+            </Text>
+          )}
           {description && (
             <div className="description__container">
               <Text style={{ marginBottom: 0 }} size="sm" len="long">
