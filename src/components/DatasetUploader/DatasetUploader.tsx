@@ -1,12 +1,15 @@
-import UserContext from 'contexts/userContext';
 import React, { useCallback, useContext, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import skyvueFetch from 'services/skyvueFetch';
 import styled from 'styled-components/macro';
+
+import UserContext from 'contexts/userContext';
+import skyvueFetch from 'services/skyvueFetch';
+
 import ActiveDragState from './ActiveDragState';
 import UploadCompleteState from './UploadCompleteState';
 import UploaderEmptyState from './UploaderEmptyState';
 import UploadErrorState from './UploadErrorState';
+import UploadExceedsLimits from './UploadExceedsLimits';
 import UploadLoadingState from './UploadLoadingState';
 
 const DropzoneContainer = styled.div`
@@ -18,21 +21,40 @@ const DropzoneContainer = styled.div`
   }
 `;
 
+export const FILE_SIZE_CAP_IN_BYTES = 5000000000;
+
 const DatasetUploader: React.FC<{
   closeModal?: () => void;
 }> = ({ closeModal }) => {
   const [uploadComplete, setUploadComplete] = useState(false);
   const [error, setError] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
+  const [fileExceedLimits, setFileExceedsLimits] = useState(false);
+
   const { accessToken } = useContext(UserContext);
+
   const onDrop = useCallback(
-    acceptedFiles => {
+    (acceptedFiles: File[]) => {
       setLoadingState(true);
-      acceptedFiles.forEach(async (file: any, index: number) => {
+      acceptedFiles.forEach(async (file, index: number) => {
+        if (file.size >= FILE_SIZE_CAP_IN_BYTES) {
+          setLoadingState(false);
+          setFileExceedsLimits(true);
+          return;
+        }
         try {
-          const { url, fields } = await skyvueFetch(accessToken).get(
+          const { url, fields, status } = await skyvueFetch(accessToken).post(
             '/datasets/make_dataset_upload_url',
+            {
+              title: file.name?.replace('.csv', ''),
+            },
           );
+
+          if (status >= 400) {
+            setLoadingState(false);
+            setError(true);
+            return;
+          }
 
           const data = {
             bucket: 'skyvue-datasets',
@@ -51,14 +73,14 @@ const DatasetUploader: React.FC<{
             body: formData,
           });
 
-          const json = await response.json();
-          console.log(json);
-          // const formData = new FormData();
-          // formData.append('csv', file);
-          // await skyvueFetch(accessToken!).postFile('/datasets/upload', formData);
+          console.log(response);
+
+          // const json = await response.json();
+          // console.log(json);
         } catch (e) {
-          console.error(e);
+          console.log(e);
           setError(true);
+          setLoadingState(false);
           return;
         }
 
@@ -84,6 +106,8 @@ const DatasetUploader: React.FC<{
           <UploadCompleteState closeModal={closeModal} />
         ) : isDragActive ? (
           <ActiveDragState />
+        ) : fileExceedLimits ? (
+          <UploadExceedsLimits />
         ) : (
           <UploaderEmptyState />
         )}

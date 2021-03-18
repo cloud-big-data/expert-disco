@@ -1,3 +1,5 @@
+import queryString from 'query-string';
+
 const makeBaseUrl = () => {
   if (process.env.REACT_APP_NETLIFY_CONTEXT) {
     const lookup: { [key: string]: string | undefined } = {
@@ -14,7 +16,10 @@ const makeBaseUrl = () => {
 const skyvueFetch = (
   accessToken?: string | null,
 ): {
-  get: (url: string) => Promise<any>;
+  get: (
+    url: string,
+    query?: { [key: string]: string | string[] | number | number[] },
+  ) => Promise<any>;
   post: (url: string, body: { [key: string]: any }) => Promise<any>;
   postFile: (url: string, file: FormData) => Promise<any>;
   patch: (url: string, body: { [key: string]: any }) => Promise<any>;
@@ -66,8 +71,11 @@ const skyvueFetch = (
   };
 
   return {
-    get: (url: string) =>
-      makeCall(url, {
+    get: (
+      url: string,
+      query?: { [key: string]: string | string[] | number | number[] },
+    ) =>
+      makeCall(`${url}${query ? `?${queryString.stringify(query ?? {})}` : ''}`, {
         method: 'GET',
       }),
     post: (url: string, body: { [key: string]: any }) =>

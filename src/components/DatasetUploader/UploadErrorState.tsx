@@ -24,7 +24,7 @@ const UploadErrorState: React.FC<{
 }> = ({ returnToUpload }) => (
   <ErrorContainer>
     <div className="x__container">
-      <i className="far fa-times" />
+      <i className="far fa-times text-red-400" />
     </div>
     <h3>There was a problem...</h3>
     <ButtonDanger

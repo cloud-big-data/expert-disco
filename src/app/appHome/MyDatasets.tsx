@@ -107,6 +107,7 @@ const MyDatasets: React.FC = () => {
   const datasets: Array<{
     title: string;
     updatedAt: string;
+    isProcessing?: boolean;
     _id: string;
   }> = data ?? [];
 
@@ -161,6 +162,7 @@ const MyDatasets: React.FC = () => {
             datasetId={dataset._id}
             timestamp={dataset.updatedAt}
             title={dataset.title}
+            isProcessing={dataset.isProcessing}
             refetch={refetch}
             duplicateDataset={duplicateDataset}
           />

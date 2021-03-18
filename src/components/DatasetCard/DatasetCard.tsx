@@ -10,9 +10,18 @@ const DatasetCard: React.FC<{
   title: string;
   timestamp: string;
   description?: string;
+  isProcessing?: boolean;
   refetch: (options?: RefetchOptions | undefined) => Promise<any>;
   duplicateDataset: (datasetId: string, title: string) => Promise<void>;
-}> = ({ datasetId, title, description, timestamp, refetch, duplicateDataset }) => {
+}> = ({
+  datasetId,
+  title,
+  description,
+  isProcessing,
+  timestamp,
+  refetch,
+  duplicateDataset,
+}) => {
   const { accessToken } = useContext(UserContext);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
   const [deleteConf, setDeleteConf] = useState(false);
@@ -40,6 +49,7 @@ const DatasetCard: React.FC<{
         datasetId={datasetId}
         title={title}
         timestamp={timestamp}
+        isProcessing={isProcessing}
         description={description}
         setEditModalIsOpen={setEditModalIsOpen}
         duplicateDataset={duplicateDataset}
