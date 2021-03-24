@@ -29,7 +29,7 @@ export default {
   xsBoxShadow: 'rgba(0, 0, 0, 0.03) 0px 2px 0px 0px',
   defaultPadding: '1rem',
   defaultMaxWidth: '70rem',
-  defaultBorderRadius: '.4rem',
+  defaultBorderRadius: '.2rem',
   defaultBgColor: '#f7f7fc',
   defaultTransitionDuration: '0.2s',
   softGray: '#b8b8d9',
