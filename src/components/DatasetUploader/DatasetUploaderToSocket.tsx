@@ -2,9 +2,7 @@ import React, { useCallback, useContext, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components/macro';
 
-import UserContext from 'contexts/userContext';
-import skyvueFetch from 'services/skyvueFetch';
-
+import DatasetContext from 'contexts/DatasetContext';
 import ActiveDragState from './ActiveDragState';
 import UploadCompleteState from './UploadCompleteState';
 import UploaderEmptyState from './UploaderEmptyState';
@@ -23,15 +21,14 @@ const DropzoneContainer = styled.div`
 
 export const FILE_SIZE_CAP_IN_BYTES = 5000000000;
 
-const DatasetUploader: React.FC<{
+const DatasetUploaderToSocket: React.FC<{
   closeModal?: () => void;
 }> = ({ closeModal }) => {
+  const { socket } = useContext(DatasetContext)!;
   const [uploadComplete, setUploadComplete] = useState(false);
   const [error, setError] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
   const [fileExceedLimits, setFileExceedsLimits] = useState(false);
-
-  const { accessToken } = useContext(UserContext);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -43,35 +40,7 @@ const DatasetUploader: React.FC<{
           return;
         }
         try {
-          const { url, fields, status } = await skyvueFetch(accessToken).post(
-            '/datasets/make_dataset_upload_url',
-            {
-              title: file.name?.replace('.csv', ''),
-            },
-          );
-
-          if (status >= 400) {
-            setLoadingState(false);
-            setError(true);
-            return;
-          }
-
-          const data = {
-            bucket: 'skyvue-datasets',
-            ...fields,
-            'Content-Type': 'text/csv',
-            file,
-          };
-
-          const formData = new FormData();
-          Object.keys(data).forEach(name => {
-            formData.append(name, data[name]);
-          });
-
-          await fetch(url, {
-            method: 'POST',
-            body: formData,
-          });
+          socket?.emit('datadump', file);
         } catch (e) {
           console.log(e);
           setError(true);
@@ -85,7 +54,7 @@ const DatasetUploader: React.FC<{
         }
       });
     },
-    [accessToken],
+    [socket],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -111,4 +80,4 @@ const DatasetUploader: React.FC<{
   );
 };
 
-export default DatasetUploader;
+export default DatasetUploaderToSocket;

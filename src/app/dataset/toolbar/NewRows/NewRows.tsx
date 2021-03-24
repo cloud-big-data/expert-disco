@@ -2,6 +2,7 @@ import Modal from 'components/ui/Modal';
 import ButtonWithOptions from 'components/ui/ButtonWithOptions';
 import React, { useState } from 'react';
 import Styles from 'styles/Styles';
+import FileUpload from './FileUpload';
 
 const NewRows: React.FC = () => {
   enum NewRowViews {
@@ -51,7 +52,7 @@ const NewRows: React.FC = () => {
       {modalIsOpen && (
         <Modal closeModal={() => setModalIsOpen(false)}>
           {view === NewRowViews.multipleEmpty && <p>Multiple empty</p>}
-          {view === NewRowViews.fromUpload && <p>From upload</p>}
+          {view === NewRowViews.fromUpload && <FileUpload />}
         </Modal>
       )}
     </>
