@@ -15,7 +15,7 @@ const getDatasetsWSUrl = (skyvueFileSize: number) => {
   const prefix = skyvueFileSize ? 'xs' : 'xs';
   if (process.env.NODE_ENV === 'production')
     return `https://${prefix}.datasets.skyvueservices.com`;
-  return 'ws://localhost:3030';
+  return 'ws://localhost:8080';
 };
 
 const useDatasetsSockets = (
