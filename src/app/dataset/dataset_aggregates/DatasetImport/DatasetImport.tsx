@@ -87,8 +87,12 @@ const DatasetImport: FC = () => {
           </ButtonTertiary>
         ))}
       {view === 'history' && (
-        <div>
-          <p>hi</p>
+        <div className="flex flex-col">
+          <h6>History of imports</h6>
+          <div className="w-4/5 my-8 mx-auto grid grid-cols-12 gap-x-4 text-center">
+            <div className="col-span-6">Original dataset</div>
+            <div className="col-span-6">23000</div>
+          </div>
         </div>
       )}
 
