@@ -48,6 +48,8 @@ const LeftNav = styled.div`
   .icon__container {
     margin-right: 1rem;
     width: 1rem;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -73,37 +75,6 @@ const NavItem = styled.div<{ active?: boolean }>`
   align-items: center;
   &:hover {
     font-weight: bold;
-  }
-
-  &:nth-of-type(2) {
-    i {
-      color: ${Styles.green};
-    }
-  }
-  &:nth-of-type(3) {
-    i {
-      color: ${Styles.blue};
-    }
-  }
-  &:nth-of-type(4) {
-    i {
-      color: ${Styles.peach};
-    }
-  }
-  &:nth-of-type(5) {
-    i {
-      color: ${Styles.yellow};
-    }
-  }
-  &:nth-of-type(6) {
-    i {
-      color: ${Styles.red400};
-    }
-  }
-  &:nth-of-type(7) {
-    i {
-      color: ${Styles.dark300};
-    }
   }
 `;
 

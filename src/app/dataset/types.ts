@@ -156,6 +156,7 @@ export interface ISmartColumn extends IColumn {
 
 export interface IRow {
   _id: string;
+  importId?: string;
   cells: ICell[];
   index: number;
   /**

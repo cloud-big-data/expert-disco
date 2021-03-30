@@ -1,7 +1,7 @@
 import { ButtonTertiary } from 'components/ui/Buttons';
 import Card from 'components/ui/Card';
 import ViewWithLeftNav from 'components/ViewWithLeftNav';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components/macro';
@@ -14,6 +14,7 @@ import DatasetExport from './DatasetExport';
 import DatasetSmartColumns from './DatasetSmartColumns';
 import DatasetSharing from './DatasetSharing';
 import DatasetJoins from './DatasetJoins';
+import DatasetImport from './DatasetImport';
 
 const ExpandWrapper = styled.div<{ expanded: boolean }>`
   display: flex;
@@ -71,6 +72,7 @@ const ViewLookup: {
   filter: <DatasetFilters />,
   join: <DatasetJoins />,
   groupings: <DatasetGrouping />,
+  import: <DatasetImport />,
   export: <DatasetExport />,
   smartColumns: <DatasetSmartColumns />,
   share: <DatasetSharing />,
@@ -81,11 +83,18 @@ const DatasetAggregates: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const querystring = queryString.parse(location.search);
+
   const [expanded, setExpanded] = useState(true);
   const [activeView, setActiveView] = useState(
     (querystring.view as string) ?? 'summary',
   );
   const ViewComponent = ViewLookup[activeView];
+
+  useEffect(() => {
+    if (activeView !== querystring.view) {
+      setActiveView(querystring.view as string);
+    }
+  }, [activeView, querystring.view]);
 
   const VIEWS = [
     {
@@ -114,10 +123,15 @@ const DatasetAggregates: React.FC = () => {
       value: 'groupings',
       icon: <i className="fad fa-layer-group" />,
     },
+    // {
+    //   name: 'Share',
+    //   value: 'share',
+    //   icon: <i className="fad fa-share" />,
+    // },
     {
-      name: 'Share',
-      value: 'share',
-      icon: <i className="fad fa-share" />,
+      name: 'Import',
+      value: 'import',
+      icon: <i className="fad fa-file-import" />,
     },
     {
       name: 'Export',

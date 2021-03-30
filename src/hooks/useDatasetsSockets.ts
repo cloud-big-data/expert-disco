@@ -40,6 +40,8 @@ const useDatasetsSockets = (
         'columns' | 'visibilitySettings' | 'layers' | '_id'
       >[],
     ) => void;
+    uploadPreview: Array<{ [key: string]: any }>;
+    setUploadPreview: (preview: Array<{ [key: string]: any }>) => void;
   },
   changeHistoryRef: React.MutableRefObject<Array<string>>,
   setFilesToDownload: (files: string[]) => void,
@@ -58,6 +60,8 @@ const useDatasetsSockets = (
     setBoardState,
     queriedDatasets,
     setQueriedDatasets,
+    uploadPreview,
+    setUploadPreview,
   } = board;
 
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
@@ -135,6 +139,10 @@ const useDatasetsSockets = (
       setBoardData(res);
     });
 
+    socket.on('appendPreview', (csvAsJson: typeof uploadPreview) => {
+      setUploadPreview(csvAsJson);
+    });
+
     socket.on('downloadReady', (objectUrls: string[]) => {
       setFilesToDownload(objectUrls);
 
@@ -170,6 +178,8 @@ const useDatasetsSockets = (
     setBoardState,
     setQueriedDatasets,
     queriedDatasets,
+    uploadPreview,
+    setUploadPreview,
   ]);
 
   useEffect(() => {
