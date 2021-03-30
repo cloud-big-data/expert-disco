@@ -15,9 +15,9 @@ const Container = styled.div`
   border-radius: ${Styles.defaultBorderRadius};
 `;
 
-const UploaderEmptyState: React.FC = () => (
+const UploaderEmptyState: React.FC<{ plural?: boolean }> = ({ plural = true }) => (
   <Container>
-    <h3>Drag and drop your file(s) here to begin uploading</h3>
+    <h3>Drag and drop your file{plural ? `(s)` : ''} here to begin uploading</h3>
     <TertiaryLabel style={{ marginBottom: 0 }}>OR</TertiaryLabel>
     <br />
     <ButtonSecondary>Browse files</ButtonSecondary>

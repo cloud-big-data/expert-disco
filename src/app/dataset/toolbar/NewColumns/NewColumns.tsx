@@ -5,10 +5,12 @@ import DatasetContext from 'contexts/DatasetContext';
 // import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useState } from 'react';
 import Styles from 'styles/Styles';
+import { useHistory } from 'react-router';
 import SingleEmpty from './views/SingleEmpty';
 // import { makeBoardActions } from '../lib/makeBoardActions';
 
 const NewColumns: React.FC = () => {
+  const history = useHistory();
   enum NewColumnViews {
     singleEmpty,
     multipleEmpty,
@@ -56,8 +58,12 @@ const NewColumns: React.FC = () => {
           {
             label: 'New smart column',
             onClick: () => {
-              setModalIsOpen(true);
-              setView(NewColumnViews.aggregateColumn);
+              window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth',
+              });
+              history.push(`${window.location.pathname}?view=smartColumns`);
             },
             icon: (
               <i
@@ -82,7 +88,6 @@ const NewColumns: React.FC = () => {
         <Modal closeModal={() => setModalIsOpen(false)}>
           {view === NewColumnViews.singleEmpty && <SingleEmpty {...viewProps} />}
           {view === NewColumnViews.multipleEmpty && <p>Multiple empty</p>}
-          {view === NewColumnViews.aggregateColumn && <p>aggregateColumn</p>}
           {view === NewColumnViews.fromUpload && <p>From upload</p>}
         </Modal>
       )}

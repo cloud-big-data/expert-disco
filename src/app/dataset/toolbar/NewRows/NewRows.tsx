@@ -52,7 +52,9 @@ const NewRows: React.FC = () => {
       {modalIsOpen && (
         <Modal closeModal={() => setModalIsOpen(false)}>
           {view === NewRowViews.multipleEmpty && <p>Multiple empty</p>}
-          {view === NewRowViews.fromUpload && <FileUpload />}
+          {view === NewRowViews.fromUpload && (
+            <FileUpload closeModal={() => setModalIsOpen(false)} />
+          )}
         </Modal>
       )}
     </>

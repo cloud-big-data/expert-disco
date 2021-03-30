@@ -32,6 +32,11 @@ const DatasetUploaderToSocket: React.FC<{
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 1) {
+        setLoadingState(false);
+        setError(true);
+        return alert('You can only upload one file at a time when appending data.');
+      }
       setLoadingState(true);
       acceptedFiles.forEach(async (file, index: number) => {
         if (file.size >= FILE_SIZE_CAP_IN_BYTES) {
@@ -73,7 +78,7 @@ const DatasetUploaderToSocket: React.FC<{
         ) : fileExceedLimits ? (
           <UploadExceedsLimits />
         ) : (
-          <UploaderEmptyState />
+          <UploaderEmptyState plural={false} />
         )}
       </div>
     </DropzoneContainer>

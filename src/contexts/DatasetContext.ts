@@ -29,6 +29,8 @@ interface IDatasetContext {
     >[],
   ) => void;
   refetch: (options?: RefetchOptions) => void;
+  uploadPreview: Array<{ [key: string]: any }>;
+  setUploadPreview: (preview: Array<{ [key: string]: any }>) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);

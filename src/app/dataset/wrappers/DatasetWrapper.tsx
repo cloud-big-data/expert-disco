@@ -95,6 +95,9 @@ const DatasetWrapper: React.FC = () => {
   const [queriedDatasets, setQueriedDatasets] = useState<
     Pick<IBoardData, 'columns' | 'visibilitySettings' | 'layers' | '_id'>[]
   >([]);
+  const [uploadPreview, setUploadPreview] = useState<Array<{ [key: string]: any }>>(
+    [],
+  );
 
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);
@@ -185,6 +188,8 @@ const DatasetWrapper: React.FC = () => {
       setBoardState,
       queriedDatasets,
       setQueriedDatasets,
+      uploadPreview,
+      setUploadPreview,
     },
     changeHistoryRef,
     setFilesToDownload,
@@ -251,6 +256,8 @@ const DatasetWrapper: React.FC = () => {
       refetch,
       visibleRows,
       setVisibleRows,
+      uploadPreview,
+      setUploadPreview,
     }),
     [
       _setBoardData,
@@ -263,6 +270,7 @@ const DatasetWrapper: React.FC = () => {
       readOnly,
       refetch,
       socket,
+      uploadPreview,
       userType,
       visibleRows,
     ],
