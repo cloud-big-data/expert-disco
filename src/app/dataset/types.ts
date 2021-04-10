@@ -163,6 +163,7 @@ export interface IRow {
    * rowHeight: The height of the row, in px.
    */
   rowHeight?: number;
+  appendId?: string;
   dragging?: boolean;
 }
 

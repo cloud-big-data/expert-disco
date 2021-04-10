@@ -24,7 +24,7 @@ const CurrentImport: FC<{
   previewColumns: PreviewColumn[];
   uploadPreview: UploadPreview;
 }> = ({ previewColumns, uploadPreview }) => {
-  const { boardData, setUploadPreview, socket } = useDatasetContext()!;
+  const { boardData, setUploadPreview, setLoading, socket } = useDatasetContext()!;
   // const [isColumnHeader, setIsColumnHeader] = useState(true);
   const [view, setView] = useState<'preview' | 'mapping'>('preview');
   const [shouldDedupe, setShouldDedupe] = useState(false);
@@ -94,14 +94,19 @@ const CurrentImport: FC<{
             Cancel
           </ButtonTertiary>
           <ButtonPrimary
-            onClick={() =>
-              view === 'preview'
-                ? setView('mapping')
-                : socket?.emit('importLastAppended', {
-                    columnMapping,
-                    dedupeSettings,
-                  })
-            }
+            onClick={() => {
+              if (view === 'preview') {
+                setView('mapping');
+                return;
+              }
+
+              setLoading(true);
+              socket?.emit('importLastAppended', {
+                columnMapping,
+                dedupeSettings,
+              });
+              setUploadPreview(undefined);
+            }}
             disabled={uploadPreview.records.length === 0}
           >
             Continue
