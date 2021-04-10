@@ -86,12 +86,13 @@ const DatasetAggregates: React.FC = () => {
 
   const [expanded, setExpanded] = useState(true);
   const [activeView, setActiveView] = useState(
-    (querystring.view as string) ?? 'summary',
+    (querystring.view ?? 'summary') as string,
   );
+
   const ViewComponent = ViewLookup[activeView];
 
   useEffect(() => {
-    if (activeView !== querystring.view) {
+    if (querystring.view && activeView !== querystring.view) {
       setActiveView(querystring.view as string);
     }
   }, [activeView, querystring.view]);
