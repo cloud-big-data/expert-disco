@@ -63,6 +63,7 @@ const Grid: React.FC<{
 
   const makeRow = React.memo(({ index, style }: any) => {
     const row = rows[index];
+
     return (
       <div
         style={{

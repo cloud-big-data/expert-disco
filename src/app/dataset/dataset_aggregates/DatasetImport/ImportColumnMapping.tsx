@@ -12,11 +12,18 @@ const ImportColumnMapping: FC<{
   setColumnMapping: (mapping: ColumnMapping[]) => void;
 }> = ({ previewColumns, columnMapping, setColumnMapping }) => {
   const { boardData } = useDatasetContext()!;
-
+  console.log(
+    boardData.columns.find(
+      col => col._id === '985c547b-032f-4752-a79c-0c72e0a678fd',
+    ),
+  );
   return (
     <div>
       <Label>Tell us where to add your new data</Label>
       <div className="mt-4 grid grid-cols-3 gap-y-2  ">
+        <Label>Imported column</Label>
+        <div />
+        <Label>Should map to</Label>
         {previewColumns.map(col => (
           <React.Fragment key={col.key}>
             <div className="col-span-1">{col.title}</div>
@@ -30,7 +37,7 @@ const ImportColumnMapping: FC<{
                 value={
                   columnMapping.find(mapping => mapping.importKey === col.key)?.mapTo
                 }
-                onChange={e =>
+                onChange={e => {
                   setColumnMapping(
                     columnMapping.map(mapping =>
                       col.key === mapping.importKey
@@ -38,12 +45,10 @@ const ImportColumnMapping: FC<{
                             ...mapping,
                             mapTo: e,
                           }
-                        : mapping.mapTo === e
-                        ? { ...mapping, mapTo: undefined }
                         : mapping,
                     ),
-                  )
-                }
+                  );
+                }}
               />
             </div>
           </React.Fragment>
