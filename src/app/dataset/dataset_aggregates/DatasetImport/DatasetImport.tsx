@@ -1,26 +1,35 @@
 import React, { FC, useState } from 'react';
 
-import { Switch, Table } from 'antd';
-
 import DatasetUploaderToSocket from 'components/DatasetUploader/DatasetUploaderToSocket';
-import { ButtonPrimary, ButtonTertiary } from 'components/ui/Buttons';
+import { ButtonTertiary } from 'components/ui/Buttons';
 import Modal from 'components/ui/Modal';
 
 import useDatasetContext from 'hooks/useDatasetContext';
-import { Label } from 'components/ui/Typography';
+import { Helper } from 'components/ui/Typography';
+import IconWithBg from 'components/ui/IconWithBg';
+import CurrentImport from './CurrentImport';
+
+export interface PreviewColumn {
+  title: string;
+  dataIndex: string;
+  key: string;
+}
 
 const DatasetImport: FC = () => {
-  const { uploadPreview, setUploadPreview } = useDatasetContext()!;
+  const { uploadPreview } = useDatasetContext()!;
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [view, setView] = useState<'current' | 'history'>('current');
-  const [isColumnHeader, setIsColumnHeader] = useState(true);
-  const [shouldDedupe, setShouldDedupe] = useState(false);
 
-  const previewColumns = Object.keys(uploadPreview[0] ?? {}).map(key => ({
-    title: key,
+  const records = (uploadPreview?.records ?? []).map((record, index) => ({
+    row: index === 0 ? 1 : uploadPreview?.meta.length,
+    ...record,
+  }));
+
+  const previewColumns = Object.keys(records?.[0] ?? {}).map(key => ({
+    title: key === 'row' ? 'row # (will not be included)' : key,
     dataIndex: key,
-    key,
+    key: key === 'row' ? 'skyvue-row-preview' : key,
   }));
 
   return (
@@ -30,8 +39,16 @@ const DatasetImport: FC = () => {
           <DatasetUploaderToSocket closeModal={() => setModalIsOpen(false)} />
         </Modal>
       )}
-      <div className="flex items-center justify-between">
-        <h6>Import more data</h6>
+      <div className="flex flex-col md:flex-row items-center justify-between">
+        <div className="flex flex-col space-y-2">
+          <div className="flex items-center space-x-4">
+            <IconWithBg>
+              <i className="fad fa-file-import" />
+            </IconWithBg>
+            <h6 style={{ margin: '0 0 0 .5rem' }}>Importing more records</h6>
+          </div>
+          <Helper>Use this when you want to make your list longer.</Helper>
+        </div>
         <div className="flex items-center">
           <ButtonTertiary
             onClick={() => setView('current')}
@@ -54,29 +71,14 @@ const DatasetImport: FC = () => {
         </div>
       </div>
       {view === 'current' &&
-        (uploadPreview.length > 0 ? (
-          <div>
-            <Label>View of current first and last rows</Label>
-            <Table
-              pagination={{ hideOnSinglePage: true }}
-              columns={previewColumns}
-              dataSource={uploadPreview}
-            />
-            <div className="flex items-center space-x-4 my-2 mt-8">
-              <Switch
-                checked={isColumnHeader}
-                onChange={() => setIsColumnHeader(!isColumnHeader)}
-              />
-              <Label unBold>The first row of my data file is a column header</Label>
-            </div>
-            <div className="flex items-center space-x-4 my-2">
-              <Switch
-                checked={shouldDedupe}
-                onChange={() => setShouldDedupe(!shouldDedupe)}
-              />
-              <Label unBold>I'm not worried about duplicate records</Label>
-            </div>
-          </div>
+        (uploadPreview && records && records.length > 0 ? (
+          <CurrentImport
+            previewColumns={previewColumns}
+            uploadPreview={{
+              ...uploadPreview,
+              records,
+            }}
+          />
         ) : (
           <ButtonTertiary
             style={{ paddingLeft: '1rem', margin: '4rem auto' }}
@@ -93,17 +95,6 @@ const DatasetImport: FC = () => {
             <div className="col-span-6">Original dataset</div>
             <div className="col-span-6">23000</div>
           </div>
-        </div>
-      )}
-
-      {uploadPreview.length > 0 && (
-        <div className="flex items-center justify-center">
-          <ButtonTertiary onClick={() => setUploadPreview([])}>
-            Cancel
-          </ButtonTertiary>
-          <ButtonPrimary disabled={uploadPreview.length === 0}>
-            Continue
-          </ButtonPrimary>
         </div>
       )}
     </div>

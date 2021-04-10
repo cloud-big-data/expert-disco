@@ -15,7 +15,7 @@ import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
 import { useQuery } from 'react-query';
 import skyvueFetch from 'services/skyvueFetch';
-import { IBoardState, IBoardData, IBoardHead } from '../types';
+import { IBoardState, IBoardData, IBoardHead, UploadPreview } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 import makeBoardDiff from '../lib/makeBoardDiff';
 import DatasetNotFound from '../DatasetNotFound';
@@ -95,9 +95,7 @@ const DatasetWrapper: React.FC = () => {
   const [queriedDatasets, setQueriedDatasets] = useState<
     Pick<IBoardData, 'columns' | 'visibilitySettings' | 'layers' | '_id'>[]
   >([]);
-  const [uploadPreview, setUploadPreview] = useState<Array<{ [key: string]: any }>>(
-    [],
-  );
+  const [uploadPreview, setUploadPreview] = useState<UploadPreview>();
 
   const [estCSVSize, setEstCSVSize] = useState<number | undefined>(undefined);
   const [filesToDownload, setFilesToDownload] = useState<string[]>([]);

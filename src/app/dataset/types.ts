@@ -288,4 +288,21 @@ export interface IServerDataset {
   createdAt: string;
 }
 
+export interface UploadPreview {
+  records: Array<{ [key: string]: any }>;
+  meta: {
+    length: number;
+  };
+}
+
+export interface DedupeSettings {
+  dedupeOn: string[];
+  keep: 'first' | 'last';
+}
+
+export interface ColumnMapping {
+  importKey: string;
+  mapTo?: string;
+}
+
 export type Destinations = 'csv' | 'sheets' | 'skyvue';

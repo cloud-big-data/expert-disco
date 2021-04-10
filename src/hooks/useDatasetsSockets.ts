@@ -6,6 +6,7 @@ import {
   IBoardHead,
   IBoardState,
   IRow,
+  UploadPreview,
 } from 'app/dataset/types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -40,8 +41,8 @@ const useDatasetsSockets = (
         'columns' | 'visibilitySettings' | 'layers' | '_id'
       >[],
     ) => void;
-    uploadPreview: Array<{ [key: string]: any }>;
-    setUploadPreview: (preview: Array<{ [key: string]: any }>) => void;
+    uploadPreview: UploadPreview | undefined;
+    setUploadPreview: (preview?: UploadPreview) => void;
   },
   changeHistoryRef: React.MutableRefObject<Array<string>>,
   setFilesToDownload: (files: string[]) => void,
@@ -139,8 +140,10 @@ const useDatasetsSockets = (
       setBoardData(res);
     });
 
-    socket.on('appendPreview', (csvAsJson: typeof uploadPreview) => {
-      setUploadPreview(csvAsJson);
+    socket.on('appendPreview', (preview: UploadPreview) => {
+      if (preview) {
+        setUploadPreview(preview);
+      }
     });
 
     socket.on('downloadReady', (objectUrls: string[]) => {

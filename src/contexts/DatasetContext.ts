@@ -1,4 +1,9 @@
-import { IBoardState, IBoardData, IBoardHead } from 'app/dataset/types';
+import {
+  IBoardState,
+  IBoardData,
+  IBoardHead,
+  UploadPreview,
+} from 'app/dataset/types';
 import { createContext } from 'react';
 import { RefetchOptions } from 'react-query/types/core/query';
 
@@ -29,8 +34,8 @@ interface IDatasetContext {
     >[],
   ) => void;
   refetch: (options?: RefetchOptions) => void;
-  uploadPreview: Array<{ [key: string]: any }>;
-  setUploadPreview: (preview: Array<{ [key: string]: any }>) => void;
+  uploadPreview?: UploadPreview;
+  setUploadPreview: (preview?: UploadPreview) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);
