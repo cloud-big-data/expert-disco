@@ -59,11 +59,13 @@ const CurrentImport: FC<{
             </div>
           </div>
           <div className="flex items-center space-x-4 my-2">
-            <Switch
-              checked={shouldDedupe}
-              onChange={() => setShouldDedupe(!shouldDedupe)}
-            />
-            <Label unBold>Filter duplicate records</Label>
+            <Label className="flex items-center" unBold>
+              <Switch
+                checked={shouldDedupe}
+                onChange={() => setShouldDedupe(!shouldDedupe)}
+              />
+              <span className="ml-4">Filter duplicate records</span>
+            </Label>
           </div>
           {shouldDedupe && (
             <DedupeController
