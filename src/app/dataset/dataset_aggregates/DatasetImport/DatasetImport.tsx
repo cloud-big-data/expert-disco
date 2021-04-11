@@ -8,6 +8,7 @@ import useDatasetContext from 'hooks/useDatasetContext';
 import { Helper } from 'components/ui/Typography';
 import IconWithBg from 'components/ui/IconWithBg';
 import CurrentImport from './CurrentImport';
+import ImportHistory from './ImportHistory';
 
 export interface PreviewColumn {
   title: string;
@@ -88,15 +89,7 @@ const DatasetImport: FC = () => {
             Upload CSV File
           </ButtonTertiary>
         ))}
-      {view === 'history' && (
-        <div className="flex flex-col">
-          <h6>History of imports</h6>
-          <div className="w-4/5 my-8 mx-auto grid grid-cols-12 gap-x-4 text-center">
-            <div className="col-span-6">Original dataset</div>
-            <div className="col-span-6">23000</div>
-          </div>
-        </div>
-      )}
+      {view === 'history' && <ImportHistory />}
     </div>
   );
 };
