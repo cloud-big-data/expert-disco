@@ -62,7 +62,15 @@ const CurrentImport: FC<{
             <Label className="flex items-center" unBold>
               <Switch
                 checked={shouldDedupe}
-                onChange={() => setShouldDedupe(!shouldDedupe)}
+                onChange={() => {
+                  if (shouldDedupe) {
+                    setDedupeSettings({
+                      dedupeOn: [],
+                      keep: 'first',
+                    });
+                  }
+                  setShouldDedupe(!shouldDedupe);
+                }}
               />
               <span className="ml-4">Filter duplicate records</span>
             </Label>
