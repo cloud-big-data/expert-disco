@@ -12,8 +12,9 @@ const DedupeController: FC<{
   uploadPreview: UploadPreview;
   dedupeSettings: DedupeSettings;
   setDedupeSettings: (settings: DedupeSettings) => void;
-}> = ({ previewColumns, uploadPreview, dedupeSettings, setDedupeSettings }) => {
+}> = ({ previewColumns, dedupeSettings, setDedupeSettings }) => {
   const { dedupeOn } = dedupeSettings;
+
   return (
     <div>
       <Label unBold>
