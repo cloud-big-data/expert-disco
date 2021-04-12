@@ -14,11 +14,15 @@ const DatasetSummaryContainer = styled.div`
   grid-column-gap: 1rem;
   overflow: hidden;
 
+  .fields__container {
+    border-left: 2px solid ${Styles.faintBorderColor};
+    padding-left: 2rem;
+  }
+
   .left__container {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    border-right: 2px solid ${Styles.faintBorderColor};
+    padding: 1rem 0 1rem 1rem;
 
     @media (max-width: 700px) {
       border-right: none;
@@ -132,7 +136,7 @@ const DatasetSummary: React.FC = () => {
 
   return (
     <DatasetSummaryContainer>
-      <div className="left__container">
+      <div className="left__container h-80">
         <div className="summary_metrics__container">
           <Metric label="records" value={rowCount} commas />
           <Metric label="columns" value={boardData.columns.length} />

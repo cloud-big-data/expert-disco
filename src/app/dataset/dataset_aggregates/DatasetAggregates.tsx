@@ -162,7 +162,9 @@ const DatasetAggregates: React.FC = () => {
             }}
             options={VIEWS}
           >
-            <Card>{ViewComponent}</Card>
+            <Card>
+              <div className="max-h-108 overflow-auto">{ViewComponent}</div>
+            </Card>
           </ViewWithLeftNav>
         </AggregatesContainer>
       ) : (
