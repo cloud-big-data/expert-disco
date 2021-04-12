@@ -194,6 +194,10 @@ a:not(.no-hover):hover {
   }
 }
 
+#root button {
+  outline: none;
+}
+
 #root .ant-checkbox-checked .ant-checkbox-inner {
   background-color: var(--blue);
   border-color: #eaf5f7;

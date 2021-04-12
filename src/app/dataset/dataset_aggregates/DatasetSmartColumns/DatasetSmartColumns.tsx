@@ -84,7 +84,7 @@ const DatasetSmartColumns: React.FC = () => {
           />
         </div>
       </div>
-      <div className="main">
+      <div className="main m-auto h-full">
         {selectedSmartColumn ? (
           <EditSmartColumn
             smartColumns={smartColumns}
