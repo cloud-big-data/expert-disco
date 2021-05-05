@@ -57,7 +57,7 @@ const DatasetUploader: React.FC<{
           }
 
           const data = {
-            bucket: 'skyvue-datasets',
+            bucket: 'skyvue-datasets-queue',
             ...fields,
             'Content-Type': 'text/csv',
             file,
@@ -68,14 +68,16 @@ const DatasetUploader: React.FC<{
             formData.append(name, data[name]);
           });
 
-          await fetch(url, {
+          const res = await fetch(url, {
             method: 'POST',
             body: formData,
           });
 
-          await skyvueFetch(accessToken).post('/datasets/process_dataset', {
-            key: data.key,
-          });
+          console.log(res);
+
+          // await skyvueFetch(accessToken).post('/datasets/process_dataset', {
+          //   key: data.key,
+          // });
         } catch (e) {
           console.log(e);
           setError(true);
