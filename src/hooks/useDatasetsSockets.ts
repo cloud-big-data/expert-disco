@@ -73,6 +73,7 @@ const useDatasetsSockets = (
 
   useEffect(() => {
     if (!userId || !datasetId || !skyvueFileSize || socketObj) return;
+    console.log(getDatasetsWSUrl(skyvueFileSize));
     const socket = io(getDatasetsWSUrl(skyvueFileSize), {
       query: {
         datasetId,
@@ -104,6 +105,7 @@ const useDatasetsSockets = (
     });
 
     socket.on('initialDatasetReceived', (res: IBoardData) => {
+      console.log(res);
       if (!boardData) {
         setBoardData(res);
         if (!changeHistoryRef.current?.[0]) {

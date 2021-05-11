@@ -80,8 +80,12 @@ const MyDatasets: React.FC = () => {
   const [newDatasetModalIsOpen, setNewDatasetModalIsOpen] = useState(false);
   const fetcher = skyvueFetch(accessToken!);
   const [loadingState, setLoadingState] = useState(false);
-  const { isLoading, data, refetch } = useQuery(newDatasetModalIsOpen, () =>
-    fetcher.get('/datasets'),
+  const { isLoading, data, refetch } = useQuery(
+    newDatasetModalIsOpen,
+    () => fetcher.get('/datasets'),
+    {
+      refetchInterval: 60000,
+    },
   );
 
   const duplicateDataset = async (datasetId: string, title: string) => {
