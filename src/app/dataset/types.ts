@@ -206,6 +206,7 @@ export interface IBoardData {
     viewers: UserId[];
   };
   columns: IColumn[];
+  underlyingColumns: IColumn[];
   rows: IRow[];
   layers: {
     joins: IJoinLayer;
