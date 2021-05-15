@@ -148,6 +148,7 @@ export interface IColumn extends ICell {
   isJoined?: boolean;
   isUnique?: boolean;
   hidden?: boolean;
+  isGrouped?: boolean;
 }
 
 export interface ISmartColumn extends IColumn {

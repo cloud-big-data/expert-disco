@@ -299,7 +299,7 @@ const DatasetWrapper: React.FC = () => {
     );
   }
 
-  if (!boardData) {
+  if (!boardData?.columns) {
     return (
       <>
         <CustomerNav email={user.email} />
