@@ -124,6 +124,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   const colFormat = isJoined ? boardData.layers.joins.condition.format : format;
   const { handleChange } = useContext(GridContext)!;
 
+  const [localValue, setLocalValue] = useState(value);
+
   const boardActions = makeBoardActions(boardData);
   const inputRef = useRef<HTMLInputElement>(null);
   const colHeaderRef = useRef<HTMLDivElement>(null);
@@ -432,12 +434,13 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         {!readOnly && active ? (
           <ActiveInput
             ref={inputRef}
-            value={value ?? ''}
+            value={localValue ?? value ?? ''}
             type="text"
             onKeyDown={e => {
               if (e.key !== 'Enter') return;
               const set = (key: string, value: any) =>
                 R.over(R.lensProp('columnsState'), R.assoc(key, value));
+              inputRef.current?.blur();
               setBoardState(
                 R.pipe(
                   set('selectedColumn', 'columnIndex'),
@@ -447,6 +450,10 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             }}
             onChange={e => {
               prevValue.current = value;
+              setLocalValue(e.target.value);
+            }}
+            onBlur={e => {
+              console.log('hi there');
               setBoardData!(
                 R.assoc(
                   'columns',
@@ -468,7 +475,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               overflow: 'hidden',
             }}
           >
-            {value}
+            {localValue ?? value}
           </Label>
         )}
         <i
