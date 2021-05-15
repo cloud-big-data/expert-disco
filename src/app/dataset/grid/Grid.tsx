@@ -4,6 +4,12 @@ import GridContext from 'contexts/GridContext';
 import React, { useContext, useRef } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
 
 import Styles from 'styles/Styles';
 import { VariableSizeList as VirtualizedList } from 'react-window';
@@ -17,6 +23,7 @@ import Row from './Row';
 import updateColumnById from '../lib/updateColumnById';
 import updateSmartColumnById from '../lib/updateSmartColumnById';
 import { defaults } from './constants';
+import sortDatasetByColumnOrder from '../lib/sortDatasetByColumnOrder';
 
 const GridContainer = styled.div`
   display: flex;
@@ -51,6 +58,8 @@ const Grid: React.FC<{
     getRowSlice,
     visibleRows,
     setVisibleRows,
+    loading,
+    socket,
   } = useContext(DatasetContext)!;
   const listRef = useRef<VirtualizedList>(null);
   const { rows, columns } = boardData;
@@ -108,6 +117,30 @@ const Grid: React.FC<{
     }, 200);
   };
 
+  const onDragEnd = (result: DropResult) => {
+    console.log(result);
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const reorder = (list: string[], startIndex: number, endIndex: number) => {
+      const result = Array.from(list);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+
+      return result;
+    };
+
+    const colOrder = reorder(
+      columns.map(col => col._id),
+      result.source.index,
+      result.destination.index,
+    );
+    socket?.emit('setColOrder', colOrder);
+    setBoardData?.(sortDatasetByColumnOrder(colOrder, boardData));
+  };
+
   return (
     <GridContext.Provider
       value={{
@@ -122,45 +155,73 @@ const Grid: React.FC<{
             undo={!readOnly ? undo : () => undefined}
             redo={!readOnly ? redo : () => undefined}
           >
-            <ColumnsContainer>
-              {columns.map((col, index) =>
-                col.hidden ? (
-                  <HiddenColumnIndicator
-                    key={col._id}
-                    value={col.value}
-                    onShow={() => {
-                      setBoardData?.(
-                        R.pipe(
-                          updateColumnById(col._id, { hidden: false }),
-                          R.ifElse(
-                            () => col.isSmartColumn === true,
-                            updateSmartColumnById(col._id, { hidden: false }),
-                            R.identity,
-                          ),
-                          R.ifElse(
-                            () => col.isJoined === true,
-                            R.assocPath(['layers', 'joins', 'hidden'], false),
-                            R.identity,
-                          ),
-                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                          // @ts-ignore
-                        )(boardData),
-                      );
-                    }}
-                  />
-                ) : (
-                  <ColumnHeader
-                    key={col._id}
-                    {...col}
-                    columnIndex={index}
-                    position={{
-                      firstColumn: index === 0,
-                      lastColumn: index === columns.length - 1,
-                    }}
-                  />
-                ),
-              )}
-            </ColumnsContainer>
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="droppable" direction="horizontal">
+                {(provided, snapshot) => (
+                  <ColumnsContainer
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    {columns.map((col, index) => (
+                      <Draggable key={col._id} draggableId={col._id} index={index}>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              ...provided.draggableProps.style,
+                            }}
+                            onMouseDown={e => console.log(e.target)}
+                          >
+                            {col.hidden ? (
+                              <HiddenColumnIndicator
+                                key={col._id}
+                                value={col.value}
+                                onShow={() => {
+                                  setBoardData?.(
+                                    R.pipe(
+                                      updateColumnById(col._id, { hidden: false }),
+                                      R.ifElse(
+                                        () => col.isSmartColumn === true,
+                                        updateSmartColumnById(col._id, {
+                                          hidden: false,
+                                        }),
+                                        R.identity,
+                                      ),
+                                      R.ifElse(
+                                        () => col.isJoined === true,
+                                        R.assocPath(
+                                          ['layers', 'joins', 'hidden'],
+                                          false,
+                                        ),
+                                        R.identity,
+                                      ),
+                                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                      // @ts-ignore
+                                    )(boardData),
+                                  );
+                                }}
+                              />
+                            ) : (
+                              <ColumnHeader
+                                key={col._id}
+                                {...col}
+                                columnIndex={index}
+                                position={{
+                                  firstColumn: index === 0,
+                                  lastColumn: index === columns.length - 1,
+                                }}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  </ColumnsContainer>
+                )}
+              </Droppable>
+            </DragDropContext>
             {rows.length > 0 ? (
               <VirtualizedList
                 ref={listRef}
@@ -178,7 +239,7 @@ const Grid: React.FC<{
                 len="short"
                 size="lg"
               >
-                Your query returned no results
+                {loading ? `Query is loading...` : `Your query returned no results`}
               </Text>
             )}
           </HotkeysProvider>

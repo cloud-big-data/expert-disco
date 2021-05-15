@@ -239,11 +239,11 @@ const DatasetWrapper: React.FC = () => {
       },
       loading,
       setLoading,
-      setBoardData: [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(
-        userType,
-      )
-        ? _setBoardData
-        : null,
+      setBoardData:
+        [DatasetUserTypes.owner, DatasetUserTypes.editor].includes(userType) ||
+        everyoneIsAdmin
+          ? _setBoardData
+          : null,
       setBoardState,
       clipboard,
       setClipboard: async (val?: string) => {
