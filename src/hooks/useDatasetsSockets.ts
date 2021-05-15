@@ -124,6 +124,7 @@ const useDatasetsSockets = (
       (
         res: Pick<IBoardData, 'columns' | 'visibilitySettings' | 'layers' | '_id'>,
       ) => {
+        console.log(res);
         setQueriedDatasets(
           queriedDatasets.find(
             dataset => dataset.columns.length === res.columns.length,

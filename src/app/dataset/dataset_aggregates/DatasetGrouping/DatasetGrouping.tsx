@@ -133,7 +133,6 @@ const DatasetGrouping: React.FC = () => {
   const { boardData, setBoardData, socket, setLoading } = useContext(
     DatasetContext,
   )!;
-  console.log(boardData);
   const [groupingState, _setGroupingState] = useState<IGroupLayer>(
     boardData.layers?.groupings.columnAggregates
       ? boardData.layers?.groupings

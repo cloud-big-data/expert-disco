@@ -86,7 +86,7 @@ const JoinEditor: FC<{
     dataset => dataset._id === condition?.datasetId,
   );
 
-  const isNestedJoin = keyLength(joiningDataset?.layers.joins) > 0;
+  const isNestedJoin = keyLength(joiningDataset?.layers?.joins) > 0;
 
   const joinableColumns = joiningDataset?.columns.filter(
     col => !col.isSmartColumn && (col.isUnique === true || col._id),
@@ -188,7 +188,7 @@ const JoinEditor: FC<{
                 value={condition?.on?.[0]?.mainColumnId}
                 onChange={e => updateJoinOn(e, 'mainColumnId')}
                 options={
-                  boardData.columns.map(col => ({
+                  boardData.underlyingColumns.map(col => ({
                     name: col.value ?? col._id,
                     value: col._id,
                   })) ?? []

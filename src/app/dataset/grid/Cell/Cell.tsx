@@ -102,7 +102,7 @@ const CellContainer = React.memo(styled.div<{
   ${props =>
     props.selected
       ? `
-    border: 2px solid ${Styles.purple400};
+    border: 1px solid ${Styles.purple400};
     border-radius: ${CELL_BORDER_RADIUS}; 
     box-shadow: ${Styles.smBoxShadow};
   `
