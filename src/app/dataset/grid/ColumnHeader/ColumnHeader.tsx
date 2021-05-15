@@ -108,6 +108,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   formatSettings,
   isSmartColumn,
   isJoined,
+  isGrouped,
   hidden,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
@@ -394,7 +395,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         active={active}
         colWidth={colWidth ?? defaults.COL_WIDTH}
         onDoubleClick={() =>
-          isSmartColumn
+          isSmartColumn || isGrouped
             ? undefined
             : setBoardState(
                 R.assocPath(

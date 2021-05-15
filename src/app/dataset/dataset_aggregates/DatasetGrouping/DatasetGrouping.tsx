@@ -133,6 +133,7 @@ const DatasetGrouping: React.FC = () => {
   const { boardData, setBoardData, socket, setLoading } = useContext(
     DatasetContext,
   )!;
+  console.log(boardData);
   const [groupingState, _setGroupingState] = useState<IGroupLayer>(
     boardData.layers?.groupings.columnAggregates
       ? boardData.layers?.groupings
@@ -149,7 +150,7 @@ const DatasetGrouping: React.FC = () => {
     });
   };
   const { groupedBy, columnAggregates } = groupingState;
-  const availableColumns = boardData.columns
+  const availableColumns = boardData.underlyingColumns
     .filter(
       x => !groupedBy?.includes(x._id) && !R.keys(columnAggregates).includes(x._id),
     )
@@ -231,7 +232,7 @@ const DatasetGrouping: React.FC = () => {
                             />
                           </IconButton>
                           <Select
-                            options={boardData.columns.map(col => ({
+                            options={boardData.underlyingColumns.map(col => ({
                               name: col.value ?? '',
                               value: col._id ?? '',
                               disabled: !availableColumns.find(
@@ -320,7 +321,7 @@ const DatasetGrouping: React.FC = () => {
                 <Select
                   placeholder="column"
                   value={key as string}
-                  options={boardData.columns.map(col => ({
+                  options={boardData.underlyingColumns.map(col => ({
                     name: col.value ?? '',
                     value: col._id ?? '',
                     disabled: !availableColumns.find(col_ => col_ === col._id),
