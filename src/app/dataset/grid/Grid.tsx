@@ -1,7 +1,7 @@
 import { Text } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
 import GridContext from 'contexts/GridContext';
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
 import {
@@ -51,6 +51,7 @@ const Grid: React.FC<{
   redo: () => void;
   handleChange: (changeHistoryItem: ChangeHistoryItem) => void;
 }> = ({ gridRef, undo, redo, handleChange }) => {
+  const [mouseIsOnEdge, setMouseIsOnEdge] = useState(false);
   const {
     boardData,
     setBoardData,
@@ -69,6 +70,31 @@ const Grid: React.FC<{
   const scrollTimeout = useRef(-1);
 
   const { height } = useWindowSize();
+
+  useEffect(() => {
+    if (!gridRef.current) return;
+    const ref = gridRef.current;
+    const handleMouseDown = (e: Event) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (e.target.classList.contains('edge__container')) {
+        setMouseIsOnEdge(true);
+      }
+    };
+    const handleMouseUp = (e: Event) => {
+      if (mouseIsOnEdge) {
+        setMouseIsOnEdge(false);
+      }
+    };
+
+    ref.addEventListener('mouseover', handleMouseDown);
+    ref.addEventListener('mouseout', handleMouseUp);
+
+    return () => {
+      ref.removeEventListener('mouseover', handleMouseDown);
+      ref.removeEventListener('mouseout', handleMouseUp);
+    };
+  }, [gridRef, mouseIsOnEdge]);
 
   const makeRow = React.memo(({ index, style }: any) => {
     const row = rows[index];
@@ -118,7 +144,6 @@ const Grid: React.FC<{
   };
 
   const onDragEnd = (result: DropResult) => {
-    console.log(result);
     // dropped outside the list
     if (!result.destination) {
       return;
@@ -156,15 +181,20 @@ const Grid: React.FC<{
             redo={!readOnly ? redo : () => undefined}
           >
             <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="droppable" direction="horizontal">
-                {(provided, snapshot) => (
+              <Droppable droppableId="column" direction="horizontal">
+                {provided => (
                   <ColumnsContainer
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                   >
                     {columns.map((col, index) => (
-                      <Draggable key={col._id} draggableId={col._id} index={index}>
-                        {(provided, snapshot) => (
+                      <Draggable
+                        isDragDisabled={mouseIsOnEdge}
+                        key={col._id}
+                        draggableId={col._id}
+                        index={index}
+                      >
+                        {provided => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
@@ -172,7 +202,6 @@ const Grid: React.FC<{
                             style={{
                               ...provided.draggableProps.style,
                             }}
-                            onMouseDown={e => console.log(e.target)}
                           >
                             {col.hidden ? (
                               <HiddenColumnIndicator
@@ -218,6 +247,7 @@ const Grid: React.FC<{
                         )}
                       </Draggable>
                     ))}
+                    {provided.placeholder}
                   </ColumnsContainer>
                 )}
               </Droppable>

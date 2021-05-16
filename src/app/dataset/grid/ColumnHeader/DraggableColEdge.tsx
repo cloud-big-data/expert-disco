@@ -1,11 +1,14 @@
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components/macro';
+
 import findColumnById from 'app/dataset/lib/findColumnById';
 import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
 import updateLayers from 'app/dataset/lib/updateLayers';
 import updateSmartColumnById from 'app/dataset/lib/updateSmartColumnById';
-import DatasetContext from 'contexts/DatasetContext';
+
 import GridContext from 'contexts/GridContext';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components/macro';
+import useDatasetContext from 'hooks/useDatasetContext';
+
 import Styles from 'styles/Styles';
 
 const ColEdgeContainer = styled.div<{
@@ -31,9 +34,7 @@ const DraggableColEdge: React.FC<{
   colWidth: number;
   colId: string;
 }> = ({ colWidth, colId }) => {
-  const { boardData, setBoardData, socket, setLoading } = useContext(
-    DatasetContext,
-  )!;
+  const { boardData, setBoardData, socket, setLoading } = useDatasetContext()!;
   const { gridRef } = useContext(GridContext)!;
   const [hovering, toggleHovering] = useState(false);
   const [mouseIsDown, toggleMouseIsDown] = useState(false);
@@ -66,6 +67,7 @@ const DraggableColEdge: React.FC<{
   );
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
+    e.stopPropagation();
     if (!xRef.current) return;
     xRef.current.style.left = `${e.pageX - 20}px`;
   }, []);
@@ -127,6 +129,7 @@ const DraggableColEdge: React.FC<{
       hovering={hovering}
       onMouseEnter={() => toggleHovering(true)}
       onMouseLeave={() => toggleHovering(false)}
+      className="edge__container"
     >
       {mouseIsDown && <WidthIndicator ref={xRef} />}
     </ColEdgeContainer>
