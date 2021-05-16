@@ -225,6 +225,7 @@ export interface IBoardData {
   };
   errors?: Array<BoardError>;
   columnSummary: IColumnSummary;
+  deletedObjects?: ObjectDeletion[];
 }
 
 export interface IBoardHead {
@@ -309,3 +310,9 @@ export interface ColumnMapping {
 }
 
 export type Destinations = 'csv' | 'sheets' | 'skyvue';
+
+export interface ObjectDeletion {
+  objectType: 'row' | 'column';
+  objectId: string;
+  deletedAt: Date;
+}

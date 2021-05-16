@@ -15,7 +15,13 @@ import { useParams } from 'react-router-dom';
 import useDatasetsSockets from 'hooks/useDatasetsSockets';
 import { useQuery } from 'react-query';
 import skyvueFetch from 'services/skyvueFetch';
-import { IBoardState, IBoardData, IBoardHead, UploadPreview } from '../types';
+import {
+  IBoardState,
+  IBoardData,
+  IBoardHead,
+  UploadPreview,
+  ObjectDeletion,
+} from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 import makeBoardDiff from '../lib/makeBoardDiff';
 import DatasetNotFound from '../DatasetNotFound';
@@ -107,6 +113,7 @@ const DatasetWrapper: React.FC = () => {
     boardData?.rows[0]?.index ?? 0,
     boardData?.rows ? R.last(boardData?.rows)?.index ?? 0 : 0,
   ] as [number, number]);
+  const [deletedObjects, setDeletedObjects] = useState<Array<ObjectDeletion>>([]);
 
   const rowsInitialized = useRef(false);
 
@@ -190,11 +197,20 @@ const DatasetWrapper: React.FC = () => {
       setQueriedDatasets,
       uploadPreview,
       setUploadPreview,
+      setDeletedObjects,
     },
     changeHistoryRef,
     setFilesToDownload,
     loading,
     setLoading,
+  );
+
+  const _setDeletedObjects = useCallback(
+    (deletedObjects: ObjectDeletion[]) => {
+      socket?.emit('setDeletedObjects', deletedObjects);
+      setDeletedObjects(deletedObjects);
+    },
+    [socket],
   );
 
   const _setBoardData = useCallback(
@@ -258,13 +274,17 @@ const DatasetWrapper: React.FC = () => {
       setVisibleRows,
       uploadPreview,
       setUploadPreview,
+      deletedObjects,
+      setDeletedObjects: _setDeletedObjects,
     }),
     [
       _setBoardData,
+      _setDeletedObjects,
       boardData,
       boardState,
       clipboard,
       datasetHead,
+      deletedObjects,
       loading,
       queriedDatasets,
       readOnly,
