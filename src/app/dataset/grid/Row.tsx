@@ -1,17 +1,17 @@
+import React, { useContext } from 'react';
+
 import { Helper, Text } from 'components/ui/Typography';
 import DatasetContext from 'contexts/DatasetContext';
-import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
 import { Menu, Dropdown } from 'antd';
-import GridContext from 'contexts/GridContext';
+// import GridContext from 'contexts/GridContext';
 import Styles from 'styles/Styles';
-import usePrevious from 'hooks/usePrevious';
+// import usePrevious from 'hooks/usePrevious';
 import { IBoardState, IColumn, IRow } from '../types';
 import Cell from './Cell';
 import { defaults } from './constants';
-import { makeBoardActions } from '../lib/makeBoardActions';
-import findRowById from '../lib/findRowById';
+// import findRowById from '../lib/findRowById';
 
 const RowContainer = styled.div`
   display: flex;
@@ -75,13 +75,12 @@ const Row: React.FC<IRowProps> = ({
     boardState,
     setBoardState,
     boardData,
-    setBoardData,
     datasetHead,
     deletedObjects,
+    setDeletedObjects,
   } = useContext(DatasetContext)!;
-  const { handleChange } = useContext(GridContext)!;
-  const boardActions = makeBoardActions(boardData);
-  const prevRowValue = usePrevious(findRowById(_id, boardData));
+  // const { handleChange } = useContext(GridContext)!;
+  // const prevRowValue = usePrevious(findRowById(_id, boardData));
 
   const menu = (
     <Menu>
@@ -89,15 +88,14 @@ const Row: React.FC<IRowProps> = ({
         <Menu.Item
           disabled={boardData.columns.length === 1}
           onClick={() => {
-            const newBoardData = boardActions.removeRow(_id);
-
-            handleChange?.({
-              changeTarget: 'row',
-              targetId: _id,
-              prevValue: prevRowValue,
-              newValue: findRowById(_id, newBoardData),
-            });
-            setBoardData?.(newBoardData);
+            setDeletedObjects([
+              ...deletedObjects,
+              {
+                objectType: 'row',
+                objectId: _id,
+                deletedAt: new Date(),
+              },
+            ]);
           }}
         >
           <MenuIcon
@@ -126,7 +124,7 @@ const Row: React.FC<IRowProps> = ({
               )
             }
           >
-            <Helper>{rowIndex}</Helper>
+            <Helper>{rowIndex + 1}</Helper>
           </RowIndexContainer>
         </Dropdown>
         <RowContainer>

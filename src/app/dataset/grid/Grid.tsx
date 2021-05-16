@@ -98,7 +98,9 @@ const Grid: React.FC<{
   }, [gridRef, mouseIsOnEdge]);
 
   const makeRow = React.memo(({ index, style }: any) => {
-    const row = rows[index];
+    const row = rows.filter(
+      row => !deletedObjects.map(obj => obj.objectId).includes(row._id),
+    )[index];
 
     return (
       <div
@@ -111,7 +113,7 @@ const Grid: React.FC<{
           key={row._id}
           {...row}
           columnLookup={columnLookup}
-          rowIndex={row.index}
+          rowIndex={index}
           position={{
             firstRow: index === 0,
             lastRow: index === rows.length - 1,
@@ -262,7 +264,12 @@ const Grid: React.FC<{
               <VirtualizedList
                 ref={listRef}
                 height={height ? height * 0.7 : 1000}
-                itemCount={boardData.rows?.length ?? 0}
+                itemCount={
+                  boardData.rows.filter(
+                    row =>
+                      !deletedObjects.map(obj => obj.objectId).includes(row._id),
+                  )?.length ?? 0
+                }
                 itemSize={() => defaults.ROW_HEIGHT * 16}
                 width={gridRef.current?.scrollWidth ?? 1000}
                 onScroll={onScroll}
