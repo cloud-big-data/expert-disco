@@ -14,8 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as R from 'ramda';
 
 const getDatasetsWSUrl = (skyvueFileSize: number) => {
-  if (process.env.NODE_ENV === 'production')
-    return `https://skyvuedatasetservice.com`;
+  if (process.env.NODE_ENV === 'production') return `https://datasets.skyvue.io`;
   return 'ws://localhost:8080';
 };
 
