@@ -6,6 +6,7 @@ import {
   IBoardHead,
   IBoardState,
   IRow,
+  ObjectDeletion,
   UploadPreview,
 } from 'app/dataset/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,6 +43,7 @@ const useDatasetsSockets = (
     ) => void;
     uploadPreview: UploadPreview | undefined;
     setUploadPreview: (preview?: UploadPreview) => void;
+    setDeletedObjects: (deletedObjects: ObjectDeletion[]) => void;
   },
   changeHistoryRef: React.MutableRefObject<Array<string>>,
   setFilesToDownload: (files: string[]) => void,
@@ -62,6 +64,7 @@ const useDatasetsSockets = (
     setQueriedDatasets,
     uploadPreview,
     setUploadPreview,
+    setDeletedObjects,
   } = board;
 
   const [socketObj, setSocket] = useState<SocketIOClient.Socket | undefined>(
@@ -108,6 +111,10 @@ const useDatasetsSockets = (
       console.log(res);
       if (!boardData) {
         setBoardData(res);
+        if (res.deletedObjects) {
+          setDeletedObjects(res.deletedObjects);
+        }
+
         if (!changeHistoryRef.current?.[0]) {
           changeHistoryRef.current = [uuidv4()];
         }
@@ -185,6 +192,7 @@ const useDatasetsSockets = (
     queriedDatasets,
     uploadPreview,
     setUploadPreview,
+    setDeletedObjects,
   ]);
 
   useEffect(() => {

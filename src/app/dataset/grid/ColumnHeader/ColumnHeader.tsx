@@ -9,13 +9,14 @@ import GridContext from 'contexts/GridContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import { Menu, Dropdown, Tooltip } from 'antd';
 import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
-import findColumnById from 'app/dataset/lib/findColumnById';
+// import findColumnById from 'app/dataset/lib/findColumnById';
 import { DATE_FORMATS, NUMBER_FORMATS, CURRENCY_CODES } from 'app/dataset/constants';
 import updateColumnById from 'app/dataset/lib/updateColumnById';
 import updateLayers from 'app/dataset/lib/updateLayers';
 import updateSmartColumnById from 'app/dataset/lib/updateSmartColumnById';
+// import deepUpdateColumnById from 'app/dataset/lib/deepUpdateColumnById';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
-import { makeBoardActions } from '../../lib/makeBoardActions';
+// import { makeBoardActions } from '../../lib/makeBoardActions';
 import {
   DataTypes,
   IBoardState,
@@ -120,13 +121,15 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
     setBoardData,
     socket,
     setLoading,
+    deletedObjects,
+    setDeletedObjects,
   } = useContext(DatasetContext)!;
   const colFormat = isJoined ? boardData.layers.joins.condition.format : format;
   const { handleChange } = useContext(GridContext)!;
 
   const [localValue, setLocalValue] = useState(value);
 
-  const boardActions = makeBoardActions(boardData);
+  // const boardActions = makeBoardActions(boardData);
   const inputRef = useRef<HTMLInputElement>(null);
   const colHeaderRef = useRef<HTMLDivElement>(null);
   const prevValue = useRef<undefined | string>(value);
@@ -134,7 +137,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   const prevActive = usePrevious(
     boardState.columnsState.activeColumn === columnIndex,
   );
-  const prevColumnValue = usePrevious(findColumnById(_id, boardData));
+  // const prevColumnValue = usePrevious(findColumnById(_id, boardData));
 
   const active = boardState.columnsState.activeColumn === columnIndex;
 
@@ -198,18 +201,33 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               );
               return;
             }
-            const newBoardData = boardActions.removeColumn(_id);
+            if (isJoined) {
+              const newLayer = R.assocPath(
+                ['joins', 'condition', 'select'],
+                boardData.layers.joins.condition.select.filter(x => x !== _id),
+                boardData.layers,
+              );
+              updateLayers(
+                {
+                  layerKey: 'joins',
+                  layerData: newLayer.joins,
+                },
+                socket,
+                undefined,
+                false,
+              );
+              setBoardData?.({
+                ...boardData,
+                layers: newLayer,
+                columns: boardData.columns.filter(col => col._id !== _id),
+              });
+              return;
+            }
 
-            handleChange?.({
-              changeTarget: 'column',
-              targetId: _id,
-              prevValue: prevColumnValue,
-              newValue: findColumnById(_id, newBoardData),
-              secondaryValue: {
-                changeTarget: 'cells',
-              },
-            });
-            setBoardData?.(newBoardData);
+            setDeletedObjects([
+              ...deletedObjects,
+              { objectId: _id, objectType: 'column', deletedAt: new Date() },
+            ]);
           }}
         >
           <MenuIcon

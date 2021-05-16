@@ -61,6 +61,7 @@ const Grid: React.FC<{
     setVisibleRows,
     loading,
     socket,
+    deletedObjects,
   } = useContext(DatasetContext)!;
   const listRef = useRef<VirtualizedList>(null);
   const { rows, columns } = boardData;
@@ -187,66 +188,71 @@ const Grid: React.FC<{
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                   >
-                    {columns.map((col, index) => (
-                      <Draggable
-                        isDragDisabled={mouseIsOnEdge}
-                        key={col._id}
-                        draggableId={col._id}
-                        index={index}
-                      >
-                        {provided => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                              ...provided.draggableProps.style,
-                            }}
-                          >
-                            {col.hidden ? (
-                              <HiddenColumnIndicator
-                                key={col._id}
-                                value={col.value}
-                                onShow={() => {
-                                  setBoardData?.(
-                                    R.pipe(
-                                      updateColumnById(col._id, { hidden: false }),
-                                      R.ifElse(
-                                        () => col.isSmartColumn === true,
-                                        updateSmartColumnById(col._id, {
-                                          hidden: false,
-                                        }),
-                                        R.identity,
-                                      ),
-                                      R.ifElse(
-                                        () => col.isJoined === true,
-                                        R.assocPath(
-                                          ['layers', 'joins', 'hidden'],
-                                          false,
+                    {columns
+                      .filter(
+                        col =>
+                          !deletedObjects.map(obj => obj.objectId).includes(col._id),
+                      )
+                      .map((col, index) => (
+                        <Draggable
+                          isDragDisabled={mouseIsOnEdge}
+                          key={col._id}
+                          draggableId={col._id}
+                          index={index}
+                        >
+                          {provided => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={{
+                                ...provided.draggableProps.style,
+                              }}
+                            >
+                              {col.hidden ? (
+                                <HiddenColumnIndicator
+                                  key={col._id}
+                                  value={col.value}
+                                  onShow={() => {
+                                    setBoardData?.(
+                                      R.pipe(
+                                        updateColumnById(col._id, { hidden: false }),
+                                        R.ifElse(
+                                          () => col.isSmartColumn === true,
+                                          updateSmartColumnById(col._id, {
+                                            hidden: false,
+                                          }),
+                                          R.identity,
                                         ),
-                                        R.identity,
-                                      ),
-                                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                      // @ts-ignore
-                                    )(boardData),
-                                  );
-                                }}
-                              />
-                            ) : (
-                              <ColumnHeader
-                                key={col._id}
-                                {...col}
-                                columnIndex={index}
-                                position={{
-                                  firstColumn: index === 0,
-                                  lastColumn: index === columns.length - 1,
-                                }}
-                              />
-                            )}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
+                                        R.ifElse(
+                                          () => col.isJoined === true,
+                                          R.assocPath(
+                                            ['layers', 'joins', 'hidden'],
+                                            false,
+                                          ),
+                                          R.identity,
+                                        ),
+                                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                        // @ts-ignore
+                                      )(boardData),
+                                    );
+                                  }}
+                                />
+                              ) : (
+                                <ColumnHeader
+                                  key={col._id}
+                                  {...col}
+                                  columnIndex={index}
+                                  position={{
+                                    firstColumn: index === 0,
+                                    lastColumn: index === columns.length - 1,
+                                  }}
+                                />
+                              )}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
                     {provided.placeholder}
                   </ColumnsContainer>
                 )}

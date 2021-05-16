@@ -3,6 +3,7 @@ import {
   IBoardData,
   IBoardHead,
   UploadPreview,
+  ObjectDeletion,
 } from 'app/dataset/types';
 import { createContext } from 'react';
 import { RefetchOptions } from 'react-query/types/core/query';
@@ -36,6 +37,8 @@ interface IDatasetContext {
   refetch: (options?: RefetchOptions) => void;
   uploadPreview?: UploadPreview;
   setUploadPreview: (preview?: UploadPreview) => void;
+  deletedObjects: ObjectDeletion[];
+  setDeletedObjects: (objects: ObjectDeletion[]) => void;
 }
 
 const DatasetContext = createContext<null | IDatasetContext>(null);

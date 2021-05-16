@@ -2,6 +2,7 @@ import {
   IColumnFormatting,
   IFilterLayer,
   IGroupLayer,
+  IJoinLayer,
   ISmartColumn,
   ISortingLayer,
   LayersTypes,
@@ -17,12 +18,14 @@ const updateLayers = (
       | IFilterLayer
       | IGroupLayer
       | ISortingLayer
+      | IJoinLayer
       | ISmartColumn[]
       | IColumnFormatting
       | Record<string, unknown>;
   },
   socket?: SocketIOClient.Socket,
   setLoading?: () => void,
+  refresh = true,
 ) => {
   setLoading?.();
   socket?.emit('layer', {

@@ -77,6 +77,7 @@ const Row: React.FC<IRowProps> = ({
     boardData,
     setBoardData,
     datasetHead,
+    deletedObjects,
   } = useContext(DatasetContext)!;
   const { handleChange } = useContext(GridContext)!;
   const boardActions = makeBoardActions(boardData);
@@ -132,6 +133,12 @@ const Row: React.FC<IRowProps> = ({
           <div className="cells__container">
             {cells
               .filter(cell => !cell || !!columnLookup[cell.columnId ?? ''])
+              .filter(
+                cell =>
+                  !deletedObjects
+                    .map(obj => obj.objectId)
+                    .includes(cell.columnId ?? ''),
+              )
               .map((cell, index) => {
                 const column = columnLookup[cell?.columnId ?? ''];
                 if (!cell) {
