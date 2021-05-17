@@ -7,7 +7,7 @@ import * as R from 'ramda';
 import usePrevious from 'hooks/usePrevious';
 import GridContext from 'contexts/GridContext';
 import useHandleClickOutside from 'hooks/useHandleClickOutside';
-import { Menu, Dropdown, Tooltip } from 'antd';
+import { Menu, Dropdown, Tooltip, Slider } from 'antd';
 import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
 // import findColumnById from 'app/dataset/lib/findColumnById';
 import { DATE_FORMATS, NUMBER_FORMATS, CURRENCY_CODES } from 'app/dataset/constants';
@@ -15,6 +15,8 @@ import updateColumnById from 'app/dataset/lib/updateColumnById';
 import updateLayers from 'app/dataset/lib/updateLayers';
 import updateSmartColumnById from 'app/dataset/lib/updateSmartColumnById';
 // import deepUpdateColumnById from 'app/dataset/lib/deepUpdateColumnById';
+import Modal from 'components/ui/Modal';
+import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
 // import { makeBoardActions } from '../../lib/makeBoardActions';
 import {
@@ -36,6 +38,8 @@ interface IColumnHeaderProps extends IColumn {
     firstColumn: boolean;
     lastColumn: boolean;
   };
+  columnModalIsOpen?: string;
+  setColumnModalIsOpen: (isOpen?: string) => void;
 }
 
 const ColumnHeaderContainer = styled.div<{
@@ -111,6 +115,8 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   isJoined,
   isGrouped,
   hidden,
+  columnModalIsOpen,
+  setColumnModalIsOpen,
 }) => {
   const [showContextMenu, toggleShowContextMenu] = useState(false);
   const {
@@ -235,6 +241,10 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             className="fal fa-times-circle"
           />
           Remove column
+        </Menu.Item>
+        <Menu.Item onClick={() => setColumnModalIsOpen(_id)}>
+          <MenuIcon className="fal fa-arrows-h" />
+          Resize Column
         </Menu.Item>
         <Menu.Item
           onClick={() => {
@@ -427,6 +437,35 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         }
         onClick={selectColumn}
       >
+        {columnModalIsOpen === _id && (
+          <Modal closeModal={() => setColumnModalIsOpen()}>
+            <Label>Set the slider to the column's desired width</Label>
+            <Label unBold>Current width: {colWidth ?? defaults.COL_WIDTH}</Label>
+            <Slider
+              max={800}
+              onAfterChange={(width: any) => {
+                const boardActions = makeBoardActions(boardData);
+                setBoardData?.(boardActions.changeColWidth(_id, width));
+                if (isSmartColumn) {
+                  updateLayers(
+                    {
+                      layerKey: 'smartColumns',
+                      layerData: updateSmartColumnById(
+                        _id,
+                        { colWidth: width },
+                        boardData,
+                      )?.layers?.smartColumns,
+                    },
+                    socket,
+                    () => setLoading(true),
+                  );
+                }
+              }}
+              tooltipVisible={false}
+              defaultValue={colWidth ?? defaults.COL_WIDTH}
+            />
+          </Modal>
+        )}
         <Tooltip color="white" title={dataType}>
           {dataType === 'string' ? (
             <i className="fad fa-text-size" style={ColumnTypeStyle} />
@@ -471,7 +510,6 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
               setLocalValue(e.target.value);
             }}
             onBlur={e => {
-              console.log('hi there');
               setBoardData!(
                 R.assoc(
                   'columns',

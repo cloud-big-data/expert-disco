@@ -9,26 +9,6 @@ import humanFileSize from 'utils/humanFileSize';
 import ColumnSummaries from './ColumnSummaries';
 
 const DatasetSummaryContainer = styled.div`
-  display: grid;
-  grid-template-columns: auto 3fr;
-  grid-column-gap: 1rem;
-  overflow: hidden;
-
-  .fields__container {
-    border-left: 2px solid ${Styles.faintBorderColor};
-    padding-left: 2rem;
-  }
-
-  .left__container {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 0 1rem 1rem;
-
-    @media (max-width: 700px) {
-      border-right: none;
-    }
-  }
-
   .summary_metrics__container {
     padding-right: 1rem;
     margin-bottom: 1rem;
@@ -36,19 +16,6 @@ const DatasetSummaryContainer = styled.div`
     flex-direction: column;
     div:not(:nth-of-type(1)) {
       margin-top: 1rem;
-    }
-  }
-
-  .fit__container {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    .row {
-      display: flex;
-      align-items: center;
-      i {
-        margin-right: 0.5rem;
-      }
     }
   }
 
@@ -136,8 +103,8 @@ const DatasetSummary: React.FC = () => {
 
   return (
     <DatasetSummaryContainer>
-      <div className="left__container h-80">
-        <div className="summary_metrics__container">
+      <div className="flex flex-col md:flex-row justify-between xl:w-1/2 md:w-full mx-auto space-y-8 md:space-y-0">
+        <div className="flex items-center space-x-4 border-dark-100 border-solid mx-auto">
           <Metric label="records" value={rowCount} commas />
           <Metric label="columns" value={boardData.columns.length} />
           <Metric
@@ -149,25 +116,26 @@ const DatasetSummary: React.FC = () => {
             value={csvFileSize ? humanFileSize(csvFileSize) : undefined}
           />
         </div>
-        <div className="fit__container">
-          <h6>
-            Compatible with
-            <br />
-            other data tools?
-          </h6>
-          {OTHER_DATATOOLS.map(tool => (
-            <div key={tool.value} className="row">
-              {validateSizeLimits(sizeLimits, tool.limits) ? (
-                <i style={{ color: Styles.green }} className="fas fa-check-square" />
-              ) : (
-                <i
-                  style={{ color: Styles.red400 }}
-                  className="fad fa-times-square"
-                />
-              )}
-              <Label unBold>{tool.label}</Label>
-            </div>
-          ))}
+        <div className="flex flex-col mx-auto">
+          <h6>Compatible with other data tools?</h6>
+          <div className="flex items-center space-x-4">
+            {OTHER_DATATOOLS.map(tool => (
+              <div key={tool.value} className="flex items-center space-x-2">
+                {validateSizeLimits(sizeLimits, tool.limits) ? (
+                  <i
+                    style={{ color: Styles.green }}
+                    className="fas fa-check-square"
+                  />
+                ) : (
+                  <i
+                    style={{ color: Styles.red400 }}
+                    className="fad fa-times-square"
+                  />
+                )}
+                <Label unBold>{tool.label}</Label>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <div className="fields__container">

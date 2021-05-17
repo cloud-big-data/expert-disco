@@ -1,12 +1,13 @@
 import { ButtonTertiary } from 'components/ui/Buttons';
 import Card from 'components/ui/Card';
-import ViewWithLeftNav from 'components/ViewWithLeftNav';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import DatasetContext from 'contexts/DatasetContext';
+import useWindowSize from 'hooks/useWindowSize';
+import Select from 'components/ui/Select';
 import DatasetFilters from './DatasetFilters';
 import DatasetSummary from './DatasetSummary';
 import DatasetGrouping from './DatasetGrouping';
@@ -36,6 +37,8 @@ const ExpandWrapper = styled.div<{ expanded: boolean }>`
     width: 100%;
     display: grid;
     grid-template-columns: repeat(7, auto);
+    justify-content: flex-start;
+    column-gap: 5rem;
     button {
       align-self: center;
       justify-self: center;
@@ -47,21 +50,6 @@ const ExpandWrapper = styled.div<{ expanded: boolean }>`
         margin-right: 1rem;
       }
     }
-  }
-`;
-
-const AggregatesContainer = styled.div`
-  display: grid;
-  width: 100%;
-  grid-template-columns: 4fr;
-
-  h6 {
-    margin: 0 0 1rem;
-  }
-
-  @media (max-width: 1400px) {
-    display: flex;
-    flex-direction: column;
   }
 `;
 
@@ -82,6 +70,7 @@ const DatasetAggregates: React.FC = () => {
   const { boardData } = useContext(DatasetContext)!;
   const history = useHistory();
   const location = useLocation();
+  const { width } = useWindowSize();
   const querystring = queryString.parse(location.search);
 
   const [expanded, setExpanded] = useState(true);
@@ -144,36 +133,25 @@ const DatasetAggregates: React.FC = () => {
   return (
     <ExpandWrapper expanded={expanded}>
       <ButtonTertiary onClick={() => setExpanded(!expanded)} id="expand_toggle">
-        Dataset actions
+        {expanded ? 'Close' : 'Open'} editor
         {expanded ? (
           <i className="fas fa-caret-down" />
         ) : (
           <i className="fas fa-caret-right" />
         )}
       </ButtonTertiary>
-      {expanded ? (
-        <AggregatesContainer>
-          <ViewWithLeftNav
-            cancelPadding
-            activeView={activeView}
-            setView={(view: string) => {
-              history.replace(`${location.pathname}?view=${view}`);
-              setActiveView(view);
-            }}
-            options={VIEWS}
-          >
-            <Card>
-              <div className="max-h-108 overflow-auto">{ViewComponent}</div>
-            </Card>
-          </ViewWithLeftNav>
-        </AggregatesContainer>
-      ) : (
+
+      {width && width > 1300 ? (
         <div className="contracted_buttons">
           {VIEWS.map(view => (
             <ButtonTertiary
               onClick={() => {
                 setActiveView(view.value);
+                history.replace(`${location.pathname}?view=${view.value}`);
                 setExpanded(true);
+              }}
+              style={{
+                color: view.value === activeView ? Styles.purple400 : 'initial',
               }}
               key={view.value}
             >
@@ -182,7 +160,21 @@ const DatasetAggregates: React.FC = () => {
             </ButtonTertiary>
           ))}
         </div>
+      ) : (
+        <Select
+          options={VIEWS.map(view => ({
+            name: view.name,
+            value: view.value,
+          }))}
+          onChange={e => {
+            setActiveView(e);
+            history.replace(`${location.pathname}?view=${e}`);
+          }}
+          value={activeView}
+          className="w-full"
+        />
       )}
+      {expanded && <Card className="w-full mt-4 md:mt-8">{ViewComponent}</Card>}
     </ExpandWrapper>
   );
 };

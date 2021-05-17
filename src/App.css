@@ -39,7 +39,7 @@
   --defaultPadding: 1rem;
   --defaultMaxWidth: 70rem;
   --defaultBorderRadius: .6rem;
-  --defaultBgColor: #f7f7fc;
+  --defaultBgColor: #FAFBFC;
   --defaultTransitionDuration: 0.2s;
   --softGray: #b8b8d9;
 }
@@ -240,10 +240,6 @@ a:not(.no-hover):hover {
   border: 1px solid var(--faintBorderColor);
 }
 
-
-#root .ant-switch {
-  box-shadow: var(--boxShadow);
-}
 #root .ant-switch-checked {
   background-color: var(--blue);
 }
@@ -268,6 +264,10 @@ a:not(.no-hover):hover {
 
 #root .ant-tabs-ink-bar {
   background: var(--text-color);
+}
+
+#root .ant-slider-handle.ant-tooltip-open::after {
+  background: white;
 }
 
 

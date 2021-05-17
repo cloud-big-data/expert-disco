@@ -30,7 +30,7 @@ export default {
   defaultPadding: '1rem',
   defaultMaxWidth: '70rem',
   defaultBorderRadius: '.6rem',
-  defaultBgColor: '#f7f7fc',
+  defaultBgColor: '#FAFBFC',
   defaultTransitionDuration: '0.2s',
   softGray: '#b8b8d9',
   fadeIn: 'animation: fadeIn .4s linear forwards;',

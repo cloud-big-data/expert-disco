@@ -14,6 +14,7 @@ interface ISelect {
   onChange: (value: string) => void;
   fill?: string;
   style?: React.CSSProperties;
+  className?: string;
 }
 
 const Select: React.FC<ISelect> = ({
@@ -24,9 +25,11 @@ const Select: React.FC<ISelect> = ({
   onChange,
   options,
   allowClear,
+  className,
 }) => (
   <AntSelect
     allowClear={allowClear}
+    className={className}
     mode={mode}
     placeholder={placeholder}
     value={options.find(opt => opt.value === value)?.name}
