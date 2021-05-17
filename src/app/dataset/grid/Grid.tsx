@@ -52,6 +52,9 @@ const Grid: React.FC<{
   handleChange: (changeHistoryItem: ChangeHistoryItem) => void;
 }> = ({ gridRef, undo, redo, handleChange }) => {
   const [mouseIsOnEdge, setMouseIsOnEdge] = useState(false);
+  const [columnModalIsOpen, setColumnModalIsOpen] = useState<string | undefined>(
+    undefined,
+  );
   const {
     boardData,
     setBoardData,
@@ -98,9 +101,10 @@ const Grid: React.FC<{
   }, [gridRef, mouseIsOnEdge]);
 
   const makeRow = React.memo(({ index, style }: any) => {
-    const row = rows.filter(
+    const filteredRows = rows.filter(
       row => !deletedObjects.map(obj => obj.objectId).includes(row._id),
-    )[index];
+    );
+    const row = filteredRows[index];
 
     return (
       <div
@@ -116,7 +120,7 @@ const Grid: React.FC<{
           rowIndex={index}
           position={{
             firstRow: index === 0,
-            lastRow: index === rows.length - 1,
+            lastRow: index === filteredRows.length - 1,
           }}
         />
       </div>
@@ -169,6 +173,10 @@ const Grid: React.FC<{
     setBoardData?.(sortDatasetByColumnOrder(colOrder, boardData));
   };
 
+  const filteredColumns = columns.filter(
+    col => !deletedObjects.map(obj => obj.objectId).includes(col._id),
+  );
+
   return (
     <GridContext.Provider
       value={{
@@ -190,71 +198,68 @@ const Grid: React.FC<{
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                   >
-                    {columns
-                      .filter(
-                        col =>
-                          !deletedObjects.map(obj => obj.objectId).includes(col._id),
-                      )
-                      .map((col, index) => (
-                        <Draggable
-                          isDragDisabled={mouseIsOnEdge}
-                          key={col._id}
-                          draggableId={col._id}
-                          index={index}
-                        >
-                          {provided => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={{
-                                ...provided.draggableProps.style,
-                              }}
-                            >
-                              {col.hidden ? (
-                                <HiddenColumnIndicator
-                                  key={col._id}
-                                  value={col.value}
-                                  onShow={() => {
-                                    setBoardData?.(
-                                      R.pipe(
-                                        updateColumnById(col._id, { hidden: false }),
-                                        R.ifElse(
-                                          () => col.isSmartColumn === true,
-                                          updateSmartColumnById(col._id, {
-                                            hidden: false,
-                                          }),
-                                          R.identity,
+                    {filteredColumns.map((col, index) => (
+                      <Draggable
+                        isDragDisabled={mouseIsOnEdge || !!columnModalIsOpen}
+                        key={col._id}
+                        draggableId={col._id}
+                        index={index}
+                      >
+                        {provided => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              ...provided.draggableProps.style,
+                            }}
+                          >
+                            {col.hidden ? (
+                              <HiddenColumnIndicator
+                                key={col._id}
+                                value={col.value}
+                                onShow={() => {
+                                  setBoardData?.(
+                                    R.pipe(
+                                      updateColumnById(col._id, { hidden: false }),
+                                      R.ifElse(
+                                        () => col.isSmartColumn === true,
+                                        updateSmartColumnById(col._id, {
+                                          hidden: false,
+                                        }),
+                                        R.identity,
+                                      ),
+                                      R.ifElse(
+                                        () => col.isJoined === true,
+                                        R.assocPath(
+                                          ['layers', 'joins', 'hidden'],
+                                          false,
                                         ),
-                                        R.ifElse(
-                                          () => col.isJoined === true,
-                                          R.assocPath(
-                                            ['layers', 'joins', 'hidden'],
-                                            false,
-                                          ),
-                                          R.identity,
-                                        ),
-                                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                        // @ts-ignore
-                                      )(boardData),
-                                    );
-                                  }}
-                                />
-                              ) : (
-                                <ColumnHeader
-                                  key={col._id}
-                                  {...col}
-                                  columnIndex={index}
-                                  position={{
-                                    firstColumn: index === 0,
-                                    lastColumn: index === columns.length - 1,
-                                  }}
-                                />
-                              )}
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
+                                        R.identity,
+                                      ),
+                                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                      // @ts-ignore
+                                    )(boardData),
+                                  );
+                                }}
+                              />
+                            ) : (
+                              <ColumnHeader
+                                key={col._id}
+                                {...col}
+                                columnIndex={index}
+                                setColumnModalIsOpen={setColumnModalIsOpen}
+                                columnModalIsOpen={columnModalIsOpen}
+                                position={{
+                                  firstColumn: index === 0,
+                                  lastColumn: index === filteredColumns.length - 1,
+                                }}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
                     {provided.placeholder}
                   </ColumnsContainer>
                 )}

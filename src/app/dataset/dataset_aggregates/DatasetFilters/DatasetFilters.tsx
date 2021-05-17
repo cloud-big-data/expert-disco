@@ -73,7 +73,7 @@ const DatasetFilters: React.FC = () => {
       <div className="top">
         <h6>Filter this dataset</h6>
         <div className="right">
-          <Label>Apply layer</Label>
+          <Label>Apply filters</Label>
           <Switch
             onChange={e => {
               setBoardData?.({

@@ -64,7 +64,7 @@ const DatasetSmartColumns: React.FC = () => {
       <div className="top">
         <h6>Smart Columns</h6>
         <div className="right">
-          <Label>Apply layer</Label>
+          <Label>Apply smart columns</Label>
           <Switch
             onChange={e => {
               setBoardData?.({

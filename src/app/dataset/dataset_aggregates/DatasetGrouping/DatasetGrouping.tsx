@@ -176,7 +176,7 @@ const DatasetGrouping: React.FC = () => {
       <div className="top">
         <h6 className="left">Group this dataset</h6>
         <div className="right">
-          <Label>Apply layer</Label>
+          <Label>Apply grouping</Label>
           <Switch
             onChange={e => {
               setBoardData?.({

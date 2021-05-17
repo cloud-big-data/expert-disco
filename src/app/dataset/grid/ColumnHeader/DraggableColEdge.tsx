@@ -60,7 +60,7 @@ const DraggableColEdge: React.FC<{
       toggleMouseIsDown(true);
       startDragPos.current = e.pageX;
       if (xRef.current) {
-        xRef.current.style.left = `${e.pageX - 45}px`;
+        xRef.current.style.left = `${e.pageX - 20}px`;
       }
     },
     [gridRef, hovering],
@@ -69,7 +69,7 @@ const DraggableColEdge: React.FC<{
   const handleMouseMove = useCallback((e: MouseEvent) => {
     e.stopPropagation();
     if (!xRef.current) return;
-    xRef.current.style.left = `${e.pageX - 45}px`;
+    xRef.current.style.left = `${e.pageX - 20}px`;
   }, []);
 
   const handleMouseUp = useCallback(

@@ -64,7 +64,7 @@ const DatasetJoins: FC = () => {
           </h6>
         </div>
         <div className="toggle__container">
-          <Label>Apply layer</Label>
+          <Label>Apply joins</Label>
           <Switch
             onChange={e => {
               setBoardData?.({

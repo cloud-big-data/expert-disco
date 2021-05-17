@@ -151,8 +151,8 @@ const DatasetToolbar: React.FC<{
   };
 
   return (
-    <BoardActionsContainer>
-      <div className="left">
+    <BoardActionsContainer className="md:flex flex-col lg:flex-row">
+      <div className="left w-full">
         <TimeTravel onClick={undo} disabled={undoDisabled}>
           <i className="fad fa-undo" />
           <Label>Undo</Label>
@@ -220,7 +220,7 @@ const DatasetToolbar: React.FC<{
           )}
         </FormatContainer>
       </div>
-      <div className="right">
+      <div className="right w-full">
         <div className="top">
           <NewColumns />
           <NewRows />

@@ -58,7 +58,7 @@ const CellContainer = React.memo(styled.div<{
   height: 100%;
   width: ${props => props.width}px;
   max-width: ${props => props.width}px;
-  background: white;
+  background: ${Styles.defaultBgColor};
   overflow: hidden;
   padding: .5rem;
   cursor: pointer;
