@@ -277,6 +277,7 @@ export interface IBoardState {
     active: boolean;
   };
   changeHistory: ChangeHistoryItem[];
+  unsavedChanges?: Record<string, string | number>;
 }
 
 export interface IServerDataset {
