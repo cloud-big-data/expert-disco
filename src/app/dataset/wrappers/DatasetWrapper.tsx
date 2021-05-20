@@ -26,6 +26,7 @@ import DatasetWrapperOwner from './DatasetWrapperOwner';
 import makeBoardDiff from '../lib/makeBoardDiff';
 import DatasetNotFound from '../DatasetNotFound';
 import DatasetDisconnected from '../DatasetDisconnected';
+import SaveChangesSection from '../SaveChangesSection';
 
 enum DatasetUserTypes {
   owner,
@@ -335,6 +336,9 @@ const DatasetWrapper: React.FC = () => {
       ))}
       <CustomerNav wide email={user.email} />
       {userType === DatasetUserTypes.owner && <DatasetWrapperOwner />}
+      {Object.keys(boardState.unsavedChanges ?? {}).length > 0 && (
+        <SaveChangesSection />
+      )}
     </DatasetContext.Provider>
   );
 };
