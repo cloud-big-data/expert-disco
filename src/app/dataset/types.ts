@@ -226,6 +226,7 @@ export interface IBoardData {
   errors?: Array<BoardError>;
   columnSummary: IColumnSummary;
   deletedObjects?: ObjectDeletion[];
+  unsavedChanges?: Record<string, any>;
 }
 
 export interface IBoardHead {
@@ -277,7 +278,6 @@ export interface IBoardState {
     active: boolean;
   };
   changeHistory: ChangeHistoryItem[];
-  unsavedChanges?: Record<string, string | number>;
 }
 
 export interface IServerDataset {

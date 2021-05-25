@@ -133,6 +133,7 @@ const HelperContainer = styled.p`
   line-height: 1rem;
   font-weight: 400;
   letter-spacing: 0.32px;
+  color: ${Styles.dark400};
 `;
 
 const Helper: React.FC<{

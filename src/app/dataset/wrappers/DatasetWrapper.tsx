@@ -336,8 +336,15 @@ const DatasetWrapper: React.FC = () => {
       ))}
       <CustomerNav wide email={user.email} />
       {userType === DatasetUserTypes.owner && <DatasetWrapperOwner />}
-      {Object.keys(boardState.unsavedChanges ?? {}).length > 0 && (
-        <SaveChangesSection />
+      {Object.keys(boardData.unsavedChanges ?? {}).length > 0 && (
+        <SaveChangesSection
+          loading={loading}
+          unsavedChanges={boardData.unsavedChanges ?? {}}
+          handleSave={() => {
+            socket?.emit('saveRows');
+            setLoading(true);
+          }}
+        />
       )}
     </DatasetContext.Provider>
   );

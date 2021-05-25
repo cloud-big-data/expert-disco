@@ -11,6 +11,7 @@ import GridContext from 'contexts/GridContext';
 import usePrevious from 'hooks/usePrevious';
 import formatValue from 'app/dataset/lib/formatValue';
 import DatePicker from 'components/ui/DatePicker';
+import addUnsavedChange from 'app/dataset/lib/addUnsavedChange';
 import {
   ICell,
   IBoardState,
@@ -181,6 +182,7 @@ const Cell: React.FC<ICellProps> = ({
     setBoardData,
     setClipboard,
     loading,
+    socket,
   } = useContext(DatasetContext)!;
   const { handleChange } = useContext(GridContext)!;
 
@@ -293,6 +295,25 @@ const Cell: React.FC<ICellProps> = ({
     setBoardState(R.assocPath(['cellsState', 'activeCell'], _id, boardState));
   }, [_id, boardState, setBoardState]);
 
+  const handleSave = (value: string) => {
+    setBoardData?.({
+      ...editCellsAndReturnBoard(
+        [
+          {
+            cellId: _id,
+            updatedValue: (value as string) ?? '',
+          },
+        ],
+        boardData,
+      ),
+      unsavedChanges: {
+        ...boardData.unsavedChanges,
+        [_id]: value,
+      },
+    });
+    addUnsavedChange({ [_id]: value }, socket);
+  };
+
   return (
     <CellContainer
       width={colWidth ?? defaults.COL_WIDTH}
@@ -309,19 +330,9 @@ const Cell: React.FC<ICellProps> = ({
       {!readOnly && active && !associatedColumn?.isSmartColumn ? (
         colDataType === 'date' ? (
           <DatePicker
-            onChange={(date, dateString) =>
-              setBoardData?.(
-                editCellsAndReturnBoard(
-                  [
-                    {
-                      cellId: _id,
-                      updatedValue: dateString ?? '',
-                    },
-                  ],
-                  boardData,
-                ),
-              )
-            }
+            onChange={(date, dateString) => {
+              handleSave(dateString);
+            }}
             value={value ? new Date(value) : undefined}
             bordered={false}
             format={colFormat ?? 'MM-DD-YYYY'}
@@ -360,21 +371,11 @@ const Cell: React.FC<ICellProps> = ({
                 }, 4500);
                 return;
               }
-              setLocalValue(e.target.value);
+              setLocalValue(value);
               clearTimeout(typingTimeout.current);
 
               typingTimeout.current = setTimeout(() => {
-                setBoardData?.(
-                  editCellsAndReturnBoard(
-                    [
-                      {
-                        cellId: _id,
-                        updatedValue: (value as string) ?? '',
-                      },
-                    ],
-                    boardData,
-                  ),
-                );
+                handleSave(value);
               }, 200);
             }}
           />

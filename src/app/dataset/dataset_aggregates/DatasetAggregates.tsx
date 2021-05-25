@@ -8,6 +8,7 @@ import Styles from 'styles/Styles';
 import DatasetContext from 'contexts/DatasetContext';
 import useWindowSize from 'hooks/useWindowSize';
 import Select from 'components/ui/Select';
+import { Helper } from 'components/ui/Typography';
 import DatasetFilters from './DatasetFilters';
 import DatasetSummary from './DatasetSummary';
 import DatasetGrouping from './DatasetGrouping';
@@ -174,7 +175,28 @@ const DatasetAggregates: React.FC = () => {
           className="w-full"
         />
       )}
-      {expanded && <Card className="w-full mt-4 md:mt-8">{ViewComponent}</Card>}
+      {expanded && (
+        <Card className="w-full mt-4 md:mt-8">
+          {Object.keys(boardData.unsavedChanges ?? {}).length > 0 && (
+            <div className="mx-auto my-4 flex items-center space-x-2">
+              <i className="fad fa-lock-alt" />{' '}
+              <Helper style={{ marginBottom: 0 }}>
+                Save changes to continue editing
+              </Helper>
+            </div>
+          )}
+          <div
+            style={{
+              pointerEvents:
+                Object.keys(boardData.unsavedChanges ?? {}).length > 0
+                  ? 'none'
+                  : 'inherit',
+            }}
+          >
+            {ViewComponent}
+          </div>
+        </Card>
+      )}
     </ExpandWrapper>
   );
 };
