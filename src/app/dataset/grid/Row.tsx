@@ -160,8 +160,10 @@ const Row: React.FC<IRowProps> = ({
                   />
                 );
               }
+
               return !column?.hidden ? (
                 <Cell
+                  {...cell}
                   key={cell?._id}
                   associatedColumn={column}
                   rowId={_id}
@@ -181,7 +183,7 @@ const Row: React.FC<IRowProps> = ({
                   colWidth={column?.colWidth}
                   colFormat={column?.format}
                   formatSettings={column?.formatSettings}
-                  {...cell}
+                  value={boardData.unsavedChanges?.[cell._id] ?? cell.value}
                 />
               ) : (
                 <div key={cell?._id} style={{ border: '16px solid transparent' }} />

@@ -85,21 +85,10 @@ div {
   font-family: "Lato", sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-ul,
-li,
-a,
-label,
-i,
-button {
-  color: var(--text-color);
+a {
+  color: unset;
 }
+
 p .btn {
   margin: 0.5em 1em;
 }
@@ -161,12 +150,6 @@ button.nostyle {
   background: transparent;
   margin: 0;
   padding: 0;
-}
-
-p,
-div,
-a {
-  color: var(--text-color) !important;
 }
 
 a:not(.no-hover):hover *,
@@ -268,6 +251,10 @@ a:not(.no-hover):hover {
 
 #root .ant-slider-handle.ant-tooltip-open::after {
   background: white;
+}
+
+#root .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--text-color);
 }
 
 

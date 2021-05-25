@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import React from 'react';
-import './App.css';
 import 'antd/dist/antd.css';
+import './App.css';
 import { Login } from 'app/userActions';
 import { AuthenticatedRoute } from 'app/routing';
 import Logout from 'app/userActions/Logout';
