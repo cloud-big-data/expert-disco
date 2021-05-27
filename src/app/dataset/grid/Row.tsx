@@ -183,7 +183,10 @@ const Row: React.FC<IRowProps> = ({
                   colWidth={column?.colWidth}
                   colFormat={column?.format}
                   formatSettings={column?.formatSettings}
-                  value={boardData.unsavedChanges?.[cell._id] ?? cell.value}
+                  // can ignore this since we can assume that unsavedChanges[cell._id] will only map to cell changes.
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  value={boardData.unsavedChanges?.[cell._id]?.value ?? cell.value}
                 />
               ) : (
                 <div key={cell?._id} style={{ border: '16px solid transparent' }} />

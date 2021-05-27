@@ -68,12 +68,10 @@ const DatasetUploader: React.FC<{
             formData.append(name, data[name]);
           });
 
-          const res = await fetch(url, {
+          await fetch(url, {
             method: 'POST',
             body: formData,
           });
-
-          console.log(res);
 
           // await skyvueFetch(accessToken).post('/datasets/process_dataset', {
           //   key: data.key,

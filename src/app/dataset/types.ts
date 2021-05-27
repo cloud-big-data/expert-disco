@@ -198,6 +198,14 @@ export interface IColumnSummary {
   };
 }
 
+export interface UnsavedChange {
+  targetId: string;
+  columnId: string;
+  rowId: string;
+  targetType: 'row' | 'cell';
+  value: string | IRow[];
+}
+
 export interface IBoardData {
   [key: string]: any;
   _id: string;
@@ -226,7 +234,7 @@ export interface IBoardData {
   errors?: Array<BoardError>;
   columnSummary: IColumnSummary;
   deletedObjects?: ObjectDeletion[];
-  unsavedChanges?: Record<string, any>;
+  unsavedChanges?: Record<string, UnsavedChange>;
 }
 
 export interface IBoardHead {

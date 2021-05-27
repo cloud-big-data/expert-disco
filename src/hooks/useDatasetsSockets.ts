@@ -75,7 +75,6 @@ const useDatasetsSockets = (
 
   useEffect(() => {
     if (!userId || !datasetId || !skyvueFileSize || socketObj) return;
-    console.log(getDatasetsWSUrl(skyvueFileSize));
     const socket = io(getDatasetsWSUrl(skyvueFileSize), {
       query: {
         datasetId,

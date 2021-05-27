@@ -18,6 +18,7 @@ import {
   DataTypes,
   NumberFormatSettings,
   IColumn,
+  UnsavedChange,
 } from '../../types';
 import { defaults } from '../constants';
 import { ActiveInput } from '../styles';
@@ -163,6 +164,8 @@ const showTypeError = (colDataType: DataTypes, attemptedType: DataTypes) => {
 
 const Cell: React.FC<ICellProps> = ({
   _id,
+  rowId,
+  columnId,
   value,
   highlighted,
   active,
@@ -171,7 +174,6 @@ const Cell: React.FC<ICellProps> = ({
   isCopying,
   colWidth,
   colFormat,
-  columnId,
   associatedColumn,
 }) => {
   const {
@@ -296,6 +298,15 @@ const Cell: React.FC<ICellProps> = ({
   }, [_id, boardState, setBoardState]);
 
   const handleSave = (value: string) => {
+    const change: Record<string, UnsavedChange> = {
+      [_id]: {
+        targetId: _id,
+        targetType: 'cell',
+        columnId: columnId!,
+        rowId,
+        value,
+      },
+    };
     setBoardData?.({
       ...editCellsAndReturnBoard(
         [
@@ -308,10 +319,10 @@ const Cell: React.FC<ICellProps> = ({
       ),
       unsavedChanges: {
         ...boardData.unsavedChanges,
-        [_id]: value,
+        ...change,
       },
     });
-    addUnsavedChange({ [_id]: value }, socket);
+    addUnsavedChange(change, socket);
   };
 
   return (
