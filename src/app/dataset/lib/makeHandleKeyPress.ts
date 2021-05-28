@@ -193,7 +193,7 @@ const makeHandleKeyPress = ({
       case 'ArrowLeft':
       case 'ArrowUp':
       case 'ArrowDown':
-        if (activeCell === '' && selectedCell) {
+        if ([-1, ''].includes(activeCell) && selectedCell) {
           e.preventDefault();
           handleArrowKey(key);
         }
