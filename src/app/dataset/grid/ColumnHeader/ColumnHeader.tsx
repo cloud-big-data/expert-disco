@@ -408,6 +408,18 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
       )(boardState) as IBoardState,
     );
 
+  const blurColumn = () => {
+    const set = (key: string, value: any) =>
+      R.over(R.lensProp('columnsState'), R.assoc(key, value));
+    inputRef.current?.blur();
+    setBoardState(
+      R.pipe(
+        set('selectedColumn', 'columnIndex'),
+        set('activeColumn', -1),
+      )(boardState),
+    );
+  };
+
   return (
     <Dropdown
       trigger={['contextMenu']}
@@ -495,21 +507,14 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             type="text"
             onKeyDown={e => {
               if (e.key !== 'Enter') return;
-              const set = (key: string, value: any) =>
-                R.over(R.lensProp('columnsState'), R.assoc(key, value));
-              inputRef.current?.blur();
-              setBoardState(
-                R.pipe(
-                  set('selectedColumn', 'columnIndex'),
-                  set('activeColumn', -1),
-                )(boardState),
-              );
+              blurColumn();
             }}
             onChange={e => {
               prevValue.current = value;
               setLocalValue(e.target.value);
             }}
             onBlur={e => {
+              blurColumn();
               setBoardData!(
                 R.assoc(
                   'columns',

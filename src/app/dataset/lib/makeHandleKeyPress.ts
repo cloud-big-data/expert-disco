@@ -177,6 +177,7 @@ const makeHandleKeyPress = ({
     const triggeredProperty = propertiesToActOn.find(
       x => x.prop && ![-1, ''].includes(x.prop),
     );
+
     if (!triggeredProperty) return;
 
     switch (key) {
@@ -192,7 +193,7 @@ const makeHandleKeyPress = ({
       case 'ArrowLeft':
       case 'ArrowUp':
       case 'ArrowDown':
-        if (activeCell === '' && !document.activeElement) {
+        if (activeCell === '' && selectedCell) {
           e.preventDefault();
           handleArrowKey(key);
         }
