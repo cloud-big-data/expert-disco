@@ -14,6 +14,7 @@ import {
 import Styles from 'styles/Styles';
 import { VariableSizeList as VirtualizedList } from 'react-window';
 import useWindowSize from 'hooks/useWindowSize';
+import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import { ChangeHistoryItem } from '../types';
 import ColumnHeader from './ColumnHeader';
 import HiddenColumnIndicator from './ColumnHeader/HiddenColumnIndicator';
@@ -58,6 +59,8 @@ const Grid: React.FC<{
   const {
     boardData,
     setBoardData,
+    boardState,
+    setBoardState,
     readOnly,
     getRowSlice,
     visibleRows,
@@ -66,6 +69,16 @@ const Grid: React.FC<{
     socket,
     deletedObjects,
   } = useContext(DatasetContext)!;
+
+  useHandleClickOutside(gridRef, () => {
+    setBoardState({
+      ...boardState,
+      cellsState: {
+        ...boardState.cellsState,
+        selectedCell: '',
+      },
+    });
+  });
   const listRef = useRef<VirtualizedList>(null);
   const { rows, columns } = boardData;
   const [firstVisibleRow, lastVisibleRow] = visibleRows;
