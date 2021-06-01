@@ -188,6 +188,7 @@ const DatasetAggregates: React.FC = () => {
           <div
             style={{
               pointerEvents:
+                activeView !== 'summary' &&
                 Object.keys(boardData.unsavedChanges ?? {}).length > 0
                   ? 'none'
                   : 'inherit',

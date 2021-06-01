@@ -4,6 +4,7 @@ import {
   IBoardHead,
   UploadPreview,
   ObjectDeletion,
+  IColumnSummary,
 } from 'app/dataset/types';
 import { createContext } from 'react';
 import { RefetchOptions } from 'react-query/types/core/query';
@@ -13,6 +14,7 @@ interface IDatasetContext {
   socket?: SocketIOClient.Socket;
   datasetHead: IBoardHead;
   boardData: IBoardData;
+  columnSummary?: IColumnSummary;
   setBoardData: null | ((data: IBoardData) => void);
   boardState: IBoardState;
   setBoardState: (boardState: IBoardState) => void;

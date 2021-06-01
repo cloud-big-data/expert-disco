@@ -5,6 +5,7 @@ import {
   IBoardData,
   IBoardHead,
   IBoardState,
+  IColumnSummary,
   IRow,
   ObjectDeletion,
   UploadPreview,
@@ -23,6 +24,7 @@ const useDatasetsSockets = (
   board: {
     boardData?: IBoardData;
     setBoardData: (boardData: IBoardData) => void;
+    setColumnSummary: (summary: IColumnSummary) => void;
     estCSVSize?: number;
     setEstCSVSize?: (head: number) => void;
     boardHead: { rowCount?: number };
@@ -54,6 +56,7 @@ const useDatasetsSockets = (
     boardData,
     datasetHead,
     setBoardData,
+    setColumnSummary,
     estCSVSize,
     setEstCSVSize,
     setBoardHead,
@@ -161,6 +164,10 @@ const useDatasetsSockets = (
       }, 5000);
     });
 
+    socket.on('columnSummary', (columnSummary: IColumnSummary) => {
+      setColumnSummary(columnSummary);
+    });
+
     socket.on('duplicateReady', ({ _id }: { _id: string }) => {
       window.open(`${window.location.host}/dataset/${_id}`);
     });
@@ -191,6 +198,7 @@ const useDatasetsSockets = (
     uploadPreview,
     setUploadPreview,
     setDeletedObjects,
+    setColumnSummary,
   ]);
 
   useEffect(() => {
