@@ -21,6 +21,7 @@ import {
   IBoardHead,
   UploadPreview,
   ObjectDeletion,
+  IColumnSummary,
 } from '../types';
 import DatasetWrapperOwner from './DatasetWrapperOwner';
 import makeBoardDiff from '../lib/makeBoardDiff';
@@ -101,6 +102,9 @@ const DatasetWrapper: React.FC = () => {
   const [boardHead, setBoardHead] = useState<{
     rowCount?: number;
   }>({});
+  const [columnSummary, setColumnSummary] = useState<undefined | IColumnSummary>(
+    undefined,
+  );
   const [queriedDatasets, setQueriedDatasets] = useState<
     Pick<IBoardData, 'columns' | 'visibilitySettings' | 'layers' | '_id'>[]
   >([]);
@@ -187,6 +191,7 @@ const DatasetWrapper: React.FC = () => {
     {
       boardData,
       setBoardData,
+      setColumnSummary,
       estCSVSize,
       setEstCSVSize,
       boardHead,
@@ -277,6 +282,7 @@ const DatasetWrapper: React.FC = () => {
       setUploadPreview,
       deletedObjects,
       setDeletedObjects: _setDeletedObjects,
+      columnSummary,
     }),
     [
       _setBoardData,
@@ -284,6 +290,7 @@ const DatasetWrapper: React.FC = () => {
       boardData,
       boardState,
       clipboard,
+      columnSummary,
       datasetHead,
       deletedObjects,
       loading,
