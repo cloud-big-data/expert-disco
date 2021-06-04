@@ -12,11 +12,9 @@ const ImportColumnMapping: FC<{
   setColumnMapping: (mapping: ColumnMapping[]) => void;
 }> = ({ previewColumns, columnMapping, setColumnMapping }) => {
   const { boardData } = useDatasetContext()!;
-  console.log(
-    boardData.columns.find(
-      col => col._id === '985c547b-032f-4752-a79c-0c72e0a678fd',
-    ),
-  );
+
+  console.log(columnMapping);
+
   return (
     <div>
       <Label>Tell us where to add your new data</Label>

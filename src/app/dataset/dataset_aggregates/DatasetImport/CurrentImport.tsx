@@ -49,7 +49,7 @@ const CurrentImport: FC<{
       {view === 'preview' ? (
         <>
           <div>
-            <Label>View of current first and last rows</Label>
+            <Label>Upload preview</Label>
             <div style={{ maxWidth: 'calc(100% - 1rem)' }} className="overflow-auto">
               <Table
                 pagination={{ hideOnSinglePage: true }}

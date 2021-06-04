@@ -22,10 +22,7 @@ const DatasetImport: FC = () => {
 
   const [view, setView] = useState<'current' | 'history'>('current');
 
-  const records = (uploadPreview?.records ?? []).map((record, index) => ({
-    row: index === 0 ? 1 : uploadPreview?.meta.length,
-    ...record,
-  }));
+  const records = uploadPreview?.records ?? [];
 
   const previewColumns = Object.keys(records?.[0] ?? {}).map(key => ({
     title: key === 'row' ? 'row # (will not be included)' : key,

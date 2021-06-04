@@ -257,6 +257,10 @@ a:not(.no-hover):hover {
   color: var(--text-color);
 }
 
+#root .ant-select {
+  width: 100%;
+}
+
 
 @media only screen and (min-width: 1000px) {
   #root .ant-select {
