@@ -72,10 +72,6 @@ const DatasetUploader: React.FC<{
             method: 'POST',
             body: formData,
           });
-
-          // await skyvueFetch(accessToken).post('/datasets/process_dataset', {
-          //   key: data.key,
-          // });
         } catch (e) {
           console.log(e);
           setError(true);
