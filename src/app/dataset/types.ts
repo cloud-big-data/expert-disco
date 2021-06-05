@@ -216,6 +216,7 @@ export interface IBoardData {
   };
   columns: IColumn[];
   underlyingColumns: IColumn[];
+  baseColumns: IColumn[];
   rows: IRow[];
   layers: {
     joins: IJoinLayer;

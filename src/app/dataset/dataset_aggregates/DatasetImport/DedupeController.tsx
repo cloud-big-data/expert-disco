@@ -1,10 +1,12 @@
 import React, { FC } from 'react';
+import * as R from 'ramda';
 
 import { UploadPreview, DedupeSettings } from 'app/dataset/types';
 import Checkbox from 'components/ui/Checkbox';
 import { Helper, Label } from 'components/ui/Typography';
 import enumerateText from 'utils/enumerateText';
 import Select from 'components/ui/Select';
+import useDatasetContext from 'hooks/useDatasetContext';
 import { PreviewColumn } from './DatasetImport';
 
 const DedupeController: FC<{
@@ -13,7 +15,12 @@ const DedupeController: FC<{
   dedupeSettings: DedupeSettings;
   setDedupeSettings: (settings: DedupeSettings) => void;
 }> = ({ previewColumns, dedupeSettings, setDedupeSettings }) => {
+  const {
+    boardData: { baseColumns },
+  } = useDatasetContext()!;
   const { dedupeOn } = dedupeSettings;
+  const colLookup = R.indexBy(R.prop('_id'), baseColumns);
+  const dedupeValues = dedupeOn.map(x => colLookup[x]?.value).filter(Boolean);
 
   return (
     <div>
@@ -25,33 +32,33 @@ const DedupeController: FC<{
         the same value.
       </Helper>
       <div className="flex flex-col ml-2">
-        {previewColumns
-          .filter(col => col.key !== 'skyvue-row-preview')
-          .map(col => (
-            <div key={col.key} className="flex">
-              <Label unBold>
-                <Checkbox
-                  onChange={e =>
-                    setDedupeSettings({
-                      ...dedupeSettings,
-                      dedupeOn: e.target.checked
-                        ? [...dedupeOn, col.key]
-                        : dedupeOn.filter(key => key !== col.key),
-                    })
-                  }
-                  checked={dedupeOn.includes(col.key)}
-                />
-                <span className="ml-4">{col.title}</span>
-              </Label>
-            </div>
-          ))}
-        {dedupeOn.length > 0 && (
+        {baseColumns.map(col => (
+          <div key={col._id} className="flex">
+            <Label unBold>
+              <Checkbox
+                onChange={e =>
+                  setDedupeSettings({
+                    ...dedupeSettings,
+                    dedupeOn: e.target.checked
+                      ? [...dedupeOn, col._id]
+                      : dedupeOn.filter(key => key !== col._id),
+                  })
+                }
+                checked={dedupeOn.includes(col._id)}
+              />
+              <span className="ml-4">{col.value}</span>
+            </Label>
+          </div>
+        ))}
+        {dedupeValues.length > 0 && (
           <div className="flex flex-col space-y-2">
             <Label unBold>
-              Rows where {dedupeOn.length === 1 && `${dedupeOn[0]} is equal `}
-              {dedupeOn.length === 2 &&
-                `${dedupeOn[0]} and ${dedupeOn[1]} are equal `}
-              {dedupeOn.length >= 3 && `${enumerateText(dedupeOn)} are all equal `}
+              Rows where{' '}
+              {dedupeValues.length === 1 && `${dedupeValues[0]} is equal `}
+              {dedupeValues.length === 2 &&
+                `${dedupeValues[0]} and ${dedupeValues[1]} are equal `}
+              {dedupeValues.length >= 3 &&
+                `${enumerateText(dedupeValues)} are all equal `}
               will be filtered from this dataset.
             </Label>
             <div>
