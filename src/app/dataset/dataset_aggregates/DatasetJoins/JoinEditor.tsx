@@ -50,11 +50,44 @@ const JOIN_VIEW_COPY = {
         list. (i.e. making your dataset WIDER).
       </Text>
     ),
+    right: (
+      <>
+        <Text className="max-w-2xl" size="sm" len="short">
+          Joins to a new dataset, and then enhances your records by{' '}
+          <span className="underline">
+            matching records from the current dataset
+          </span>{' '}
+          to the joined dataset. The is the same as a left join, besides a key
+          difference:
+        </Text>
+        <ul>
+          <li>
+            • Left joins match records from the <strong>joined</strong> dataset to
+            your <strong>current</strong> dataset.
+          </li>
+          <li>
+            • Right joins match records from your <strong>current</strong> dataset to
+            the <strong>joined</strong>.
+          </li>
+        </ul>
+        <Text className="max-w-2xl" size="sm" len="short">
+          When in doubt, use a <strong>left join</strong>. If you're wondering which
+          you should use, left joins are generally the answer.
+        </Text>
+      </>
+    ),
     inner: (
       <Text className="max-w-2xl" size="sm" len="short">
         Joins to a new dataset, and then filters & returns ONLY records that appear
         in both datasets. Think of this as filtering your dataset based on another
         list.
+      </Text>
+    ),
+    outer: (
+      <Text className="max-w-2xl" size="sm" len="short">
+        Joins to a new dataset, and then{' '}
+        <span className="underline">adds new records</span> to your dataset. Use this
+        when you want to make your list LONGER.
       </Text>
     ),
   },
@@ -153,8 +186,14 @@ const JoinEditor: FC<{
         <TabPane tab="Enhance records (Left join)" key="left">
           {JOIN_VIEW_COPY.joinTypes.left}
         </TabPane>
+        <TabPane tab="Enhance records (right join)" key="right">
+          {JOIN_VIEW_COPY.joinTypes.right}
+        </TabPane>
         <TabPane tab="Keep only matches (inner join)" key="inner">
           {JOIN_VIEW_COPY.joinTypes.inner}
+        </TabPane>
+        <TabPane tab="Add new records (outer join)" key="outer">
+          {JOIN_VIEW_COPY.joinTypes.outer}
         </TabPane>
       </Tabs>
 

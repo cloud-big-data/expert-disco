@@ -20,13 +20,14 @@ const ErrorContainer = styled.div`
 `;
 
 const UploadErrorState: React.FC<{
+  text?: string;
   returnToUpload: () => void;
-}> = ({ returnToUpload }) => (
+}> = ({ text, returnToUpload }) => (
   <ErrorContainer>
     <div className="x__container">
       <i className="far fa-times text-red-400" />
     </div>
-    <h3>There was a problem...</h3>
+    <h3>{text ?? 'There was a problem...'}</h3>
     <ButtonDanger
       onClick={e => {
         e?.stopPropagation();

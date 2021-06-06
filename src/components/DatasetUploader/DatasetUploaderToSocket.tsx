@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import styled from 'styled-components/macro';
 
 import DatasetContext from 'contexts/DatasetContext';
@@ -30,11 +30,19 @@ const DatasetAppendUploader: React.FC<{
   const { socket, datasetHead } = useContext(DatasetContext)!;
   const [uploadComplete, setUploadComplete] = useState(false);
   const [error, setError] = useState(false);
+  const [tooManyFiles, setTooManyFiles] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
   const [fileExceedLimits, setFileExceedsLimits] = useState(false);
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+      if (
+        fileRejections.some(reject => reject.errors[0].code === 'too-many-files')
+      ) {
+        setTooManyFiles(true);
+        setError(true);
+        return;
+      }
       if (acceptedFiles.length > 1) {
         setLoadingState(false);
         setError(true);
@@ -92,7 +100,10 @@ const DatasetAppendUploader: React.FC<{
     [accessToken, datasetHead._id, socket],
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+  });
   return (
     <DropzoneContainer>
       <div {...getRootProps()}>
@@ -100,7 +111,10 @@ const DatasetAppendUploader: React.FC<{
         {loadingState ? (
           <UploadLoadingState />
         ) : error ? (
-          <UploadErrorState returnToUpload={() => setError(false)} />
+          <UploadErrorState
+            text={tooManyFiles ? 'Please only upload one file at a time' : undefined}
+            returnToUpload={() => setError(false)}
+          />
         ) : uploadComplete ? (
           <UploadCompleteState closeModal={closeModal} />
         ) : isDragActive ? (

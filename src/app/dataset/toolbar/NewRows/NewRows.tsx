@@ -2,6 +2,7 @@ import Modal from 'components/ui/Modal';
 import ButtonWithOptions from 'components/ui/ButtonWithOptions';
 import React, { useState } from 'react';
 import Styles from 'styles/Styles';
+import { useHistory } from 'react-router';
 import FileUpload from './FileUpload';
 
 const NewRows: React.FC = () => {
@@ -9,8 +10,8 @@ const NewRows: React.FC = () => {
     multipleEmpty,
     fromUpload,
   }
-
-  const [view, setView] = useState(NewRowViews.multipleEmpty);
+  const history = useHistory();
+  const [view] = useState(NewRowViews.multipleEmpty);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   // const { boardData, setBoardData } = useContext(DatasetContext)!;
   // const boardActions = makeBoardActions(boardData);
@@ -25,23 +26,14 @@ const NewRows: React.FC = () => {
             icon: <i className="fas fa-horizontal-rule" />,
           },
           {
-            label: 'Add multiple empty rows',
-            onClick: () => {
-              setView(NewRowViews.multipleEmpty);
-              setModalIsOpen(true);
-            },
-            icon: (
-              <i
-                style={{ color: Styles.purple400 }}
-                className="fad fa-line-columns"
-              />
-            ),
-          },
-          {
             label: 'New rows from file upload',
             onClick: () => {
-              setView(NewRowViews.fromUpload);
-              setModalIsOpen(true);
+              window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth',
+              });
+              history.push(`${window.location.pathname}?view=import`);
             },
             icon: <i style={{ color: Styles.blue }} className="far fa-file-plus" />,
           },

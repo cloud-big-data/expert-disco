@@ -249,8 +249,9 @@ a:not(.no-hover):hover {
   background: var(--text-color);
 }
 
-#root .ant-slider-handle.ant-tooltip-open::after {
+#root .ant-tooltip-open::after {
   background: white;
+  color: var(--text-color) !important;
 }
 
 #root .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {

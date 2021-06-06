@@ -478,7 +478,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
             />
           </Modal>
         )}
-        <Tooltip color="white" title={dataType}>
+        <Tooltip color={Styles.dark400} title={dataType}>
           {dataType === 'string' ? (
             <i className="fad fa-text-size" style={ColumnTypeStyle} />
           ) : dataType === 'number' ? (
@@ -491,12 +491,12 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
         </Tooltip>
 
         {isSmartColumn && (
-          <Tooltip color="white" title="Smart column">
+          <Tooltip color={Styles.dark400} title="Smart column">
             <i style={{ marginRight: '1rem' }} className="fad fa-network-wired" />
           </Tooltip>
         )}
         {isJoined && (
-          <Tooltip color="white" title="Joined column">
+          <Tooltip color={Styles.dark400} title="Joined column">
             <i style={{ marginRight: '1rem' }} className="fad fa-code-merge" />
           </Tooltip>
         )}
