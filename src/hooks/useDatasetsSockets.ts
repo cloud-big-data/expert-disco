@@ -157,7 +157,7 @@ const useDatasetsSockets = (
     });
 
     socket.on('downloadReady', (objectUrls: string[]) => {
-      setFilesToDownload(objectUrls);
+      setFilesToDownload(objectUrls ?? []);
 
       setTimeout(() => {
         setFilesToDownload([]);

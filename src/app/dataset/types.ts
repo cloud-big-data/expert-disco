@@ -33,7 +33,7 @@ export type JoinTypes = 'full' | 'left' | 'right' | 'inner';
 
 export interface IJoinLayer {
   joinType: JoinTypes;
-  hidden?: boolean;
+  isHidden?: boolean;
   condition: {
     format?: Formats;
     formatSettings?: FormatSettings;
@@ -147,7 +147,7 @@ export interface IColumn extends ICell {
   foreignKeyId?: string;
   isJoined?: boolean;
   isUnique?: boolean;
-  hidden?: boolean;
+  isHidden?: boolean;
   isGrouped?: boolean;
 }
 

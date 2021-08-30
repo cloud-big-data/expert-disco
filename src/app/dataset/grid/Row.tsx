@@ -161,7 +161,7 @@ const Row: React.FC<IRowProps> = ({
                 );
               }
 
-              return !column?.hidden ? (
+              return !column?.isHidden ? (
                 <Cell
                   {...cell}
                   key={cell?._id}

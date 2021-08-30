@@ -114,7 +114,7 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
   isSmartColumn,
   isJoined,
   isGrouped,
-  hidden,
+  isHidden,
   columnModalIsOpen,
   setColumnModalIsOpen,
 }) => {
@@ -250,15 +250,15 @@ const ColumnHeader: React.FC<IColumnHeaderProps> = ({
           onClick={() => {
             setBoardData?.(
               R.pipe(
-                updateColumnById(_id, { hidden: true }),
+                updateColumnById(_id, { isHidden: true }),
                 R.ifElse(
                   () => isSmartColumn === true,
-                  updateSmartColumnById(_id, { hidden: true }),
+                  updateSmartColumnById(_id, { isHidden: true }),
                   R.identity,
                 ),
                 R.ifElse(
                   () => isJoined === true,
-                  R.assocPath(['layers', 'joins', 'hidden'], true),
+                  R.assocPath(['layers', 'joins', 'isHidden'], true),
                   R.identity,
                 ),
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

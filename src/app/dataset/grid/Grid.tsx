@@ -227,25 +227,25 @@ const Grid: React.FC<{
                               ...provided.draggableProps.style,
                             }}
                           >
-                            {col.hidden ? (
+                            {col.isHidden ? (
                               <HiddenColumnIndicator
                                 key={col._id}
                                 value={col.value}
                                 onShow={() => {
                                   setBoardData?.(
                                     R.pipe(
-                                      updateColumnById(col._id, { hidden: false }),
+                                      updateColumnById(col._id, { isHidden: false }),
                                       R.ifElse(
                                         () => col.isSmartColumn === true,
                                         updateSmartColumnById(col._id, {
-                                          hidden: false,
+                                          isHidden: false,
                                         }),
                                         R.identity,
                                       ),
                                       R.ifElse(
                                         () => col.isJoined === true,
                                         R.assocPath(
-                                          ['layers', 'joins', 'hidden'],
+                                          ['layers', 'joins', 'isHidden'],
                                           false,
                                         ),
                                         R.identity,
