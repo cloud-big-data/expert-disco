@@ -15,7 +15,9 @@ const formatNumber = ({
   formatSettings,
 }: FormattingParams) => {
   if (value === undefined || value === null) return;
-  const parsed = parseFloat(value);
+  const parsed =
+    desiredFormat === 'percent' ? parseFloat(value) * 100 : parseFloat(value);
+  const suffix = desiredFormat === 'percent' ? '%' : '';
 
   if (desiredFormat === 'currency') {
     const asCurrency = new Intl.NumberFormat('en-US', {
@@ -28,16 +30,12 @@ const formatNumber = ({
       : asCurrency;
   }
 
-  if (desiredFormat === 'percent') {
-    return `${(parsed * 100).toFixed(formatSettings?.decimalPoints ?? 2)}%`;
-  }
-
   return formatSettings?.commas ?? true
     ? parsed.toLocaleString('en-US', {
         minimumFractionDigits: formatSettings?.decimalPoints ?? 2,
         maximumFractionDigits: formatSettings?.decimalPoints ?? 2,
-      })
-    : parsed.toFixed(formatSettings?.decimalPoints ?? 2);
+      }) + suffix
+    : parsed.toFixed(formatSettings?.decimalPoints ?? 2) + suffix;
 };
 
 const formatDate = ({ desiredFormat, value }: FormattingParams) => {
