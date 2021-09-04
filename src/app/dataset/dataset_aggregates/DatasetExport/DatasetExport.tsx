@@ -63,7 +63,7 @@ const DatasetExport: React.FC = () => {
               <ButtonPrimary
                 onClick={() => {
                   setStep(1);
-                  socket?.emit('exportToCsv', {
+                  socket?.emit('exportDataset', {
                     title: datasetHead?.title,
                     destination,
                   });

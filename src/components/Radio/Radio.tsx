@@ -1,6 +1,7 @@
-import { Helper } from 'components/ui/Typography';
 import React from 'react';
 import styled from 'styled-components/macro';
+
+import { Helper } from 'components/ui/Typography';
 import Styles from 'styles/Styles';
 
 const RadioContainer = styled.button<{ selected: boolean }>`
@@ -22,8 +23,18 @@ const RadioContainer = styled.button<{ selected: boolean }>`
 const Radio: React.FC<{
   selected: boolean;
   onClick?: () => void;
-}> = ({ selected, onClick, children }) => (
+  id?: string;
+  name?: string;
+}> = ({ selected, onClick, children, id, name }) => (
   <RadioContainer selected={selected} onClick={onClick}>
+    <input
+      hidden
+      name={name}
+      id={id}
+      type="radio"
+      onChange={onClick}
+      checked={selected}
+    />
     <div className="indicator" />
     <Helper>{children}</Helper>
   </RadioContainer>

@@ -39,7 +39,7 @@ const InputContainer = styled.div<{
     align-items: center;
     width: 3rem;
     i {
-      font-size: 1.5rem;
+      font-size: 1rem;
       ${props =>
         props.active
           ? `
@@ -57,7 +57,7 @@ const Input = styled.input<{
 }>`
   width: 100%;
   border-radius: 0.625rem;
-  height: ${props => (props.unsetHeight ? 'unset' : '3rem')};
+  height: ${props => (props.unsetHeight ? 'unset' : '2rem')};
   ${props =>
     props.unsetHeight
       ? `
@@ -194,7 +194,7 @@ const InputField: React.FC<{
   );
 
   return (
-    <>
+    <div>
       {props.label && (
         <Label unBold htmlFor={props.name ?? props.label}>
           {props.label}
@@ -234,7 +234,7 @@ const InputField: React.FC<{
           </OnConfirmContainer>
         )}
       </InputContainer>
-    </>
+    </div>
   );
 };
 

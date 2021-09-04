@@ -15,6 +15,7 @@ interface ISelect {
   fill?: string;
   style?: React.CSSProperties;
   className?: string;
+  heightFull?: boolean;
 }
 
 const Select: React.FC<ISelect> = ({
