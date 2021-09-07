@@ -78,9 +78,10 @@ const ListContainer = styled.div`
 const MyDatasets: React.FC = () => {
   const { accessToken } = useContext(UserContext);
   const [newDatasetModalIsOpen, setNewDatasetModalIsOpen] = useState(false);
-  const fetcher = skyvueFetch(accessToken!);
   const [loadingState, setLoadingState] = useState(false);
-  const { isLoading, data, refetch } = useQuery(
+
+  const fetcher = skyvueFetch(accessToken!);
+  const { isLoading, data: datasetResponse, refetch } = useQuery(
     newDatasetModalIsOpen,
     () => fetcher.get('/datasets'),
     {
@@ -94,7 +95,6 @@ const MyDatasets: React.FC = () => {
       `/datasets/duplicate/${datasetId}`,
       {
         newTitle: title,
-        raw: true,
       },
     );
 
@@ -105,7 +105,7 @@ const MyDatasets: React.FC = () => {
     }
   };
 
-  const { error } = data ?? {};
+  const { error } = datasetResponse ?? {};
   if (error) return <p>Error occurred!</p>;
 
   const datasets: Array<{
@@ -113,7 +113,7 @@ const MyDatasets: React.FC = () => {
     updatedAt: string;
     isProcessing?: boolean;
     _id: string;
-  }> = data ?? [];
+  }> = datasetResponse ?? [];
 
   return (
     <MyDatasetsContainer>

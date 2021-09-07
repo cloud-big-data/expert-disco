@@ -14,6 +14,7 @@ interface IButton {
   loading?: boolean;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
+  type?: 'submit' | 'button';
 }
 
 const Button = styled.button<{
@@ -165,6 +166,7 @@ const ButtonPrimary: React.FC<IButton> = props => (
     primary
     style={props.style}
     className={props.className}
+    type={props.type}
   >
     {props.iconLeft && <div className="icon left">{props.iconLeft}</div>}
     {props.loading && (
@@ -185,6 +187,7 @@ const ButtonSecondary: React.FC<IButton> = props => (
     secondary
     style={props.style}
     className={props.className}
+    type={props.type}
   >
     {props.iconLeft && <div className="icon left">{props.iconLeft}</div>}
     {props.children}
@@ -200,6 +203,7 @@ const ButtonTertiary: React.FC<IButton> = props => (
     tertiary
     style={props.style}
     className={props.className}
+    type={props.type}
   >
     {props.iconLeft && <div className="icon left">{props.iconLeft}</div>}
     {props.children}
@@ -215,6 +219,7 @@ const ButtonDanger: React.FC<IButton> = props => (
     danger
     style={props.style}
     className={props.className}
+    type={props.type}
   >
     {props.children}
   </Button>
@@ -228,6 +233,7 @@ const IconButton: React.FC<IButton> = props => (
     icon
     style={props.style}
     className={props.className}
+    type={props.type}
   >
     {props.children}
   </Button>

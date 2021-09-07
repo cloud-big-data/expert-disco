@@ -102,7 +102,9 @@ const EditDatasetModal: React.FC<{
           </div>
           <div className="buttons__container">
             <div className="split">
-              <ButtonSecondary onClick={closeModal}>Cancel</ButtonSecondary>
+              <ButtonSecondary type="button" onClick={closeModal}>
+                Cancel
+              </ButtonSecondary>
               <ButtonPrimary onClick={() => updateDataset(datasetTitle)}>
                 Save
               </ButtonPrimary>
