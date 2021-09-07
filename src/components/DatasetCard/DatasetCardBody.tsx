@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import styled from 'styled-components/macro';
 
-import DropdownMenu from 'components/DropdownMenu';
 import { Helper, Label, Text } from 'components/ui/Typography';
 
 import makeDatasetLink from 'lib/makeDatasetLink';
 import humanizeTimeAgo from 'utils/humanizeTimeAgo';
 
 import Styles from 'styles/Styles';
+import { Dropdown, Menu } from 'antd';
+import MenuIcon from 'components/ui/MenuIcon';
 
 const DatasetCardContainer = styled.div`
   display: flex;
@@ -76,98 +77,102 @@ const DatasetCardBody: React.FC<{
   duplicateDataset,
   setDeleteConf,
 }) => {
-  const [contextMenuIsOpen, setContextMenuIsOpen] = useState(false);
-
-  const OPTIONS = [
-    {
-      label: 'Delete',
-      onClick: () => {
-        setDeleteConf(true);
-        setEditModalIsOpen(true);
-      },
-      icon: <i style={{ color: Styles.red400 }} className="fal fa-times-circle" />,
-    },
-    {
-      label: 'Rename',
-      onClick: () => {
-        setEditModalIsOpen(true);
-      },
-      icon: <i style={{ color: Styles.blue }} className="fad fa-edit" />,
-    },
-    {
-      label: 'Open in new tab',
-      onClick: () => window.open(makeDatasetLink(datasetId)),
-      icon: <i className="fad fa-external-link" />,
-    },
-    {
-      label: 'Duplicate',
-      onClick: () => duplicateDataset(datasetId, `${title} (copy)`),
-      icon: <i style={{ color: Styles.purple300 }} className="fad fa-folders" />,
-    },
-  ];
+  const contextMenu = (
+    <Menu>
+      <Menu.ItemGroup>
+        <Menu.Item
+          role="button"
+          onClick={() => {
+            setDeleteConf(true);
+            setEditModalIsOpen(true);
+          }}
+        >
+          <MenuIcon
+            className="fal fa-times-circle"
+            style={{ color: Styles.red400 }}
+          />
+          Delete
+        </Menu.Item>
+        <Menu.Item
+          role="button"
+          onClick={() => {
+            setEditModalIsOpen(true);
+          }}
+        >
+          <MenuIcon style={{ color: Styles.blue }} className="fad fa-edit" />
+          Rename
+        </Menu.Item>
+        <Menu.Item
+          role="button"
+          onClick={() => window.open(makeDatasetLink(datasetId))}
+        >
+          <MenuIcon className="fad fa-external-link" />
+          Open in new tab
+        </Menu.Item>
+        <Menu.Item
+          role="button"
+          onClick={() => duplicateDataset(datasetId, `${title} (copy)`)}
+        >
+          <MenuIcon className="fad fa-folders" style={{ color: Styles.purple300 }} />
+          Duplicate
+        </Menu.Item>
+      </Menu.ItemGroup>
+    </Menu>
+  );
 
   return (
-    <Link
-      className="no-hover"
-      style={{ textDecoration: 'none' }}
-      to={
-        isProcessing ? window.location.pathname : makeDatasetLink(datasetId, false)
-      }
-      onContextMenu={e => {
-        e.preventDefault();
-        setContextMenuIsOpen(true);
-      }}
-    >
-      <DatasetCardContainer
-        className={classNames({
-          'opacity-50': isProcessing,
-        })}
+    <Dropdown trigger={['contextMenu']} overlay={contextMenu}>
+      <Link
+        className="no-hover"
+        style={{ textDecoration: 'none' }}
+        to={
+          isProcessing ? window.location.pathname : makeDatasetLink(datasetId, false)
+        }
       >
-        <div className="background" />
-        <div className="main">
-          <div className="meta__bar">
-            <div className="time-ago__container">
-              <Helper>Last updated: {humanizeTimeAgo(timestamp)}</Helper>
+        <DatasetCardContainer
+          className={classNames({
+            'opacity-50': isProcessing,
+          })}
+        >
+          <div className="background" />
+          <div className="main">
+            <div className="meta__bar">
+              <div className="time-ago__container">
+                <Helper>Last updated: {humanizeTimeAgo(timestamp)}</Helper>
+              </div>
+              <div className="actions">
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setEditModalIsOpen(true);
+                  }}
+                  className="nostyle"
+                >
+                  <i className="far fa-cog" />
+                </button>
+              </div>
             </div>
-            <div className="actions">
-              <button
-                onClick={e => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setEditModalIsOpen(true);
-                }}
-                className="nostyle"
-              >
-                <i className="far fa-cog" />
-              </button>
+            <div className="label__container">
+              <Label style={{ margin: 0 }}>{title}</Label>
             </div>
-          </div>
-          <div className="label__container">
-            <Label style={{ margin: 0 }}>{title}</Label>
-          </div>
 
-          {isProcessing && (
-            <Text size="sm" len="short">
-              Processing...
-            </Text>
-          )}
-          {description && (
-            <div className="description__container">
-              <Text style={{ marginBottom: 0 }} size="sm" len="long">
-                {description}
+            {isProcessing && (
+              <Text size="sm" len="short">
+                Processing...
               </Text>
-            </div>
-          )}
-
-          {contextMenuIsOpen && (
-            <DropdownMenu
-              options={OPTIONS}
-              closeMenu={() => setContextMenuIsOpen(false)}
-            />
-          )}
-        </div>
-      </DatasetCardContainer>
-    </Link>
+            )}
+            {description && (
+              <div className="description__container">
+                <Text style={{ marginBottom: 0 }} size="sm" len="long">
+                  {description}
+                </Text>
+              </div>
+            )}
+          </div>
+        </DatasetCardContainer>
+      </Link>
+    </Dropdown>
   );
 };
 

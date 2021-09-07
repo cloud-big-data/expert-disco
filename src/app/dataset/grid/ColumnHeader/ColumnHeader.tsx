@@ -1,24 +1,26 @@
-import { Label } from 'components/ui/Typography';
-import DatasetContext from 'contexts/DatasetContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
-import Styles from 'styles/Styles';
 import * as R from 'ramda';
-import usePrevious from 'hooks/usePrevious';
-import GridContext from 'contexts/GridContext';
-import useHandleClickOutside from 'hooks/useHandleClickOutside';
 import { Menu, Dropdown, Tooltip, Slider } from 'antd';
-import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
-// import findColumnById from 'app/dataset/lib/findColumnById';
+
+import DatasetContext from 'contexts/DatasetContext';
+import GridContext from 'contexts/GridContext';
+import { Label } from 'components/ui/Typography';
+import usePrevious from 'hooks/usePrevious';
+import useHandleClickOutside from 'hooks/useHandleClickOutside';
+
 import { DATE_FORMATS, NUMBER_FORMATS, CURRENCY_CODES } from 'app/dataset/constants';
+import typesAreCompatible from 'app/dataset/lib/typesAreCompatible';
 import updateColumnById from 'app/dataset/lib/updateColumnById';
 import updateLayers from 'app/dataset/lib/updateLayers';
 import updateSmartColumnById from 'app/dataset/lib/updateSmartColumnById';
-// import deepUpdateColumnById from 'app/dataset/lib/deepUpdateColumnById';
-import Modal from 'components/ui/Modal';
 import { makeBoardActions } from 'app/dataset/lib/makeBoardActions';
+
+import Styles from 'styles/Styles';
+import Modal from 'components/ui/Modal';
+
+import MenuIcon from 'components/ui/MenuIcon';
 import returnUpdatedCells from '../../lib/returnUpdatedCells';
-// import { makeBoardActions } from '../../lib/makeBoardActions';
 import {
   DataTypes,
   IBoardState,
@@ -94,12 +96,6 @@ const MenuTrigger = styled.div`
       color: ${Styles.blue};
     }
   }
-`;
-
-const MenuIcon = styled.i`
-  margin-right: 0.5rem;
-  width: 1rem;
-  height: 1rem;
 `;
 
 const ColumnHeader: React.FC<IColumnHeaderProps> = ({

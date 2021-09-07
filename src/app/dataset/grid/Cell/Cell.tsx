@@ -4,14 +4,14 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 import * as R from 'ramda';
 import editCellsAndReturnBoard from 'app/dataset/lib/editCellsAndReturnBoard';
-import DropdownMenu from 'components/DropdownMenu';
-import { notification } from 'antd';
+import { Dropdown, Menu, notification } from 'antd';
 import parseDataType from 'app/dataset/lib/parseDataType';
 import GridContext from 'contexts/GridContext';
 import usePrevious from 'hooks/usePrevious';
 import formatValue from 'app/dataset/lib/formatValue';
 import DatePicker from 'components/ui/DatePicker';
 import addUnsavedChange from 'app/dataset/lib/addUnsavedChange';
+import MenuIcon from 'components/ui/MenuIcon';
 import {
   ICell,
   IBoardState,
@@ -222,24 +222,6 @@ const Cell: React.FC<ICellProps> = ({
 
   const colDataType = associatedColumn?.dataType;
 
-  const MENU_OPTIONS = [
-    {
-      label: 'copy',
-      onClick: handleCopy,
-      icon: <i className="fad fa-copy" />,
-    },
-    {
-      label: 'paste',
-      onClick: () => null,
-      icon: <i className="far fa-paste" />,
-    },
-    {
-      label: 'cut',
-      onClick: () => null,
-      icon: <i className="fad fa-cut" />,
-    },
-  ];
-
   useEffect(() => {
     if (value !== localValue) {
       setLocalValue(value);
@@ -325,87 +307,106 @@ const Cell: React.FC<ICellProps> = ({
     addUnsavedChange(change, socket);
   };
 
+  const ContextMenu = (
+    <Menu>
+      <Menu.ItemGroup>
+        <Menu.Item onClick={handleCopy}>
+          <MenuIcon className="fad fa-copy" />
+          Copy
+        </Menu.Item>
+        <Menu.Item onClick={() => null}>
+          <MenuIcon className="far fa-paste" />
+          Paste
+        </Menu.Item>
+        <Menu.Item onClick={() => null}>
+          <MenuIcon className="fad fa-cut" />
+          Cut
+        </Menu.Item>
+      </Menu.ItemGroup>
+    </Menu>
+  );
+
   return (
-    <CellContainer
-      width={colWidth ?? defaults.COL_WIDTH}
-      isCopying={isCopying}
-      active={active}
-      highlighted={highlighted}
-      position={position}
-      selected={isSelected}
-      isLoading={loading}
-      onContextMenu={onContextMenu}
-      onClick={handleClick}
-      onDoubleClick={onDoubleClick}
+    <Dropdown
+      trigger={['contextMenu']}
+      onVisibleChange={() => setShowContextMenu(!showContextMenu)}
+      overlay={ContextMenu}
     >
-      {!readOnly && active && !associatedColumn?.isSmartColumn ? (
-        colDataType === 'date' ? (
-          <DatePicker
-            onChange={(date, dateString) => {
-              handleSave(dateString);
-            }}
-            value={value ? new Date(value) : undefined}
-            bordered={false}
-            format={colFormat ?? 'MM-DD-YYYY'}
-          />
-        ) : (
-          <ActiveInput
-            ref={inputRef}
-            value={localValue ?? ''}
-            type={colDataType === 'string' ? 'text' : 'number'}
-            onKeyDown={e => {
-              if (e.key !== 'Enter') return;
-              const setCells = (key: string, value: any) =>
-                R.over(R.lensProp('cellsState'), R.assoc(key, value));
+      <CellContainer
+        width={colWidth ?? defaults.COL_WIDTH}
+        isCopying={isCopying}
+        active={active}
+        highlighted={highlighted}
+        position={position}
+        selected={isSelected}
+        isLoading={loading}
+        onContextMenu={onContextMenu}
+        onClick={handleClick}
+        onDoubleClick={onDoubleClick}
+      >
+        {!readOnly && active && !associatedColumn?.isSmartColumn ? (
+          colDataType === 'date' ? (
+            <DatePicker
+              onChange={(date, dateString) => {
+                handleSave(dateString);
+              }}
+              value={value ? new Date(value) : undefined}
+              bordered={false}
+              format={colFormat ?? 'MM-DD-YYYY'}
+            />
+          ) : (
+            <ActiveInput
+              ref={inputRef}
+              value={localValue ?? ''}
+              type={colDataType === 'string' ? 'text' : 'number'}
+              onKeyDown={e => {
+                if (e.key !== 'Enter') return;
+                const setCells = (key: string, value: any) =>
+                  R.over(R.lensProp('cellsState'), R.assoc(key, value));
 
-              setBoardState(
-                R.pipe(
-                  setCells('activeCell', ''),
-                  setCells('selectedCell', _id),
-                )(boardState) as IBoardState,
-              );
-            }}
-            onChange={e => {
-              const { value } = e.target;
-              const attemptedInputType = parseDataType(value);
-              if (
-                colDataType !== 'string' &&
-                value !== '' &&
-                attemptedInputType !== colDataType
-              ) {
-                if (!errorNotificationIsOpen) {
-                  showTypeError(colDataType!, attemptedInputType);
+                setBoardState(
+                  R.pipe(
+                    setCells('activeCell', ''),
+                    setCells('selectedCell', _id),
+                  )(boardState) as IBoardState,
+                );
+              }}
+              onChange={e => {
+                const { value } = e.target;
+                const attemptedInputType = parseDataType(value);
+                if (
+                  colDataType !== 'string' &&
+                  value !== '' &&
+                  attemptedInputType !== colDataType
+                ) {
+                  if (!errorNotificationIsOpen) {
+                    showTypeError(colDataType!, attemptedInputType);
+                  }
+                  setErrorNotification(true);
+                  setTimeout(() => {
+                    setErrorNotification(false);
+                  }, 4500);
+                  return;
                 }
-                setErrorNotification(true);
-                setTimeout(() => {
-                  setErrorNotification(false);
-                }, 4500);
-                return;
-              }
-              setLocalValue(value);
-              clearTimeout(typingTimeout.current);
+                setLocalValue(value);
+                clearTimeout(typingTimeout.current);
 
-              typingTimeout.current = setTimeout(() => {
-                handleSave(value);
-              }, 200);
-            }}
+                typingTimeout.current = setTimeout(() => {
+                  handleSave(value);
+                }, 200);
+              }}
+            />
+          )
+        ) : (
+          <CellDisplay
+            format={columnSettings?.format}
+            formatSettings={columnSettings?.formatSettings}
+            colDataType={colDataType}
+            value={value}
           />
-        )
-      ) : (
-        <CellDisplay
-          format={columnSettings?.format}
-          formatSettings={columnSettings?.formatSettings}
-          colDataType={colDataType}
-          value={value}
-        />
-      )}
-      {showContextMenu && (
-        <DropdownMenu
-          closeMenu={() => setShowContextMenu(false)}
-          options={MENU_OPTIONS}
-        />
-      )}
-    </CellContainer>
+        )}
+      </CellContainer>
+    </Dropdown>
   );
 };
 
