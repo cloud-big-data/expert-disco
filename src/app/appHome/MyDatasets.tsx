@@ -10,6 +10,7 @@ import { useQuery } from 'react-query';
 import Loading from 'components/ui/Loading';
 import { Empty } from 'antd';
 import Styles from 'styles/Styles';
+import DomAnchorNode from 'components/ui/DomAnchorNode';
 
 const MyDatasetsContainer = styled.div`
   display: flex;
@@ -158,8 +159,18 @@ const MyDatasets: React.FC = () => {
           </ButtonPrimary>
         </Empty>
       )}
-      <ListContainer>
-        {(loadingState || isLoading) && <Loading />}
+      <ListContainer id="list-container">
+        {(loadingState || isLoading) && (
+          <DomAnchorNode
+            domNodeSelector={{
+              selector: '#list-container',
+            }}
+          >
+            <div className="w-full h-full flex items-start justify-center">
+              <Loading />
+            </div>
+          </DomAnchorNode>
+        )}
         {datasets?.map(dataset => (
           <DatasetCard
             key={dataset._id}

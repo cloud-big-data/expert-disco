@@ -15,12 +15,12 @@ const InputContainer = styled.div<{
   background: ${props => (props.disabled ? 'rgba(239, 239, 239, 0.3)' : 'white')};
   border: ${props =>
     props.error
-      ? `2px solid ${Styles.red400}`
-      : `2px solid ${Styles.faintBorderColor}`};
+      ? `1px solid ${Styles.red400}`
+      : `1px solid ${Styles.faintBorderColor}`};
   ${props =>
     props.active && !props.error
       ? `
-    border: 2px solid ${Styles.purple400};
+    border: 1px solid ${Styles.purple400};
   `
       : ''}
   border-radius: .625rem;
@@ -30,7 +30,7 @@ const InputContainer = styled.div<{
       props.active || props.error
         ? ``
         : `
-      border: 2px solid rgba(0,0,0,.1);
+      border: 1px solid rgba(0,0,0,.1);
     `}
   }
   .icon__container {
@@ -61,7 +61,7 @@ const Input = styled.input<{
   ${props =>
     props.unsetHeight
       ? `
-    font-size: 14px;
+    font-size: 12px;
   `
       : ''}
   border: none;

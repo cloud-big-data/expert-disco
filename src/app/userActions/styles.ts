@@ -2,17 +2,29 @@ import styled from 'styled-components/macro';
 import Styles from 'styles/Styles';
 
 export const UserContainer = styled.div`
-  width: 50%;
   box-shadow: ${Styles.boxShadow};
+  border: 2px solid ${Styles.faintBorderColor};
+  width: 50%;
   border-radius: 1rem;
   padding: 1.5rem;
-  position: absolute;
   display: flex;
   flex-direction: column;
-  top: 20%;
+  position: absolute;
+  top: 25%;
   left: 25%;
   right: 25%;
-  border: 2px solid ${Styles.faintBorderColor};
+  @media (max-width: 1000px) {
+    width: 80%;
+    left: 10%;
+    right: 10%;
+  }
+  @media (max-width: 600px) {
+    width: 95%;
+    left: 2.5%;
+    right: 2.5%;
+    box-shadow: none;
+    border: none;
+  }
 
   .input-group {
     width: 100%;

@@ -53,7 +53,9 @@ const ForgotPassword: React.FC = () => {
       <div className="actions__container">
         <ButtonPrimary onClick={onSubmit}>Reset my password</ButtonPrimary>
         <Helper>
-          <Link to="/forgot_password">Customer Login</Link>
+          <strong>
+            <Link to="/login">Customer Login</Link>
+          </strong>
         </Helper>
       </div>
     </UserContainer>
