@@ -100,6 +100,11 @@ const MyDatasets: React.FC = () => {
     );
 
     setLoadingState(false);
+    if (duplicatedDataset.error) {
+      return alert(
+        'There was a problem duplicating this dataset. Please try again later.',
+      );
+    }
 
     if (duplicatedDataset._id) {
       refetch();
