@@ -34,6 +34,7 @@ const Radio: React.FC<{
       type="radio"
       onChange={onClick}
       checked={selected}
+      readOnly
     />
     <div className="indicator" />
     <Helper>{children}</Helper>

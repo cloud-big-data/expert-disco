@@ -6,6 +6,7 @@ import DatasetContext from 'contexts/DatasetContext';
 import { Text } from 'components/ui/Typography';
 import { ButtonPrimary } from 'components/ui/Buttons';
 import SingleSelect from 'components/SingleSelect';
+import { SwitchRender } from 'components/SwitchRender';
 import SkyvueExport from './Destinations/SkyvueExport';
 
 const { Step } = Steps;
@@ -75,24 +76,32 @@ const DatasetExport: React.FC = () => {
             </div>
           </div>
         )}
-        {step === 1 &&
-          (destination === 'skyvue' ? (
-            <div className="output-settings__container">
-              <SkyvueExport />
-            </div>
-          ) : destination === 'csv' ? (
-            <div className="output-settings__container">
-              <h5>Your download has started</h5>
-              <Text size="sm" len="short">
-                It may take a few moments for the dataset to be fully downloaded,
-                depending on the size of the file.
-              </Text>
-            </div>
-          ) : (
-            <div className="output-settings__container">
-              <p>Sorry, we don't yet support {destination} as a destination!</p>
-            </div>
-          ))}
+        {step === 1 && destination && (
+          <SwitchRender
+            switchValue={destination}
+            caseValues={{
+              csv: (
+                <div className="output-settings__container">
+                  <h5>Your download has started</h5>
+                  <Text size="sm" len="short">
+                    It may take a few moments for the dataset to be fully downloaded,
+                    depending on the size of the file.
+                  </Text>
+                </div>
+              ),
+              skyvue: (
+                <div className="output-settings__container">
+                  <SkyvueExport />
+                </div>
+              ),
+            }}
+            defaultCase={
+              <div className="output-settings__container">
+                <p>Sorry, we don't yet support {destination} as a destination!</p>
+              </div>
+            }
+          />
+        )}
       </div>
     </ExportContainer>
   );

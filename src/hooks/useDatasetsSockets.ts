@@ -172,9 +172,14 @@ const useDatasetsSockets = (
       window.open(`${window.location.host}/dataset/${_id}`);
     });
 
+    const interval = setInterval(() => {
+      socket.emit('test', { testing: 'foo bar' });
+    }, 5000);
+
     window.addEventListener('unload', () => socket.emit('unload'));
     return () => {
       window.removeEventListener('unload', () => socket.emit('unload'));
+      clearInterval(interval);
     };
   }, [
     userId,
@@ -220,6 +225,7 @@ const useDatasetsSockets = (
 
     socket.on('clearErrors', () => {
       if (!boardData) return;
+      console.log('clearing');
       setBoardData?.({
         ...boardData,
         errors: [],

@@ -180,9 +180,9 @@ type UserId = string;
 
 export interface BoardError {
   message: any;
-  type: string;
-  target: string;
-  section: LayersTypes;
+  type?: string;
+  target?: string;
+  section: LayersTypes | 'export';
 }
 
 export type Privileges = 'owner' | 'editor' | 'viewer';
