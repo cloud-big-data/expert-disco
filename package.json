@@ -53,7 +53,8 @@
     "uuid": "^8.3.1"
   },
   "scripts": {
-    "start": "doppler run -- craco start",
+    "start": "craco start",
+    "dev": "doppler run -- npm start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
