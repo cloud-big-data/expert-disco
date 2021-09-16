@@ -61,7 +61,7 @@ const Input = styled.input<{
   ${props =>
     props.unsetHeight
       ? `
-    font-size: 12px;
+    font-size: 14px;
   `
       : ''}
   border: none;

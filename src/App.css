@@ -95,7 +95,7 @@ p .btn {
 
 @media only screen and (min-width: 600px) {
   input {
-    font-size: 0.75rem !important;
+    font-size: 0.9rem !important;
   }
 }
 @media only screen and (max-width: 600px) {
